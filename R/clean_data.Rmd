@@ -1,0 +1,116 @@
+---
+title: "Clean 2023 salary data"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(readr)
+library(here)
+library(purrr)
+library(glue)
+
+library(dplyr)
+library(tidyr)
+library(gt)
+library(ggplot2)
+library(skimr)
+library(janitor)
+library(stringr)
+```
+
+# preprocess excel data 
+
+I extract the sheets into separate csv files so that they can display on github and be more easily used.
+
+```{r process-sheets, eval = FALSE}
+# run this once, manually
+library(googlesheets4)
+google_sheets_url <- 'https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit#gid=491268892'
+sheet_names <- c('2024', '2023', '2022')
+
+sheet_names |>  
+  walk(
+    \(x) read_sheet(google_sheets_url, sheet = x) |> 
+      write_csv(here('data', glue::glue('{x}_survey_results.csv')))
+  )
+
+```
+
+# 2024 data
+
+load and clean
+
+```{r}
+sal <- read_csv(here('data', '2024_survey_results.csv'))
+sal |>  skim()
+
+# remove variables that are all NA:
+var_all_na <- sal |>  
+  skim()  |>   
+  filter(n_missing == nrow(sal)) |> 
+  pull(skim_variable)
+
+message('removing variables that are have all missing values')
+sal_clean <- sal |> 
+  select(-any_of(var_all_na))
+message(glue(
+  "{length(var_all_na)}/{ncol(sal)} columns removed that are all NA"
+))
+
+# clean colnames
+tibble(original = colnames(sal)) |> 
+  
+  # janitor to start
+  mutate(new = janitor::make_clean_names(original)) |> 
+  
+  gt() 
+sal_clean <- janitor::clean_names(sal_clean)
+```
+
+clean the values
+
+It would be a massive effort to clean every column. Let's prioritize to most important ones:
+
+- Salary
+  - base
+  - target bonus (%)
+  - equity
+- Title
+- Experience
+  - years
+  - degree
+- Location
+  - country
+  - city
+  
+If I have time, can look also at:
+
+- 401k match
+
+
+```{r}
+sal_clean |>  
+  ggplot(aes(x = compensation_annual_base_salary_pay)) + geom_histogram()
+sal_clean |> 
+  filter(compensation_annual_base_salary_pay < 5000) |> 
+  count(compensation_annual_base_salary_pay)
+
+# remove guy with "1" in base
+sal_clean_filt <- sal_clean |> 
+  filter(compensation_annual_base_salary_pay > 1)
+
+# for the remainder of individuals with salary < 5000 (all in hundreds), 
+# multiple by 1000
+sal_clean_filt <- sal_clean_filt |>  
+  mutate(
+    compensation_annual_base_salary_pay = ifelse(
+      compensation_annual_base_salary_pay < 1000,
+      compensation_annual_base_salary_pay*1000, 
+      compensation_annual_base_salary_pay     
+    ))
+
+
+```
+
