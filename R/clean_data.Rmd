@@ -31,8 +31,9 @@ google_sheets_url <- 'https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWm
 sheet_names <- c('2024', '2023', '2022')
 
 sheet_names |>  
+  # read it as character values to avoid list-column headaches
   walk(
-    \(x) read_sheet(google_sheets_url, sheet = x) |> 
+    \(x) read_sheet(google_sheets_url, sheet = x, col_types = 'c') |> 
       write_csv(here('data', glue::glue('{x}_survey_results.csv')))
   )
 
