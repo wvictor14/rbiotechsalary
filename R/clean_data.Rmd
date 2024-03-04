@@ -150,5 +150,80 @@ sal_clean_filt |>
   gt()
 ```
 
+### target bonus
+
+is a mix of % and $ amount
+
+
+I combine this with annual base to create two new variables: bonus_pct, bonus (raw)
+
+My strategy:
+
+1. Remove special characters, except periods which represent decimals
+2. convert to numeric, which has two impacts:
+  - "Not Applicable/None" entries will be converted to NAs
+  - percentages will be converted from those values that are less than "50"
+  - raw currency values will be simply those that are above 1000
+3. If there is a range of values, then I keep the higher value, since bonus is typically interpreted as the maximum bonus amount, depending on company and individual performance
+
+
+```{r}
+sal_clean_filt |> 
+  select(compensation_annual_base_salary_pay, 
+         compensation_annual_target_bonus) |>  
+  head(n = 20) |> gt() 
+
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(
+    bonus_cleaned = compensation_annual_target_bonus |> 
+      
+      # remove special characters
+      str_remove_all('[\\$,\\%]') |>
+      
+      # remove any non-digits at beginning or end of string
+      str_remove('^[^\\d]+') |> 
+      str_remove('[^\\d]+$') |> 
+      
+      # if there is text between numbers, 
+      # split it as likely this represents a range
+      str_split('[^\\d\\.]+') |> 
+      
+      # convert to numeric
+      # if it is a range, keep the highest value
+      map_dbl(\(x) x |> as.numeric() |> max()) 
+    ) |> 
+  
+  mutate(bonus_pct = case_when(
+    bonus_cleaned < 50 ~ bonus_cleaned/100,
+    bonus_cleaned > 1000 ~ bonus_cleaned / salary_base,
+    TRUE ~ NA
+  ),
+  bonus = case_when(
+    bonus_cleaned < 50 ~ bonus_pct * salary_base,
+    bonus_cleaned > 1000 ~ bonus_cleaned,
+    TRUE ~ NA
+  ))
+```
+
+Let's look at the cleaned bonus data vs the original:
+
+```{r}
+sal_clean_filt |> 
+  filter(compensation_annual_target_bonus != bonus_cleaned) |> 
+  count(salary_base, compensation_annual_target_bonus, 
+        bonus_cleaned, bonus_pct, bonus)  |> 
+  arrange(salary_base) |> 
+  gt() |> 
+  fmt_percent(bonus_pct) |> 
+  fmt_currency(c(salary_base, bonus))
+
+
+n_changed_bonus <- sal_clean_filt |> 
+    filter(salary_base != compensation_annual_base_salary_pay) |>
+    nrow() 
+```
+
+I converted bonus into % and raw $. This involved modifying `r n_changed_bonus` bonus data points.
+
 ```
 
