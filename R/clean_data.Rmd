@@ -276,5 +276,17 @@ sal_clean_filt |>
   count(role_title_of_current_position) |> 
   gt()
 ```
+
+## Experience
+
+```{r}
+sal_clean_filt |> 
+  count(years_of_experience)
+
+sal_clean_filt |> 
+  count(what_degrees_do_you_have)
+```
+
+
 ```
 
