@@ -253,5 +253,28 @@ sal_clean_filt |>
   unique() |> 
   head(n = 20) 
 ```
+
+
+## Title
+
+For title let's try to standardize some positions. I create a new variable `title_standard` that categories responses into:
+
+- Research Associate
+- Associate Scientist
+- Scientist
+- Senior Scientist
+- Staff Scientist
+- Principal Scientist
+- Associate Director
+- Director
+- Senior Director
+- Executive Director
+- VP
+
+```{r}
+sal_clean_filt |> 
+  count(role_title_of_current_position) |> 
+  gt()
+```
 ```
 
