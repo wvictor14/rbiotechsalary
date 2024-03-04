@@ -288,5 +288,69 @@ sal_clean_filt |>
 ```
 
 
+## Location
+
+Location is quite messy, are free-form responses  spread between 3 variables:
+
+- `where_are_you_located` contains Countries (USA, Canada, etc.), states (CO, Carolinas, etc.)
+- `what_country_do_you_work_in` seems to all be countries, but not harmonized e.g.: Usa, usa, United States
+- `where_is_the_closest_major_city_or_hub` mixed bag: Bay area, Boston, san diego, Research Triangle, 
+
+We can use tmaptools to separate this out into 3 new variables:
+
+Country, State, City
+
+I write a function to 
+
+```{r}
+library(tmaptools)
+
+query <- sal_clean_filt |> 
+  filter(!is.na(where_are_you_located)) |> 
+  slice(1:6) |>
+  select(where_are_you_located) 
+
+possibly_geocode <- possibly(
+  .f = ~tmaptools::geocode_OSM(.x, keep.unfound = TRUE, as.sf = TRUE) |> 
+    tmaptools::rev_geocode_OSM(as.data.frame = TRUE) |>  
+    as_tibble() |> 
+    select(country, country_code, county, state),
+  otherwise = NULL
+) 
+
+geo <- query$where_are_you_located %>%
+  setNames(., nm = .) |> 
+  map(possibly_geocode) |> 
+  list_rbind(names_to = 'query')
+
+sal_clean_filt |> 
+  left_join(
+    geo,
+    by = c('where_are_you_located' = 'query')
+  )
+
+```
+
+
+
+
+```{r}
+
+sal_clean_filt |>  
+  count(
+    where_are_you_located, 
+    what_country_do_you_work_in, 
+    where_is_the_closest_major_city_or_hub) |>
+  gt()
+
+
+sal_clean_filt |> 
+  count(where_are_you_located)
+
+sal_clean_filt |> 
+  count(what_country_do_you_work_in)
+
+sal_clean_filt |> 
+  count(where_is_the_closest_major_city_or_hub)
 ```
 
