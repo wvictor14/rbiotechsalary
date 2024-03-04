@@ -42,10 +42,16 @@ sheet_names |>
 
 load and clean
 
+Look at response rate per question (number of NAs):
+
 ```{r}
 sal <- read_csv(here('data', '2024_survey_results.csv'))
 sal |>  skim()
+```
 
+Remove those with 0 answers:
+
+```{r}
 # remove variables that are all NA:
 var_all_na <- sal |>  
   skim()  |>   
@@ -58,18 +64,22 @@ sal_clean <- sal |>
 message(glue(
   "{length(var_all_na)}/{ncol(sal)} columns removed that are all NA"
 ))
+print(var_all_na)
+```
 
-# clean colnames
+I rename column names to make them easier to call:
+
+```{r}
+# view changed colnames
 tibble(original = colnames(sal)) |> 
-  
-  # janitor to start
   mutate(new = janitor::make_clean_names(original)) |> 
-  
   gt() 
 sal_clean <- janitor::clean_names(sal_clean)
 ```
 
-clean the values
+Now I begin cleaning the variable values
+
+## Data cleaning
 
 It would be a massive effort to clean every column. Let's prioritize to most important ones:
 
@@ -89,10 +99,23 @@ If I have time, can look also at:
 
 - 401k match
 
+## salary
+
+- base
+- target bonus (%)
+- equity
+
+There are a handful of responses with annual salary reportedly less than $5000. There is one person that responded with "$1" - we remove them. And then the remaining report a range from 105-210, which likely represent 105**k** - 210**k**, I multiple these ones by 1000.
+
+### base
 
 ```{r}
 sal_clean |>  
-  ggplot(aes(x = compensation_annual_base_salary_pay)) + geom_histogram()
+  ggplot(aes(x = compensation_annual_base_salary_pay)) + 
+  geom_histogram() +
+  scale_x_continuous(labels = scales::number)
+
+# a bunch of salary entries that are <1000:
 sal_clean |> 
   filter(compensation_annual_base_salary_pay < 5000) |> 
   count(compensation_annual_base_salary_pay)
@@ -100,17 +123,31 @@ sal_clean |>
 # remove guy with "1" in base
 sal_clean_filt <- sal_clean |> 
   filter(compensation_annual_base_salary_pay > 1)
+n_removed <- nrow(sal_clean) - nrow(sal_clean_filt)
 
 # for the remainder of individuals with salary < 5000 (all in hundreds), 
 # multiple by 1000
 sal_clean_filt <- sal_clean_filt |>  
   mutate(
-    compensation_annual_base_salary_pay = ifelse(
+    salary_base = ifelse(
       compensation_annual_base_salary_pay < 1000,
       compensation_annual_base_salary_pay*1000, 
       compensation_annual_base_salary_pay     
     ))
 
+n_changed <- sal_clean_filt |> 
+    filter(salary_base != compensation_annual_base_salary_pay) |>
+    nrow() 
+```
+
+We removed `r n_removed` data point, and changed / cleaned `r n_changed` 
+
+```{r}
+sal_clean_filt |> 
+  filter(salary_base != compensation_annual_base_salary_pay) |>
+  select(compensation_annual_base_salary_pay, salary_base) |> 
+  gt()
+```
 
 ```
 
