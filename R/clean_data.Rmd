@@ -225,5 +225,33 @@ n_changed_bonus <- sal_clean_filt |>
 
 I converted bonus into % and raw $. This involved modifying `r n_changed_bonus` bonus data points.
 
+### equity
+
+Equity is a little bit complicated:
+
+Some are reported as options, some are reported in 1000s e.g. "15k" vs "15000"
+Some are reported in $ amount
+Some say "it varies per year" 
+There are a few that report %, is that amount percentage from base in $ or in options??
+
+
+1. We set "Not Applicable/None" to 0
+2. Set responses that report %, to NA (I don't want to deal with this and it is a small number of responses)
+2. We then create two variables, equity_options, equity_currency_value
+
+- `equity_currency_value` takes those data points that start with a dollar sign $
+- `equity_options` is everything else
+  - treat this the same as base salary:
+  - clean and then:
+  - where if it is less than 1000, multiple by 1000
+
+3. Convert everything to numeric
+
+```{r}
+sal_clean_filt |> 
+  pull(compensation_annual_equity_stock_option) |>  
+  unique() |> 
+  head(n = 20) 
+```
 ```
 
