@@ -30,6 +30,8 @@ library(googlesheets4)
 google_sheets_url <- 'https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit#gid=491268892'
 sheet_names <- c('2024', '2023', '2022')
 
+#read_sheet(google_sheets_url, sheet = '2024', col_types = 'c')
+
 sheet_names |>  
   # read it as character values to avoid list-column headaches
   walk(
@@ -85,17 +87,17 @@ Now I begin cleaning the variable values
 It would be a massive effort to clean every column. Let's prioritize to most important ones:
 
 - Salary
-  - base
-  - target bonus (%)
-  - equity
+- base
+- target bonus (%)
+- equity
 - Title
 - Experience
-  - years
-  - degree
+- years
+- degree
 - Location
-  - country
-  - city
-  
+- country
+- city
+
 If I have time, can look also at:
 
 - 401k match
@@ -137,8 +139,8 @@ sal_clean_filt <- sal_clean_filt |>
     ))
 
 n_changed <- sal_clean_filt |> 
-    filter(salary_base != compensation_annual_base_salary_pay) |>
-    nrow() 
+  filter(salary_base != compensation_annual_base_salary_pay) |>
+  nrow() 
 ```
 
 We removed `r n_removed` data point, and changed / cleaned `r n_changed` 
@@ -161,9 +163,9 @@ My strategy:
 
 1. Remove special characters, except periods which represent decimals
 2. convert to numeric, which has two impacts:
-  - "Not Applicable/None" entries will be converted to NAs
-  - percentages will be converted from those values that are less than "50"
-  - raw currency values will be simply those that are above 1000
+- "Not Applicable/None" entries will be converted to NAs
+- percentages will be converted from those values that are less than "50"
+- raw currency values will be simply those that are above 1000
 3. If there is a range of values, then I keep the higher value, since bonus is typically interpreted as the maximum bonus amount, depending on company and individual performance
 
 
@@ -191,7 +193,7 @@ sal_clean_filt <- sal_clean_filt |>
       # convert to numeric
       # if it is a range, keep the highest value
       map_dbl(\(x) x |> as.numeric() |> max()) 
-    ) |> 
+  ) |> 
   
   mutate(bonus_pct = case_when(
     bonus_cleaned < 50 ~ bonus_cleaned/100,
@@ -219,8 +221,8 @@ sal_clean_filt |>
 
 
 n_changed_bonus <- sal_clean_filt |> 
-    filter(salary_base != compensation_annual_base_salary_pay) |>
-    nrow() 
+  filter(salary_base != compensation_annual_base_salary_pay) |>
+  nrow() 
 ```
 
 I converted bonus into % and raw $. This involved modifying `r n_changed_bonus` bonus data points.
@@ -241,9 +243,9 @@ There are a few that report %, is that amount percentage from base in $ or in op
 
 - `equity_currency_value` takes those data points that start with a dollar sign $
 - `equity_options` is everything else
-  - treat this the same as base salary:
-  - clean and then:
-  - where if it is less than 1000, multiple by 1000
+- treat this the same as base salary:
+- clean and then:
+- where if it is less than 1000, multiple by 1000
 
 3. Convert everything to numeric
 
@@ -305,30 +307,35 @@ I write a function to
 ```{r}
 library(tmaptools)
 
+#' @param location messy location variable in .df
+get_location <- function(.df, location) {
+  possibly_geocode <- purrr::possibly(
+    .f = ~
+      tmaptools::geocode_OSM(.x, keep.unfound = TRUE, as.sf = TRUE) |> 
+      tmaptools::rev_geocode_OSM(as.data.frame = TRUE) |>  
+      as_tibble() |> 
+      select(country, country_code, county, state),
+    otherwise = data.frame(country = NA) # errors return an empty row 
+  )
+  
+  .df |> 
+    mutate(.results = map({{location}}, possibly_geocode)) |> 
+    unnest()
+}
+
 query <- sal_clean_filt |> 
   filter(!is.na(where_are_you_located)) |> 
   slice(1:6) |>
-  select(where_are_you_located) 
+  select(where_are_you_located) |> 
+  get_location(where_are_you_located)
 
-possibly_geocode <- possibly(
-  .f = ~tmaptools::geocode_OSM(.x, keep.unfound = TRUE, as.sf = TRUE) |> 
-    tmaptools::rev_geocode_OSM(as.data.frame = TRUE) |>  
-    as_tibble() |> 
-    select(country, country_code, county, state),
-  otherwise = NULL
-) 
 
-geo <- query$where_are_you_located %>%
-  setNames(., nm = .) |> 
-  map(possibly_geocode) |> 
-  list_rbind(names_to = 'query')
 
-sal_clean_filt |> 
-  left_join(
-    geo,
-    by = c('where_are_you_located' = 'query')
-  )
+query |>  
+  mutate(location = map(where_are_you_located, possibly_geocode)) |> 
+  unnest()
 
+geo |>  unnest(location)
 ```
 
 
