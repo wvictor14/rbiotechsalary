@@ -4,3 +4,5 @@
 .Ruserdata
 *.Rproj
 R/clean_data.html
+data/salary_results_cleaned.csv
+data/geo_queried_results.csv
