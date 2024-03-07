@@ -1,5 +1,9 @@
 source("renv/activate.R")
 
+if (interactive()) {
+  require(usethis)
+  require(devtools)
+}
 library(ggplot2)
 theme_set(
   theme_bw(base_size = 12) +
