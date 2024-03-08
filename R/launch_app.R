@@ -29,8 +29,12 @@ rb_ui <- function() {
 
   shiny.fluent::fluentPage(
     shiny.fluent::Text(variant = "xxLarge", "r/biotech Salary Tracker is live!"),
+    tags$style(".card { padding: 28px; margin-bottom: 28px; }"),
     makeCard("Filters", filters, size = 4, style = "max-height: 320px;"),
+    makeCard("Deals count", plotly::plotlyOutput("plot"), size = 8, style = "max-height: 320px"),
     uiOutput("analysis")
+  )
+
 }
 
 #' app server
@@ -77,9 +81,9 @@ rb_server <- function(input, output, session) {
     }
 
     shiny.fluent::Stack(
-      tokens = list(childrenGap = 5),
+      tokens = list(childrenGap = 10), horizontal = TRUE,
       shiny.fluent::Text(variant = "large", "Salary details", block = TRUE),
-      div(style="max-height: 500px; overflow: auto", items_list)
+      makeCard("Top results", div(style="max-height: 500px; overflow: auto", items_list))
     )
   })
 
