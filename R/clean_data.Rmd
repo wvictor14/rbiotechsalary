@@ -10,7 +10,7 @@ library(readr)
 library(here)
 library(purrr)
 library(glue)
-
+library(lubridate)
 library(dplyr)
 library(tidyr)
 library(gt)
@@ -18,6 +18,7 @@ library(ggplot2)
 library(skimr)
 library(janitor)
 library(stringr)
+library(tictoc)
 ```
 
 # preprocess excel data 
@@ -32,13 +33,14 @@ sheet_names <- c('2024', '2023', '2022')
 
 #read_sheet(google_sheets_url, sheet = '2024', col_types = 'c')
 
+tic()
 sheet_names |>  
   # read it as character values to avoid list-column headaches
   walk(
     \(x) read_sheet(google_sheets_url, sheet = x, col_types = 'c') |> 
       write_csv(here('data', glue::glue('{x}_survey_results.csv')))
   )
-
+toc()
 ```
 
 # 2024 data
@@ -410,6 +412,17 @@ sal_clean_filt |>
   count(where_is_the_closest_major_city_or_hub)
 ```
 
+# time
+
+```{r}
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(timestamp = mdy_hms(timestamp),
+         year = year(timestamp),
+         month = month(timestamp),
+         day = day(timestamp)) |> 
+  select(timestamp, year:day, everything())
+```
+
 
 # write out the data
 
@@ -418,3 +431,7 @@ sal_clean_filt |>
   write_csv(here::here('data', 'salary_results_cleaned.csv'))
 ```
 
+
+```{r eval = FALSE}
+use_data(salaries, overwrite = TRUE)
+```
