@@ -50,6 +50,17 @@ rb_server <- function(input, output, session) {
       )
   })
 
+  output$plot <- plotly::renderPlotly({
+    p <- ggplot(.salaries(), aes(
+      x = salary_base, fill = role_title_of_current_position)) +
+      geom_histogram()  +
+      scale_fill_discrete(guide ='none') +
+      theme_light() +
+      scale_x_continuous(labels = scales::number)
+    plotly::ggplotly(p, height = 300)
+  })
+
+  # render the table + other components
   output$analysis <- renderUI({
     #browser()
     items_list <- if(nrow(.salaries()) > 0){
