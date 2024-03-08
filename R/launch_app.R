@@ -30,11 +30,18 @@ rb_ui <- function() {
   shiny.fluent::fluentPage(
     shiny.fluent::Text(variant = "xxLarge", "r/biotech Salary Tracker is live!"),
     tags$style(".card { padding: 28px; margin-bottom: 28px; }"),
-    makeCard("Filters", filters, size = 4, style = "max-height: 320px;"),
-    makeCard("Deals count", plotly::plotlyOutput("plot"), size = 8, style = "max-height: 320px"),
+
+    shiny.fluent::Stack(
+      tokens = list(childrenGap = 10), horizontal = TRUE,
+      makeCard("Filters", filters, size = 4, style = "max-height: 320px;"),
+      makeCard(
+        "Deals count",
+        plotly::plotlyOutput("plot"),
+        size = 8,
+        style = "max-height: 320px")
+    ),
     uiOutput("analysis")
   )
-
 }
 
 #' app server
@@ -92,7 +99,7 @@ rb_server <- function(input, output, session) {
 #' @export
 makeCard <- function(title, content, size = 12, style = "") {
   div(
-    class = glue("card ms-depth-8 ms-sm{size} ms-xl{size}"),
+    class = glue::glue("card ms-depth-8 ms-sm{size} ms-xl{size}"),
     style = style,
     Stack(
       tokens = list(childrenGap = 5),
