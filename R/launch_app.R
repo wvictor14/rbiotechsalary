@@ -21,11 +21,16 @@ launch_app <- function(..., salaries = NULL) {
 #'
 #' @export
 rb_ui <- function() {
-  shiny.fluent::fluentPage(
-    shiny.fluent::Text(variant = "xxLarge", "r/biotech Salary Tracker is live!")
+
+  filters <- tagList(
+    DatePicker.shinyInput("fromDate", value = as.Date('2024/01/01'), label = "From date"),
+    DatePicker.shinyInput("toDate", value = Sys.time() |> lubridate::date(), label = "To date")
   )
 
-  uiOutput("analysis")
+  shiny.fluent::fluentPage(
+    shiny.fluent::Text(variant = "xxLarge", "r/biotech Salary Tracker is live!"),
+    makeCard("Filters", filters, size = 4, style = "max-height: 320px;"),
+    uiOutput("analysis")
 }
 
 #' app server
@@ -36,8 +41,13 @@ rb_ui <- function() {
 rb_server <- function(input, output, session) {
 
   .salaries <- reactive({
+    req(input$fromDate)
     salaries |>
-      select(timestamp:day, salary_base:bonus, everything())
+      select(timestamp:day, salary_base:bonus, everything()) |>
+      filter(
+        timestamp >= input$fromDate,
+        timestamp <= input$toDate,
+      )
   })
 
   output$analysis <- renderUI({
