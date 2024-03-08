@@ -23,6 +23,8 @@ launch_app <- function(..., salaries = NULL) {
 rb_ui <- function() {
 
   filters <- tagList(
+    ComboBox.shinyInput('combobox', value = NULL, options = NULL, label = 'Job Title'),
+    Text(variant = 'xLarge', 'Survey response date:'),
     DatePicker.shinyInput("fromDate", value = as.Date('2024/01/01'), label = "From date"),
     DatePicker.shinyInput("toDate", value = Sys.time() |> lubridate::date(), label = "To date")
   )
@@ -33,9 +35,9 @@ rb_ui <- function() {
 
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
-      makeCard("Filters", filters, size = 4, style = "max-height: 320px;"),
+      makeCard("", filters, size = 4, style = "max-height: 320px;"),
       makeCard(
-        "Deals count",
+        "Salary histogram",
         plotly::plotlyOutput("plot"),
         size = 8,
         style = "max-height: 320px")
@@ -49,6 +51,7 @@ rb_ui <- function() {
 #' @param output output
 #' @param session session
 #' @export
+#' @import dplyr ggplot2
 rb_server <- function(input, output, session) {
 
   .salaries <- reactive({
@@ -61,6 +64,18 @@ rb_server <- function(input, output, session) {
       )
   })
 
+  # filters
+  observe({
+    choices <- .salaries()$role_title_of_current_position |>  unique()
+    options <- tibble(key = choices, text = choices)
+    updateComboBox.shinyInput(
+      session,
+      'combobox',
+      options = options
+    )
+  })
+
+  #plot
   output$plot <- plotly::renderPlotly({
     p <- ggplot(.salaries(), aes(
       x = salary_base, fill = role_title_of_current_position)) +
@@ -89,8 +104,7 @@ rb_server <- function(input, output, session) {
 
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
-      shiny.fluent::Text(variant = "large", "Salary details", block = TRUE),
-      makeCard("Top results", div(style="max-height: 500px; overflow: auto", items_list))
+      makeCard("Salaries data", div(style="max-height: 500px; overflow: auto", items_list))
     )
   })
 
