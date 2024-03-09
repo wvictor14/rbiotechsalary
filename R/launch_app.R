@@ -23,10 +23,15 @@ launch_app <- function(..., salaries = NULL) {
 rb_ui <- function() {
 
   filters <- tagList(
-    ComboBox.shinyInput('title', value = NULL, options = NULL, label = 'Job Title'),
-    Text(variant = 'xLarge', 'Survey response date:'),
-    DatePicker.shinyInput("fromDate", value = as.Date('2024/01/01'), label = "From date"),
-    DatePicker.shinyInput("toDate", value = Sys.time() |> lubridate::date(), label = "To date")
+    ComboBox.shinyInput(
+      'title', value = NULL, options = NULL, label = 'Job Title'),
+    ComboBox.shinyInput(
+      'location', value = NULL, options = NULL, label = 'Location',
+      multiSelect  = TRUE),
+    DatePicker.shinyInput(
+      "fromDate", value = as.Date('2024/01/01'), label = "From date"),
+    DatePicker.shinyInput(
+      "toDate", value = Sys.time() |> lubridate::date(), label = "To date")
   )
 
   shiny.fluent::fluentPage(
@@ -61,7 +66,8 @@ rb_server <- function(input, output, session) {
       filter(
         timestamp >= input$fromDate,
         timestamp <= input$toDate,
-        role_title_of_current_position %in% input$title
+        role_title_of_current_position %in% input$title,
+        where_are_you_located %in% input$location
       )
   })
 
@@ -70,10 +76,14 @@ rb_server <- function(input, output, session) {
     choices <- salaries$role_title_of_current_position |>  unique()
     options <- tibble(key = choices, text = choices)
     updateComboBox.shinyInput(
-      session,
-      'title',
-      value = NULL,
-      options = options
+      session, 'title', value = NULL, options = options
+    )
+  })
+  observe({
+    choices <- salaries$where_are_you_located |>  unique()
+    options <- tibble(key = choices, text = choices)
+    updateComboBox.shinyInput(
+      session, 'location', value = NULL, options = options
     )
   })
 
