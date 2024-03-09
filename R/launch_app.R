@@ -34,11 +34,14 @@ rb_ui <- function() {
         mutate(key = ifelse(is.na(key), 'no response', key), text = key) |>
         distinct()
     ),
-
-    DatePicker.shinyInput(
-      "fromDate", value = as.Date('2024/01/01'), label = "From date"),
-    DatePicker.shinyInput(
-      "toDate", value = Sys.time() |> lubridate::date(), label = "To date")
+    shiny.fluent::Stack(
+      horizontal = TRUE,
+      tokens = list(childrenGap = 10),
+      DatePicker.shinyInput(
+        "fromDate", value = as.Date('2024/01/01'), label = "From date"),
+      DatePicker.shinyInput(
+        "toDate", value = Sys.time() |> lubridate::date(), label = "To date")
+    )
   )
 
   shiny.fluent::fluentPage(
@@ -115,7 +118,7 @@ rb_server <- function(input, output, session) {
           fieldName = colnames(.salaries()),
           name =  colnames(.salaries()),
           key = fieldName
-          )
+        )
       )
     } else {
       p("No matching salary data.")
