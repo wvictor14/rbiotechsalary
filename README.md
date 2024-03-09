@@ -15,6 +15,8 @@ devtools::install_github("wvictor14/r_biotech_salary")
 
 ## Ideas
 
+? indicate still considering if worth
+
 ### For cleaning
 
 Targeted minimum set of variables:
@@ -31,24 +33,25 @@ Targeted minimum set of variables:
 
 **Filters**
 
--   [ ] add filter by location
+-   [x] add filter by location
 -   [x] add filter by timestamp
-    -   [ ] select by year, or by all
+    -   [ ] ?select by year, or by all
 -   [x] add filter by role title
--   [ ] filter by background experience (\# of years, degree)
+-   [ ] ?filter by background experience (\# of years, degree)
 
 **Salary graphs**
 
-default now is histogram of salary, consider other graphics, can layout by tabs?
+How to lay these out? by tabs?
 
 -   [ ] salary x experience
+-   [x] histogram
+    -   [ ] add bonus / TC
 
-histogram improvements:
+    -   [ ] show median in text + line
 
--   [ ] above histogram, show average salary, 10th and 90th percentile
--   [ ] include base / tc (base + bonus)
+    -   [ ] show range (10th and 90th percentile?)
 
 **Table**
 
--   [ ] gt output for most customized output
+-   [ ] gt output for most customized output?
 -   [ ] show TC and breakdown base and bonus concisely
