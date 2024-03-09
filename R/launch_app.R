@@ -25,9 +25,16 @@ rb_ui <- function() {
   filters <- tagList(
     ComboBox.shinyInput(
       'title', value = NULL, options = NULL, label = 'Job Title'),
-    ComboBox.shinyInput(
-      'location', value = NULL, options = NULL, label = 'Location',
-      multiSelect  = TRUE),
+    Dropdown.shinyInput(
+      "location",
+      placeHolder = "Select location",
+      multiSelect = TRUE,
+      options = salaries |>
+        select(key = where_are_you_located) |>
+        mutate(key = ifelse(is.na(key), 'no response', key), text = key) |>
+        distinct()
+    ),
+
     DatePicker.shinyInput(
       "fromDate", value = as.Date('2024/01/01'), label = "From date"),
     DatePicker.shinyInput(
