@@ -261,8 +261,74 @@ sal_clean_filt |>
 
 ## Title
 
-For title let's try to standardize some positions. I create a new variable `title_standard` that categories responses into:
+It's a lot of work to standardize titles, so I focus on what I know best, scientist 
 
+```{r}
+sal_clean_filt |> 
+  count(role_title_of_current_position) |>
+  slice_sample(n=10) |> 
+  gt() 
+```
+
+I'm going to create two new variables
+
+A variable that includes general scientist levels
+And another that has the other detail of job title, such as Scientist of Research
+
+
+```{r}
+# all roles matching "Scientist"
+sal_clean_filt |> 
+  filter(str_detect(
+    role_title_of_current_position, regex('Scientist', ignore_case = FALSE))) |> 
+  count(role_title_of_current_position) |> gt()
+```
+
+
+There's a lot of "Sr" prefixes, let's replace those with "Senior"
+
+```{r}
+sal_title_clean_sci <- sal_clean_filt |> 
+  filter(str_detect(
+    role_title_of_current_position, regex('Scientist', ignore_case = FALSE))) |>
+  mutate(
+    title_ = role_title_of_current_position |>  
+      
+      # address single cases that are hard to generalize
+      str_remove('\\(R') |> # a single case
+      str_replace('Scientist ll', 'Scientist II') |>  # someone used "L"s LOL
+      
+      
+      # Replace sr with senior
+      str_replace_all(regex('Sr\\.?', ignore_case = TRUE), 'Senior') |> 
+      str_replace_all('1', 'I') |> 
+      str_replace_all('2', 'II') |>
+      str_replace_all('3', 'III'),
+    
+    # Extract the "level" part of title
+    title_standard = str_extract(
+      title_,
+      '((Associate|Senior|Principal)?\\s?(Data\\s?)?)*Scientist\\s?[I]*'
+      ),
+    
+    # Put everything else into another variable
+    title_detail = 
+      title_ |> 
+      str_remove('Scientist\\s?[I]*') |> 
+      str_remove_all('[()-]') |> 
+      str_remove_all('(Associate|Senior|Principal)') |> 
+      str_replace_all('/', ' ')
+  ) 
+
+sal_title_clean_sci |> 
+  count(title_standard, title_detail, role_title_of_current_position) |> 
+  arrange(role_title_of_current_position) |> gt() 
+```
+
+
+I create a new variable `title_standard` that categories responses into. And then I create a broader grouping variable:
+
+Scientist:
 - Research Associate
 - Associate Scientist
 - Scientist
@@ -275,10 +341,12 @@ For title let's try to standardize some positions. I create a new variable `titl
 - Executive Director
 - VP
 
+
+
+
+
 ```{r}
-sal_clean_filt |> 
-  count(role_title_of_current_position) |> 
-  gt()
+
 ```
 
 ## Experience
