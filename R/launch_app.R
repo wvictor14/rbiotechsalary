@@ -23,7 +23,7 @@ launch_app <- function(..., salaries = NULL) {
 rb_ui <- function() {
 
   filters <- tagList(
-    ComboBox.shinyInput('combobox', value = NULL, options = NULL, label = 'Job Title'),
+    ComboBox.shinyInput('title', value = NULL, options = NULL, label = 'Job Title'),
     Text(variant = 'xLarge', 'Survey response date:'),
     DatePicker.shinyInput("fromDate", value = as.Date('2024/01/01'), label = "From date"),
     DatePicker.shinyInput("toDate", value = Sys.time() |> lubridate::date(), label = "To date")
@@ -61,16 +61,18 @@ rb_server <- function(input, output, session) {
       filter(
         timestamp >= input$fromDate,
         timestamp <= input$toDate,
+        role_title_of_current_position %in% input$title
       )
   })
 
   # filters
   observe({
-    choices <- .salaries()$role_title_of_current_position |>  unique()
+    choices <- salaries$role_title_of_current_position |>  unique()
     options <- tibble(key = choices, text = choices)
     updateComboBox.shinyInput(
       session,
-      'combobox',
+      'title',
+      value = NULL,
       options = options
     )
   })
