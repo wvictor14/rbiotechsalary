@@ -49,28 +49,42 @@ sheet_names |>
 toc()
 ```
 
-# 2024 data
+# Initial exploratory
 
 ## Completeness
 
-Load and clean
-
 Look at response rate per question (number of NAs):
 
-```{r}
-sal <- read_csv(here('data', '2024_survey_results.csv'))
+```{r read_data}
+# read in each sheet and combine
+sal <- c('2022', '2023', '2024') %>% 
+  setNames(., nm = .) |>   
+  map(
+    \(x) read_csv(
+      here('data', glue::glue('{x}_survey_results.csv')), 
+      col_types = cols(.default = "c"))
+  )  |> 
+  list_rbind(names_to = 'sheet_year')
 
-percent_na <- function(x) {
+
+# assess NAs
+percent_na <- function(x, invert = FALSE) {
   p <- sum(is.na(x)) / length(x)
+  if (invert) { p <- 1 - p}
   scales::percent(p)
 }
 
 sal |> 
   summarize(
-    across(everything(), ~percent_na(.x))
+    across(everything(), ~percent_na(.x, invert = TRUE))
   ) |> 
-  pivot_longer(everything(), names_to = 'column', values_to = '% missing') |> 
+  pivot_longer(everything(), names_to = 'column', values_to = '% responded') |> 
   gt()
+```
+
+skimr has a great function that does this, `skim`:
+
+```{r}
 sal |>  skim()
 ```
 
@@ -137,6 +151,14 @@ There are a handful of responses with annual salary reportedly less than $5000. 
 ### base
 
 ```{r}
+# make numeric
+sal_clean <- sal_clean |>  
+  mutate(
+    across(
+      c(compensation_annual_base_salary_pay, 
+        compensation_annual_target_bonus), ~as.numeric(.x))
+  )
+
 sal_clean |>  
   ggplot(aes(x = compensation_annual_base_salary_pay)) + 
   geom_histogram() +
