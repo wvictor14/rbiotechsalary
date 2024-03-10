@@ -23,23 +23,34 @@ launch_app <- function(..., salaries = NULL) {
 rb_ui <- function() {
 
   filters <- tagList(
-    shiny.fluent::ComboBox.shinyInput(
-      'title', value = NULL, options = NULL, label = 'Job Title'),
+    shiny.fluent::Dropdown.shinyInput(
+      'title',
+      multiSelect = TRUE,
+      value = 'Scientist',
+      options = salaries |>
+        mutate(key = title_general, text = title_general) |>
+        select(key, text) |>
+        distinct()  |>
+        arrange(key) |>
+        mutate(key = forcats::fct_na_value_to_level(key, '(Other)')),
+      label = 'Job Title'
+    ),
     shiny.fluent::Dropdown.shinyInput(
       "location",
       placeHolder = "Select location",
       multiSelect = TRUE,
-      options = salaries |>
-        select(key = location_country) |>
+      options =  salaries |>
+        mutate(key = location_country, text = location_country) |>
+        select(key, text) |>
+        distinct()  |>
         arrange(key) |>
-        mutate(key = ifelse(is.na(key), 'no response', key), text = key) |>
-        distinct()
+        mutate(key = forcats::fct_na_value_to_level(key, '(Other)'))
     ),
     shiny.fluent::Stack(
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
       shiny.fluent::DatePicker.shinyInput(
-        "fromDate", value = as.Date('2024/01/01'), label = "From date"),
+        "fromDate", value = as.Date('2022/01/01'), label = "From date"),
       shiny.fluent::DatePicker.shinyInput(
         "toDate", value = Sys.time() |> lubridate::date(), label = "To date")
     )
@@ -86,7 +97,7 @@ rb_server <- function(input, output, session) {
     choices <- salaries$title_general |>  unique()
     options <- tibble(key = choices, text = choices) |>  arrange(key)
     shiny.fluent::updateComboBox.shinyInput(
-      session, 'title', value = NULL, options = options
+      session, 'title', value = 'Scientist', options = options
     )
   })
   observe({
