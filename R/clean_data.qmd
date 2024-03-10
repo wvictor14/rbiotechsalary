@@ -175,16 +175,6 @@ sal_clean_filt <- sal_clean |>
   filter(compensation_annual_base_salary_pay > 1)
 n_removed <- nrow(sal_clean) - nrow(sal_clean_filt)
 
-# for the remainder of individuals with salary < 5000 (all in hundreds), 
-# multiple by 1000
-sal_clean_filt <- sal_clean_filt |>  
-  mutate(
-    salary_base = ifelse(
-      compensation_annual_base_salary_pay < 1000,
-      compensation_annual_base_salary_pay*1000, 
-      compensation_annual_base_salary_pay     
-    ))
-
 # 1 guy added extra 0
 sal_clean_filt <- sal_clean_filt |> 
   mutate(compensation_annual_base_salary_pay = ifelse(
@@ -193,6 +183,17 @@ sal_clean_filt <- sal_clean_filt |>
     1350000/10, 
     compensation_annual_base_salary_pay
   ))
+
+# for the remainder of individuals with salary < 5000 (all in hundreds), 
+# multiply by 1000
+sal_clean_filt <- sal_clean_filt |>  
+  mutate(
+    salary_base = ifelse(
+      compensation_annual_base_salary_pay < 1000,
+      compensation_annual_base_salary_pay*1000, 
+      compensation_annual_base_salary_pay     
+    ))
+
 
 n_changed <- sal_clean_filt |> 
   filter(salary_base != compensation_annual_base_salary_pay) |>
