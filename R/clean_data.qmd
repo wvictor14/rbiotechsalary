@@ -185,6 +185,15 @@ sal_clean_filt <- sal_clean_filt |>
       compensation_annual_base_salary_pay     
     ))
 
+# 1 guy added extra 0
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(compensation_annual_base_salary_pay = ifelse(
+    compensation_annual_base_salary_pay == 1350000 &
+      sheet_year == '2023', 
+    1350000/10, 
+    compensation_annual_base_salary_pay
+  ))
+
 n_changed <- sal_clean_filt |> 
   filter(salary_base != compensation_annual_base_salary_pay) |>
   nrow() 
