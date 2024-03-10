@@ -51,6 +51,18 @@ Look at response rate per question (number of NAs):
 
 ```{r}
 sal <- read_csv(here('data', '2024_survey_results.csv'))
+
+percent_na <- function(x) {
+  p <- sum(is.na(x)) / length(x)
+  scales::percent(p)
+}
+
+sal |> 
+  summarize(
+    across(everything(), ~percent_na(.x))
+  ) |> 
+  pivot_longer(everything()) |> 
+  gt()
 sal |>  skim()
 ```
 
@@ -475,12 +487,32 @@ sal_clean_filt |>
 
 ## Location
 
-location variables
+Location is quite messy data consisting of free-form responses  spread between 3 variables:
 
-- `location_country`
+- `where_are_you_located` contains Countries (USA, Canada, etc.), states (CO, Carolinas, etc.)
 
-The survey tried to get "hubs", but most of the data is missing if relying on this information.
+This is not a required question so there are 174 responses that did not respond, and this also included an "other" freeform option.
 
+- Pharma Central (NY, NJ, PA)
+- New England (MA, CT, RI, NH, VT, ME)
+- DC Metro Area (DC, VA, MD, DE)
+- Carolinas & Southeast (From NC to AR, South FL and LA)
+- Midwest (From OH to KS, North to ND)
+- South & Mountain West (TX to AZ, North to MT)
+- West Coast (California & Pacific Northwest)
+- Other US Location (HI, AK, PR, etc.)
+- Canada
+- United Kingdom and Ireland
+- Germany
+- Other:
+
+
+The 174 missing responses have values for these other two variables. I think this is due to the survey changing the question at some point, probably due to feedback.
+
+- `what_country_do_you_work_in` seems to all be countries, but not harmonized e.g.: Usa, usa, United States
+- `where_is_the_closest_major_city_or_hub` mixed bag: Bay area, Boston, san diego, Research Triangle, 
+
+Here I create one new location variable `location_country`, that, unlike the other variables, cover >90% of the data
 
 ```{r}
 USA <- c(
@@ -526,37 +558,30 @@ sal_clean_filt |>
   arrange(location_country) |>  gt()
 ```
 
-Location is quite messy, are free-form responses  spread between 3 variables:
-
-- `where_are_you_located` contains Countries (USA, Canada, etc.), states (CO, Carolinas, etc.)
-
-This is not a required question so there are 174 responses that did not respond, and this also included an "other" freeform option.
-
-- Pharma Central (NY, NJ, PA)
-- New England (MA, CT, RI, NH, VT, ME)
-- DC Metro Area (DC, VA, MD, DE)
-- Carolinas & Southeast (From NC to AR, South FL and LA)
-- Midwest (From OH to KS, North to ND)
-- South & Mountain West (TX to AZ, North to MT)
-- West Coast (California & Pacific Northwest)
-- Other US Location (HI, AK, PR, etc.)
-- Canada
-- United Kingdom and Ireland
-- Germany
-- Other:
-
-
-The 174 missing responses have values for these other two variables. I think this is due to the survey changing the question at some point, probably due to feedback.
-
-- `what_country_do_you_work_in` seems to all be countries, but not harmonized e.g.: Usa, usa, United States
-- `where_is_the_closest_major_city_or_hub` mixed bag: Bay area, Boston, san diego, Research Triangle, 
-
 ```{r}
 sal_clean_filt |> 
   count(
     where_are_you_located, what_country_do_you_work_in, where_is_the_closest_major_city_or_hub) |>  gt()
 
 ```
+
+Compare the missingness of original location variables vs the cleaned `location_country` variable:
+
+```{r}
+
+
+sal_clean_filt |> 
+  summarize(
+    across(c(
+      location_country, 
+      where_are_you_located, 
+      what_country_do_you_work_in, 
+      where_is_the_closest_major_city_or_hub), 
+      ~ percent_na(.x))
+  ) |> 
+  pivot_longer(everything())
+```
+
 
 We can use tmaptools to separate this out into 3 new variables:
 
