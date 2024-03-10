@@ -25,6 +25,7 @@ library(skimr)
 library(janitor)
 library(stringr)
 library(tictoc)
+library(usethis)
 ```
 
 # preprocess excel data 
@@ -320,9 +321,21 @@ sal_clean_filt |>
   gt() 
 ```
 
+### filtering
+Remove some obvious rows
+
+```{r}
+sal_clean_filt <- sal_clean_filt |> 
+  filter(role_title_of_current_position != 'pimp')
+```
+
+
+
+### Standardize titles
+
 It's a lot of work to standardize titles, so I focus on what I know best, scientist 
 
-### Scientist
+#### Scientist
 
 It's a lot of work to standardize titles, so I focus on what I know best, scientist 
 
@@ -363,15 +376,15 @@ title_clean_sci <- sal_clean_filt |>
     role_title_of_current_position, regex('Scientist', ignore_case = TRUE))) |>
   mutate(
     title_category = 'Scientist',
-    title_ = role_title_of_current_position |>  
+    title_ = tolower(role_title_of_current_position) |>  
       
       # address single cases that are hard to generalize
-      str_remove('\\(R') |> # a single case
-      str_replace('Scientist ll', 'Scientist II') |>  # someone used "L"s LOL
+      str_remove('\\(r') |> # a single case
+      str_replace('scientist ll', 'Scientist II') |>  # someone used "L"s LOL
       
       
       # Replace sr with senior
-      str_replace_all(regex('Sr\\.?', ignore_case = TRUE), 'Senior') |> 
+      str_replace_all('sr\\.?', 'Senior') |> 
       str_replace_all('1', 'I') |> 
       str_replace_all('2', 'II') |>
       str_replace_all('3', 'III'),
@@ -379,21 +392,26 @@ title_clean_sci <- sal_clean_filt |>
     # Extract the "level" part of title
     title_general = str_extract(
       title_,
-      '((Associate|Senior|Principal|Staff)?\\s?(Data\\s?)?)*Scientist\\s?[I]*'
+      '((associate|senior|principal|staff)?\\s?(data\\s?)?)*scientist\\s?[iI]*'
     ) |> 
       str_trim(),
+    title_general = ifelse(title_general == '', NA, title_general),
+    title_general = title_general |> str_remove('\\s[iI]+$') |> 
+      str_to_title(), 
     
     # Put everything else into another variable
     title_detail = 
       title_ |> 
-      str_remove('Scientist\\s?[I]*') |> 
+      str_remove('scientist\\s?[iI]*') |> 
       str_remove_all('[()-]') |> 
-      str_remove_all('(Associate|Senior|Principal|Staff)') |> 
+      str_remove_all('(associate|senior|principal|staff)') |> 
       str_replace_all('/', ' ') |> 
       str_trim(),
-    title_general = ifelse(title_general == '', NA, title_general),
-    title_detail = ifelse(title_detail == '', NA, title_detail) |> 
-      forcats::fct() |>  forcats::fct_na_value_to_level('None')
+    title_detail = ifelse(title_detail == '', NA, title_detail),
+    title_detail = title_detail |>  
+      str_to_title() |> 
+      forcats::fct() |> 
+      forcats::fct_na_value_to_level(level = 'None')
   ) 
 
 title_clean_sci |> 
@@ -402,16 +420,16 @@ title_clean_sci |>
 
 # join back to data
 title_clean <- sal_clean_filt |> 
-  left_join(
-    title_clean_sci |> 
-      select(timestamp, title_category, title_general, title_detail), 
-    by = 'timestamp')
+  
+  filter(!str_detect(
+    role_title_of_current_position, regex('Scientist', ignore_case = TRUE))) |>
+  bind_rows(title_clean_sci)
 
 stopifnot(nrow(title_clean) == nrow(sal_clean_filt))
 glimpse(title_clean |>  select(contains('title')))
 ```
 
-### directors and VP
+#### Directors and VP
 
 Same approach as for Scientist, but these are the levels:
 
@@ -429,18 +447,23 @@ sal_clean_filt |>
 - VP
 
 ```{r}
-s_title <- '(Director|VP)'
+s_title <- '(Dir(ector)?|VP|AD)'
 s_levels <- '(Associate|Senior|Executive|Principal|Staff)'
 
 title_clean_dv <- title_clean |> 
   filter(str_detect(
-    role_title_of_current_position, regex(s_title, ignore_case = TRUE))) |>
+    role_title_of_current_position, 
+    regex(s_title, ignore_case = TRUE)) |
+      str_detect(role_title_of_current_position, 'AD')
+      ) |>
   mutate(
     title_category = role_title_of_current_position |> 
       str_extract(regex(s_title, ignore_case = TRUE)),
     title_ = role_title_of_current_position |>  
       
       # address single cases that are hard to generalize
+      str_replace('ad', 'associate director') |> 
+      str_replace('vp', 'VP') |> 
       str_replace('SVP', 'Senior VP') |> 
       str_replace('clin ops', 'Clinical Operations') |> 
       str_replace('operations', 'Operations') |> 
@@ -514,9 +537,18 @@ The non-processed data is useful, if messy. Let's populate the cleaned variables
 ```{r}
 sal_clean_filt <- title_clean_sdv |> 
   mutate(
-    title_category = ifelse(is.na(title_category), 'Other', title_category),
-    title_general = ifelse(is.na(title_general), role_title_of_current_position, title_general),
-    title_detail = ifelse(is.na(title_detail), role_title_of_current_position, title_detail)
+    title_category = ifelse(
+      is.na(title_category), 'Other', title_category),
+    title_general = ifelse(
+      is.na(title_general), 
+      
+      role_title_of_current_position |> 
+        str_replace("^\\w{1}", toupper) |> # first 
+        str_replace_all('\\b+\\w{1}', toupper),  # every other
+      
+      title_general),
+    title_detail = ifelse(
+      is.na(title_detail), role_title_of_current_position, title_detail)
   ) 
 ```
 
@@ -643,13 +675,7 @@ sal_clean_filt <- sal_clean_filt |>
 # write out the data
 
 ```{r}
-sal_clean_filt |> 
-  write_csv(here::here('data', 'salary_results_cleaned.csv'))
-```
-
-```{r eval = FALSE}
-salaries <- read_csv(here::here('data', 'salary_results_cleaned.csv'))
-salaries <- salaries |>  
+sal_clean_filt |>
   mutate(date = str_extract(as.character(timestamp), "^[-\\w]+")) |> 
   select(
     date, 
@@ -665,6 +691,11 @@ salaries <- salaries |>
     role_title_of_current_position,
     everything(),
     -timestamp, -title_, -bonus_cleaned, -year, -month, -day
-  )
+  ) |> 
+  write_csv(here::here('data', 'salary_results_cleaned.csv'))
+```
+
+```{r eval = TRUE}
+salaries <- read_csv(here::here('data', 'salary_results_cleaned.csv'))
 use_data(salaries, overwrite = TRUE)
 ```
