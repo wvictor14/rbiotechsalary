@@ -23,23 +23,24 @@ launch_app <- function(..., salaries = NULL) {
 rb_ui <- function() {
 
   filters <- tagList(
-    ComboBox.shinyInput(
+    shiny.fluent::ComboBox.shinyInput(
       'title', value = NULL, options = NULL, label = 'Job Title'),
-    Dropdown.shinyInput(
+    shiny.fluent::Dropdown.shinyInput(
       "location",
       placeHolder = "Select location",
       multiSelect = TRUE,
       options = salaries |>
-        select(key = where_are_you_located) |>
+        select(key = location_country) |>
+        arrange(key) |>
         mutate(key = ifelse(is.na(key), 'no response', key), text = key) |>
         distinct()
     ),
     shiny.fluent::Stack(
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
-      DatePicker.shinyInput(
+      shiny.fluent::DatePicker.shinyInput(
         "fromDate", value = as.Date('2024/01/01'), label = "From date"),
-      DatePicker.shinyInput(
+      shiny.fluent::DatePicker.shinyInput(
         "toDate", value = Sys.time() |> lubridate::date(), label = "To date")
     )
   )
@@ -72,36 +73,37 @@ rb_server <- function(input, output, session) {
   .salaries <- reactive({
     req(input$fromDate)
     salaries |>
-      select(timestamp:day, salary_base:bonus, everything()) |>
       filter(
-        timestamp >= input$fromDate,
-        timestamp <= input$toDate,
-        role_title_of_current_position %in% input$title,
-        where_are_you_located %in% input$location
+        date >= input$fromDate,
+        date <= input$toDate,
+        title_general %in% input$title,
+        location_country %in% input$location
       )
   })
 
   # filters
   observe({
-    choices <- salaries$role_title_of_current_position |>  unique()
-    options <- tibble(key = choices, text = choices)
-    updateComboBox.shinyInput(
+    choices <- salaries$title_general |>  unique()
+    options <- tibble(key = choices, text = choices) |>  arrange(key)
+    shiny.fluent::updateComboBox.shinyInput(
       session, 'title', value = NULL, options = options
     )
   })
   observe({
-    choices <- salaries$where_are_you_located |>  unique()
-    options <- tibble(key = choices, text = choices)
-    updateComboBox.shinyInput(
-      session, 'location', value = NULL, options = options
+    choices <- salaries |>
+      arrange(location_country) |>  pull(location_country) |>  unique()
+    options <- tibble(key = choices, text = choices) |> arrange(key) |>
+      mutate(key = forcats::fct_na_value_to_level(key, '(missing)'))
+    shiny.fluent::updateComboBox.shinyInput(
+      session, 'location', value = choices, options = options
     )
   })
 
   #plot
   output$plot <- plotly::renderPlotly({
     p <- ggplot(.salaries(), aes(
-      x = salary_base, fill = role_title_of_current_position)) +
-      geom_histogram()  +
+      x = salary_base, fill = title_general)) +
+      geom_histogram(bins = 50)  +
       scale_fill_discrete(guide ='none') +
       theme_light() +
       scale_x_continuous(labels = scales::number)
