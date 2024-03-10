@@ -255,9 +255,14 @@ sal_clean_filt <- sal_clean_filt |>
 
 Let's look at the cleaned bonus data vs the original:
 
+
 ```{r}
 sal_clean_filt |> 
-  filter(compensation_annual_target_bonus != bonus_cleaned) |> 
+  
+  # take 12 rows, 6 that are different, and then 6 not
+  mutate(different = compensation_annual_target_bonus != bonus_cleaned) |> 
+  slice_sample(n = 6, by = different) |>  
+  
   count(salary_base, compensation_annual_target_bonus, 
         bonus_cleaned, bonus_pct, bonus)  |> 
   arrange(salary_base) |> 
@@ -274,6 +279,8 @@ n_changed_bonus <- sal_clean_filt |>
 I converted bonus into % and raw $. This involved modifying `r n_changed_bonus` bonus data points.
 
 ### equity
+
+NOT CURRENTLY ATTEMPTED. Prioritize other data first.
 
 Equity is a little bit complicated:
 
@@ -304,6 +311,8 @@ sal_clean_filt |>
 
 ## Title
 
+Title is very important, but also very messy. Titles can have different meanings (compensation, experience, responsibilities) between companies, and location.
+
 ```{r}
 sal_clean_filt |> 
   count(role_title_of_current_position) |>
@@ -311,11 +320,14 @@ sal_clean_filt |>
   gt() 
 ```
 
+It's a lot of work to standardize titles, so I focus on what I know best, scientist 
+
 ### Scientist
 
 It's a lot of work to standardize titles, so I focus on what I know best, scientist 
 
 Scientist:
+
 - Research Associate
 - Associate Scientist
 - Scientist
@@ -334,7 +346,7 @@ I'm going to create two new variables
 sal_clean_filt |> 
   filter(str_detect(
     role_title_of_current_position, regex('Scientist', ignore_case = FALSE))) |> 
-  count(role_title_of_current_position) |> gt()
+  count(role_title_of_current_position) |> head(25) |> gt()
 ```
 
 
@@ -386,7 +398,7 @@ title_clean_sci <- sal_clean_filt |>
 
 title_clean_sci |> 
   count(title_general, title_detail, role_title_of_current_position) |> 
-  arrange(role_title_of_current_position) |> gt() 
+  arrange(role_title_of_current_position) |>  slice_sample(n = 25) |> gt() 
 
 # join back to data
 title_clean <- sal_clean_filt |> 
@@ -407,7 +419,7 @@ Same approach as for Scientist, but these are the levels:
 sal_clean_filt |> 
   filter(str_detect(
     role_title_of_current_position, regex('Director', ignore_case = TRUE))) |> 
-  count(role_title_of_current_position) |> gt()
+  count(role_title_of_current_position) |>  slice_sample(n = 25) |> gt()
 ```
 
 - Associate Director
@@ -456,7 +468,7 @@ title_clean_dv <- title_clean |>
 
 title_clean_dv |> 
   count(title_category, title_general, title_detail, role_title_of_current_position) |> 
-  arrange(role_title_of_current_position) |> gt() 
+  arrange(role_title_of_current_position) |>  slice_sample(n = 25) |> gt() 
 ```
 
 Now join back 
@@ -477,14 +489,16 @@ title_clean_sdv |>  select(contains('title')) |>  glimpse()
 
 title_clean_sdv |> 
   count(title_category, title_general, title_detail) |> 
+  slice_sample(n = 25) |> 
   gt()
 
 title_clean_sdv |>  count(title_category)
 ```
 
-### other
+### Roles that have not been processed
 
-Look at the remaining roles that have not been processed:
+Look at the remaining roles that I have not tried to process.
+
 
 ```{r}
 title_clean_sdv |>  
@@ -495,7 +509,7 @@ title_clean_sdv |>
 
 ### final
 
-address non cleaned responses by just using the original response
+The non-processed data is useful, if messy. Let's populate the cleaned variables with values from the non cleaned responses.
 
 ```{r}
 sal_clean_filt <- title_clean_sdv |> 
@@ -633,23 +647,22 @@ sal_clean_filt |>
   write_csv(here::here('data', 'salary_results_cleaned.csv'))
 ```
 
-
 ```{r eval = FALSE}
 salaries <- read_csv(here::here('data', 'salary_results_cleaned.csv'))
 salaries <- salaries |>  
   mutate(date = str_extract(as.character(timestamp), "^[-\\w]+")) |> 
   select(
     date, 
-    
-    where_are_you_located, what_country_do_you_work_in, 
-    
-    title_category, title_general, title_detail, 
-    role_title_of_current_position,
-    
+    location_country, 
+    title_category, title_general, title_detail,
     salary_base, bonus_pct, bonus,
     
+    # need to fix these
     years_of_experience, what_degrees_do_you_have,
     
+    # the original data
+    where_are_you_located, what_country_do_you_work_in,
+    role_title_of_current_position,
     everything(),
     -timestamp, -title_, -bonus_cleaned, -year, -month, -day
   )
