@@ -13,7 +13,9 @@ RoxygenNote: 7.3.1
 Imports: 
     ggplot2,
     glue,
-    scales
+    scales,
+    shiny,
+    shiny.fluent
 Suggests: 
     devtools
 Depends: 
