@@ -5,5 +5,4 @@
 *.Rproj
 R/clean_data.html
 R/clean_data_files/*
-data/salary_results_cleaned.csv
 data/geo_queried_results.csv
