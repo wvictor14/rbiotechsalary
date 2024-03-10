@@ -258,10 +258,7 @@ sal_clean_filt |>
   head(n = 20) 
 ```
 
-
 ## Title
-
-It's a lot of work to standardize titles, so I focus on what I know best, scientist 
 
 ```{r}
 sal_clean_filt |> 
@@ -270,11 +267,23 @@ sal_clean_filt |>
   gt() 
 ```
 
+### Scientist
+
+It's a lot of work to standardize titles, so I focus on what I know best, scientist 
+
+Scientist:
+- Research Associate
+- Associate Scientist
+- Scientist
+- Senior Scientist
+- Staff Scientist
+- Principal Scientist
+
 I'm going to create two new variables
 
-A variable that includes general scientist levels
-And another that has the other detail of job title, such as Scientist of Research
-
+- `title_category` - Set this to `Scientist`
+- `title_general` - A variable that includes general scientist + levels, e.g. Sci **III**, and **Associate** Sci
+- `title_detail` - Contains the other detail of job title, e.g. **Research**, **Clinical**
 
 ```{r}
 # all roles matching "Scientist"
@@ -285,13 +294,19 @@ sal_clean_filt |>
 ```
 
 
-There's a lot of "Sr" prefixes, let's replace those with "Senior"
+Extract **levels** + *general title* + `sub-level` = **Associate** *Scientist* `I`
+
+- There's a lot of "Sr" prefixes, let's replace those with "Senior"
+- Normalize  sub-levels, 1 -> I, 2 -> II
+- Pattern Match to level + general title + subtitle
+- put other detail into another variable
 
 ```{r}
-sal_title_clean_sci <- sal_clean_filt |> 
+title_clean_sci <- sal_clean_filt |> 
   filter(str_detect(
-    role_title_of_current_position, regex('Scientist', ignore_case = FALSE))) |>
+    role_title_of_current_position, regex('Scientist', ignore_case = TRUE))) |>
   mutate(
+    title_category = 'Scientist',
     title_ = role_title_of_current_position |>  
       
       # address single cases that are hard to generalize
@@ -306,47 +321,145 @@ sal_title_clean_sci <- sal_clean_filt |>
       str_replace_all('3', 'III'),
     
     # Extract the "level" part of title
-    title_standard = str_extract(
+    title_general = str_extract(
       title_,
-      '((Associate|Senior|Principal)?\\s?(Data\\s?)?)*Scientist\\s?[I]*'
-      ),
+      '((Associate|Senior|Principal|Staff)?\\s?(Data\\s?)?)*Scientist\\s?[I]*'
+      ) |> 
+      str_trim(),
     
     # Put everything else into another variable
     title_detail = 
       title_ |> 
       str_remove('Scientist\\s?[I]*') |> 
       str_remove_all('[()-]') |> 
-      str_remove_all('(Associate|Senior|Principal)') |> 
-      str_replace_all('/', ' ')
+      str_remove_all('(Associate|Senior|Principal|Staff)') |> 
+      str_replace_all('/', ' ') |> 
+      str_trim(),
+    title_general = ifelse(title_general == '', NA, title_general),
+    title_detail = ifelse(title_detail == '', NA, title_detail) |> 
+      forcats::fct() |>  forcats::fct_na_value_to_level('None')
   ) 
 
-sal_title_clean_sci |> 
-  count(title_standard, title_detail, role_title_of_current_position) |> 
+title_clean_sci |> 
+  count(title_general, title_detail, role_title_of_current_position) |> 
   arrange(role_title_of_current_position) |> gt() 
+
+# join back to data
+title_clean <- sal_clean_filt |> 
+  left_join(
+    title_clean_sci |> 
+      select(timestamp, title_category, title_general, title_detail), 
+    by = 'timestamp')
+
+stopifnot(nrow(title_clean) == nrow(sal_clean_filt))
+glimpse(title_clean |>  select(contains('title')))
 ```
 
+### directors and VP
 
-I create a new variable `title_standard` that categories responses into. And then I create a broader grouping variable:
+Same approach as for Scientist, but these are the levels:
 
-Scientist:
-- Research Associate
-- Associate Scientist
-- Scientist
-- Senior Scientist
-- Staff Scientist
-- Principal Scientist
+```{r}
+sal_clean_filt |> 
+  filter(str_detect(
+    role_title_of_current_position, regex('Director', ignore_case = TRUE))) |> 
+  count(role_title_of_current_position) |> gt()
+```
+
 - Associate Director
 - Director
 - Senior Director
 - Executive Director
 - VP
 
+```{r}
+s_title <- '(Director|VP)'
+s_levels <- '(Associate|Senior|Executive|Principal|Staff)'
 
+title_clean_dv <- title_clean |> 
+  filter(str_detect(
+    role_title_of_current_position, regex(s_title, ignore_case = TRUE))) |>
+  mutate(
+    title_category = role_title_of_current_position |> 
+      str_extract(regex(s_title, ignore_case = TRUE)),
+    title_ = role_title_of_current_position |>  
+      
+      # address single cases that are hard to generalize
+      str_replace('SVP', 'Senior VP') |> 
+      str_replace('clin ops', 'Clinical Operations') |> 
+      str_replace('operations', 'Operations') |> 
+      # Replace sr with senior
+      str_replace_all(regex('Sr\\.?', ignore_case = TRUE), 'Senior'),
+    
+    # Extract the "level" part of title
+    title_general = str_extract(title_, glue('({s_levels}?\\s?)*{s_title}')) |> 
+      str_trim(),
+    
+    # Put everything else into another variable
+    title_detail = 
+      title_ |> 
+      str_remove(s_title) |> 
+      str_remove_all(s_levels) |> 
+      str_remove_all(',') |> 
+      str_replace_all('/', ' ') |> 
+      str_trim() |> 
+      str_remove('^of ') |> 
+      str_replace("^\\w{1}", toupper),
+    title_general = ifelse(title_general == '', NA, title_general),
+    title_detail = ifelse(title_detail == '', NA, title_detail) |> 
+      forcats::fct() |>  forcats::fct_na_value_to_level('None')
+  ) 
 
+title_clean_dv |> 
+  count(title_category, title_general, title_detail, role_title_of_current_position) |> 
+  arrange(role_title_of_current_position) |> gt() 
+```
 
+Now join back 
 
 ```{r}
+title_clean_sdv <- title_clean |> 
+  
+  # remove the dir / vp rows that we filled in
+  filter(!str_detect(
+    role_title_of_current_position, regex(s_title, ignore_case = TRUE))) |>
+  
+  # then add them back in
+  bind_rows(title_clean_dv)
 
+# check results
+stopifnot(nrow(title_clean_sdv) == nrow(title_clean))
+title_clean_sdv |>  select(contains('title')) |>  glimpse()
+
+title_clean_sdv |> 
+  count(title_category, title_general, title_detail) |> 
+  gt()
+
+title_clean_sdv |>  count(title_category)
+```
+
+### other
+
+Look at the remaining roles that have not been processed:
+
+```{r}
+title_clean_sdv |>  
+  filter(is.na(title_category)) |>  count(role_title_of_current_position) |> 
+  gt()
+```
+
+
+### final
+
+address non cleaned responses by just using the original response
+
+```{r}
+sal_clean_filt <- title_clean_sdv |> 
+  mutate(
+    title_category = ifelse(is.na(title_category), 'Other', title_category),
+    title_general = ifelse(is.na(title_general), role_title_of_current_position, title_general),
+    title_detail = ifelse(is.na(title_detail), role_title_of_current_position, title_detail)
+    ) 
 ```
 
 ## Experience
@@ -398,9 +511,7 @@ I write a function to predict and extract structured location information based 
 
 I pings REST APIs so I try to speed this up by parallelizing using futures + furrr, but unfortunately it is stil quite slow for ~500 requests. So I run this once interactively, and then cache and use those results for the reporting.
 
-```{r eval = FALSE}
-
-
+```{r eval = TRUE}
 file <- here::here('data', 'geo_queried_results.csv')
 if (!file.exists(file)) {
   library(tmaptools)
@@ -501,5 +612,23 @@ sal_clean_filt |>
 
 
 ```{r eval = FALSE}
+salaries <- read_csv(here::here('data', 'salary_results_cleaned.csv'))
+salaries <- salaries |>  
+  mutate(date = str_extract(as.character(timestamp), "^[-\\w]+")) |> 
+  select(
+    date, 
+    
+    where_are_you_located, what_country_do_you_work_in, 
+    
+    title_category, title_general, title_detail, 
+    role_title_of_current_position,
+    
+    salary_base, bonus_pct, bonus,
+    
+    years_of_experience, what_degrees_do_you_have,
+    
+    everything(),
+    -timestamp, -title_, -bonus_cleaned, -year, -month, -day
+    )
 use_data(salaries, overwrite = TRUE)
 ```
