@@ -453,18 +453,17 @@ s_levels <- '(Associate|Senior|Executive|Principal|Staff)'
 title_clean_dv <- title_clean |> 
   filter(str_detect(
     role_title_of_current_position, 
-    regex(s_title, ignore_case = TRUE)) |
-      str_detect(role_title_of_current_position, 'AD')
-      ) |>
+    regex(s_title, ignore_case = TRUE))) |>
   mutate(
     title_category = role_title_of_current_position |> 
       str_extract(regex(s_title, ignore_case = TRUE)),
-    title_ = role_title_of_current_position |>  
+    title_ = tolower(role_title_of_current_position) |>  
       
       # address single cases that are hard to generalize
+      str_replace('\\bdir\\b', 'director') |> 
       str_replace('ad', 'associate director') |> 
       str_replace('vp', 'VP') |> 
-      str_replace('SVP', 'Senior VP') |> 
+      str_replace('svp', 'Senior VP') |> 
       str_replace('clin ops', 'Clinical Operations') |> 
       str_replace('operations', 'Operations') |> 
       # Replace sr with senior
@@ -544,7 +543,7 @@ sal_clean_filt <- title_clean_sdv |>
       
       role_title_of_current_position |> 
         str_replace("^\\w{1}", toupper) |> # first 
-        str_replace_all('\\b+\\w{1}', toupper),  # every other
+        str_replace_all('\\b\\w{1}', toupper),  # every other
       
       title_general),
     title_detail = ifelse(
