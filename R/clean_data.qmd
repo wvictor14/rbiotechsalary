@@ -539,26 +539,22 @@ title_clean_sdv |>
 ```
 
 
-### final
+### Final filtering
 
-The non-processed data is useful, if messy. Let's populate the cleaned variables with values from the non cleaned responses.
+The non-processed data is useful, if messy. 
+
+For now, I remove rows with title data that I have not cleaned
+
+So basically we only have scientist, directors, and VPs right now.
 
 ```{r}
+n_before_filter <- nrow(title_clean_sdv)
 sal_clean_filt <- title_clean_sdv |> 
-  mutate(
-    title_category = ifelse(
-      is.na(title_category), 'Other', title_category),
-    title_general = ifelse(
-      is.na(title_general), 
-      
-      role_title_of_current_position |> 
-        str_replace("^\\w{1}", toupper) |> # first 
-        str_replace_all('\\b\\w{1}', toupper),  # every other
-      
-      title_general),
-    title_detail = ifelse(
-      is.na(title_detail), role_title_of_current_position, title_detail)
-  ) 
+  filter(!is.na(title_category))
+n_after_filter <- nrow(sal_clean_filt)
+
+p_filt <- scales::percent(n_after_filter / n_before_filter, accuracy = 1)
+message(glue("{n_after_filter} / {n_before_filter}  ({p_filt}) remain after filtering for uncleaned title data"))
 ```
 
 ## Experience
