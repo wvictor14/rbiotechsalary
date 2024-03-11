@@ -27,13 +27,13 @@ rb_ui <- function() {
       'title',
       multiSelect = TRUE,
       value = 'Scientist',
+      label = 'Job Title',
       options = salaries |>
         mutate(key = title_general, text = title_general) |>
         select(key, text) |>
         distinct()  |>
         arrange(key) |>
-        mutate(key = forcats::fct_na_value_to_level(key, '(Other)')),
-      label = 'Job Title'
+        mutate(across(everything(), ~ifelse(is.na(.x), '(Missing)', .x)))
     ),
     shiny.fluent::Dropdown.shinyInput(
       "location",
