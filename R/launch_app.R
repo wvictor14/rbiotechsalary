@@ -39,12 +39,13 @@ rb_ui <- function() {
       "location",
       placeHolder = "Select location",
       multiSelect = TRUE,
+      value = salaries$location_country |> unique() |>  sort(),
       options =  salaries |>
         mutate(key = location_country, text = location_country) |>
-        mutate(across(everything(), ~ifelse(is.na(.x), '(Missing)', .x))) |>
         select(key, text) |>
         distinct()  |>
-        arrange(key)
+        arrange(key) |>
+        mutate(across(everything(), ~ifelse(is.na(.x), '(Missing)', .x)))
     ),
     shiny.fluent::Stack(
       horizontal = TRUE,
