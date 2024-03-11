@@ -84,7 +84,6 @@ rb_server <- function(input, output, session) {
 
   .salaries <- reactive({
     req(input$fromDate)
-    print(input$location)
     salaries |>
       filter(
         date >= input$fromDate,
@@ -95,15 +94,7 @@ rb_server <- function(input, output, session) {
   })
 
   #plot
-  output$plot <- plotly::renderPlotly({
-    p <- ggplot(.salaries(), aes(
-      x = salary_base, fill = title_general)) +
-      geom_histogram(bins = 50)  +
-      scale_fill_discrete(guide ='none') +
-      theme_light() +
-      scale_x_continuous(labels = scales::number)
-    plotly::ggplotly(p, height = 300)
-  })
+  output$plot <- plotly::renderPlotly({plot_salary(.salaries())})
 
   # render the table + other components
   output$analysis <- renderUI({
