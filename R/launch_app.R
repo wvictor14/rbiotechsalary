@@ -94,24 +94,6 @@ rb_server <- function(input, output, session) {
       )
   })
 
-  # filters
-  observe({
-    choices <- salaries$title_general |>  unique()
-    options <- tibble(key = choices, text = choices) |>  arrange(key)
-    shiny.fluent::updateComboBox.shinyInput(
-      session, 'title', value = 'Scientist', options = options
-    )
-  })
-  observe({
-    choices <- salaries |>
-      arrange(location_country) |>  pull(location_country) |>  unique()
-    options <- tibble(key = choices, text = choices) |> arrange(key) |>
-      mutate(key = forcats::fct_na_value_to_level(key, '(missing)'))
-    #shiny.fluent::updateComboBox.shinyInput(
-    #  session, 'location', value = choices, options = options
-    #)
-  })
-
   #plot
   output$plot <- plotly::renderPlotly({
     p <- ggplot(.salaries(), aes(
