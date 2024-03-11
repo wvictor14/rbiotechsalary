@@ -41,10 +41,10 @@ rb_ui <- function() {
       multiSelect = TRUE,
       options =  salaries |>
         mutate(key = location_country, text = location_country) |>
+        mutate(across(everything(), ~ifelse(is.na(.x), '(Missing)', .x))) |>
         select(key, text) |>
         distinct()  |>
-        arrange(key) |>
-        mutate(key = forcats::fct_na_value_to_level(key, '(Other)'))
+        arrange(key)
     ),
     shiny.fluent::Stack(
       horizontal = TRUE,
@@ -83,6 +83,7 @@ rb_server <- function(input, output, session) {
 
   .salaries <- reactive({
     req(input$fromDate)
+    print(input$location)
     salaries |>
       filter(
         date >= input$fromDate,
@@ -105,9 +106,9 @@ rb_server <- function(input, output, session) {
       arrange(location_country) |>  pull(location_country) |>  unique()
     options <- tibble(key = choices, text = choices) |> arrange(key) |>
       mutate(key = forcats::fct_na_value_to_level(key, '(missing)'))
-    shiny.fluent::updateComboBox.shinyInput(
-      session, 'location', value = choices, options = options
-    )
+    #shiny.fluent::updateComboBox.shinyInput(
+    #  session, 'location', value = choices, options = options
+    #)
   })
 
   #plot
