@@ -175,16 +175,6 @@ sal_clean_filt <- sal_clean |>
   filter(compensation_annual_base_salary_pay > 1)
 n_removed <- nrow(sal_clean) - nrow(sal_clean_filt)
 
-# for the remainder of individuals with salary < 5000 (all in hundreds), 
-# multiple by 1000
-sal_clean_filt <- sal_clean_filt |>  
-  mutate(
-    salary_base = ifelse(
-      compensation_annual_base_salary_pay < 1000,
-      compensation_annual_base_salary_pay*1000, 
-      compensation_annual_base_salary_pay     
-    ))
-
 # 1 guy added extra 0
 sal_clean_filt <- sal_clean_filt |> 
   mutate(compensation_annual_base_salary_pay = ifelse(
@@ -193,6 +183,17 @@ sal_clean_filt <- sal_clean_filt |>
     1350000/10, 
     compensation_annual_base_salary_pay
   ))
+
+# for the remainder of individuals with salary < 5000 (all in hundreds), 
+# multiply by 1000
+sal_clean_filt <- sal_clean_filt |>  
+  mutate(
+    salary_base = ifelse(
+      compensation_annual_base_salary_pay < 1000,
+      compensation_annual_base_salary_pay*1000, 
+      compensation_annual_base_salary_pay     
+    ))
+
 
 n_changed <- sal_clean_filt |> 
   filter(salary_base != compensation_annual_base_salary_pay) |>
@@ -538,26 +539,22 @@ title_clean_sdv |>
 ```
 
 
-### final
+### Final filtering
 
-The non-processed data is useful, if messy. Let's populate the cleaned variables with values from the non cleaned responses.
+The non-processed data is useful, if messy. 
+
+For now, I remove rows with title data that I have not cleaned
+
+So basically we only have scientist, directors, and VPs right now.
 
 ```{r}
+n_before_filter <- nrow(title_clean_sdv)
 sal_clean_filt <- title_clean_sdv |> 
-  mutate(
-    title_category = ifelse(
-      is.na(title_category), 'Other', title_category),
-    title_general = ifelse(
-      is.na(title_general), 
-      
-      role_title_of_current_position |> 
-        str_replace("^\\w{1}", toupper) |> # first 
-        str_replace_all('\\b\\w{1}', toupper),  # every other
-      
-      title_general),
-    title_detail = ifelse(
-      is.na(title_detail), role_title_of_current_position, title_detail)
-  ) 
+  filter(!is.na(title_category))
+n_after_filter <- nrow(sal_clean_filt)
+
+p_filt <- scales::percent(n_after_filter / n_before_filter, accuracy = 1)
+message(glue("{n_after_filter} / {n_before_filter}  ({p_filt}) remain after filtering for uncleaned title data"))
 ```
 
 ## Experience
