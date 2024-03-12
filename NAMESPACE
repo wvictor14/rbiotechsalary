@@ -3,6 +3,7 @@
 export(launch_app)
 export(makeCard)
 export(plot_salary)
+export(plot_salary_title)
 export(rb_server)
 export(rb_ui)
 import(dplyr)
