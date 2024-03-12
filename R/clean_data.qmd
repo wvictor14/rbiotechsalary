@@ -255,12 +255,12 @@ sal_clean_filt <- sal_clean_filt |>
   mutate(bonus_pct = case_when(
     bonus_cleaned < 50 ~ bonus_cleaned/100,
     bonus_cleaned > 1000 ~ bonus_cleaned / salary_base,
-    TRUE ~ NA
+    TRUE ~ 0
   ),
   bonus = case_when(
     bonus_cleaned < 50 ~ bonus_pct * salary_base,
     bonus_cleaned > 1000 ~ bonus_cleaned,
-    TRUE ~ NA
+    TRUE ~ 0
   ))
 ```
 
@@ -288,6 +288,18 @@ n_changed_bonus <- sal_clean_filt |>
 ```
 
 I converted bonus into % and raw $. This involved modifying `r n_changed_bonus` bonus data points.
+
+### total comp
+
+```{r}
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(salary_total = salary_base + bonus)
+
+sal_clean_filt |>  count(is.na(salary_total))
+sal_clean_filt |>  count(is.na(salary_base))
+sal_clean_filt |>  count(is.na(bonus))
+```
+
 
 ### equity
 
