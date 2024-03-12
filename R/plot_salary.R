@@ -67,13 +67,13 @@ plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
   l <- list(
     average = mean(.df$salary_total),
 
-    base_min = min(.df$salary_base),
-    total_min = min(.df$salary_total),
-    bonus_min = min(.df$bonus),
+    base_min = quantile(.df$salary_base, 0.05),
+    total_min = quantile(.df$salary_total, 0.05),
+    bonus_min = quantile(.df$bonus, 0.05),
 
-    base_max = max(.df$salary_base),
-    total_max = max(.df$salary_total),
-    bonus_max = max(.df$bonus)
+    base_max = quantile(.df$salary_base, 0.95),
+    total_max = quantile(.df$salary_total, 0.95),
+    bonus_max = quantile(.df$bonus, 0.95)
   ) |>
     purrr::map(~scales::dollar(.x, accuracy = 1))
 
