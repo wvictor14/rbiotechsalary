@@ -100,13 +100,23 @@ rb_server <- function(input, output, session) {
   output$analysis <- renderUI({
     #browser()
     items_list <- if(nrow(.salaries()) > 0){
+      selected_cols <- .salaries() |>
+        select(
+          title_general, title_detail, location_country, salary_base,
+          bonus_pct, date,
+        ) |>
+        mutate(
+          date = as.character(date),
+          salary_base = scales::dollar(salary_base),
+          bonus_pct = scales::percent(bonus_pct, accuracy = 1))
+
       shiny.fluent::DetailsList(
-        items = .salaries(),
+        items = selected_cols,
         columns = tibble(
-          fieldName = colnames(.salaries()),
-          name =  colnames(.salaries()),
-          key = fieldName
-        )
+          fieldName = colnames(selected_cols),
+          name =  colnames(selected_cols)
+        ),
+        constrainMode = 0
       )
     } else {
       p("No matching salary data.")
