@@ -63,14 +63,15 @@ rb_ui <- function() {
 
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
-      makeCard("", filters, size = 4, style = "max-height: 320px;"),
-      makeCard(
-        "Salary histogram",
-        plotly::plotlyOutput("plot"),
+      makeCard(content = filters, size = 4, style = "max-height: 360px;"),
+      makeCard(content = shiny.fluent::Stack(
+          shiny::uiOutput('salary_stats_text'),
+          plotly::plotlyOutput("plot")
+        ),
         size = 8,
-        style = "max-height: 320px")
+        style = "max-height: 360px")
     ),
-    uiOutput("analysis")
+    shiny::uiOutput("analysis")
   )
 }
 
@@ -94,7 +95,16 @@ rb_server <- function(input, output, session) {
   })
 
   #plot
-  output$plot <- plotly::renderPlotly({plot_salary(.salaries())})
+  output$salary_stats_text <- shiny::renderUI({
+    plot_salary_title(.salaries()) |>
+      stringr::str_replace_all('\\\n', '<br/>') |>
+      shiny::HTML()
+  })
+  output$plot <- plotly::renderPlotly({
+    p <- plot_salary(.salaries())
+    p$x$layout$title <- NULL # remove title
+    p
+    })
 
   # render the table + other components
   output$analysis <- renderUI({
@@ -131,7 +141,9 @@ rb_server <- function(input, output, session) {
 }
 
 #' @export
-makeCard <- function(title, content, size = 12, style = "") {
+makeCard <- function(title = NULL, content, size = 12, style = "") {
+
+
   div(
     class = glue::glue("card ms-depth-8 ms-sm{size} ms-xl{size}"),
     style = style,
