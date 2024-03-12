@@ -63,13 +63,17 @@ rb_ui <- function() {
 
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
-      makeCard(content = filters, size = 4, style = "max-height: 360px;"),
       makeCard(content = shiny.fluent::Stack(
-          gt::gt_output('salary_stats_text'),
+        filters,
+        gt::gt_output('salary_stats_text')
+      ),
+      size = 4,
+      style = "max-height: 300px;"),
+      makeCard(content = shiny.fluent::Stack(
           plotly::plotlyOutput("plot")
         ),
         size = 8,
-        style = "max-height: 360px")
+        style = "max-height: 300px")
     ),
     shiny::uiOutput("analysis")
   )
@@ -99,9 +103,7 @@ rb_server <- function(input, output, session) {
     plot_salary_title(.salaries())
   })
   output$plot <- plotly::renderPlotly({
-    p <- plot_salary(.salaries())
-    p$x$layout$title <- NULL # remove title
-    p
+    plot_salary(.salaries(), title = 'Salary (Base + Bonus)')
     })
 
   # render the table + other components
