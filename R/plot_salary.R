@@ -7,35 +7,48 @@
 #'
 #' @param .df salary data
 #' @export
-plot_salary <- function(.df, x = salary_total, fill = title_general, title = FALSE) {
-
+plot_salary <- function(.df, x = salary_total, fill = title_general, title = NULL) {
+  .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}})
+  )
   x_mean <- .df |>  pull({{x}}) |> mean()
   x_mean_lab <- x_mean |>  gt::vec_fmt_currency(decimals = 0)
+  if (is.null(title)) {
+    title <- glue::glue("Average is {x_mean_lab}/year")
+  } else {
+    title <- title
+  }
+
+  # stats
+  percentiles <- .df |>  pull({{x}}) |>  quantile(c(0.05, 0.95))
+  stats <- c(
+    'Average' = x_mean,
+    setNames(percentiles, nm = c('5th percentile', '95th percentile'))) |>
+    tibble::enframe(name = 'stat', 'x') |>
+    mutate(stat = forcats::fct(
+      stat, levels = c('5th percentile', 'Average', '95th percentile')))
 
   p <- ggplot(.df, aes(
     x = {{x}}, fill = {{fill}})) +
-    geom_vline(xintercept = x_mean, color = 'darkblue', linetype = 'twodash') +
-    annotate(
-      geom = 'text', label =  glue::glue("Average is {x_mean_lab}"),
-      color = 'darkblue',
-
-      # relative coordinates
-      x = x_mean+(x_mean*0.1), y = Inf
-    ) +
+    geom_vline(
+      data = stats, aes(xintercept = x, color = stat), linetype = 'twodash') +
     geom_histogram(bins = 25, aes(y = after_stat(count / sum(count))))  +
-    scale_fill_discrete(guide ='none') +
     theme_minimal() +
-    theme(panel.grid.minor = element_blank(),
-          axis.line = element_line()) +
+    theme(
+      axis.title.y = element_text(angle = 0, vjust = 0.5),
+      panel.grid.minor = element_blank(),
+      axis.line = element_line(),
+      legend.position = 'bottom') +
+    paletteer::scale_fill_paletteer_d('ggthemes::Tableau_20', guide ='none') +
+    #004488FF #DDAA33FF #BB5566FF
+    paletteer::scale_color_paletteer_d('khroma::highcontrast') +
     scale_y_continuous(
       label = ~scales::percent(.x, accuracy = 1),
       expand = expansion(mult = c(0, 0))
     ) +
     scale_x_continuous(label = scales::dollar, expand = expansion())  +
     labs(
-      title = glue::glue("Average is {x_mean_lab}/year"),
+      title = title, color = '',
       x = '', y = '% of jobs')
-
   plotly::ggplotly(p, height = 300)
 }
 
