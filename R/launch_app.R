@@ -103,7 +103,7 @@ rb_server <- function(input, output, session) {
     plot_salary_title(.salaries())
   })
   output$plot <- plotly::renderPlotly({
-    plot_salary(.salaries(), title = 'Salary (Base + Bonus)')
+    plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)')
     })
 
   # render the table + other components

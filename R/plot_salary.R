@@ -60,7 +60,6 @@ plot_salary <- function(.df, x = salary_total, fill = title_general, title = NUL
 #' @examples
 #' data(salaries)
 #' salaries |>  plot_salary_title()
-#'    )
 #'
 plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
 
@@ -83,7 +82,12 @@ plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
   title <- tibble(
     left = c('Average is', 'Total Pay Range', 'Base Pay', 'Bonus'),
     right = c(
-      "{l$average} /yr", "{l$total_min} - {l$total_max} /yr",
+      '<b><a style="color:#DDAA33FF">{l$average}</b></a> /yr',
+      glue::glue(
+        '<b><a style="color:#004488FF">{l$total_min}</b></a>',
+        ' - ',
+        '<b><a style="color:#BB5566FF">{l$total_max}</b></a> /yr'
+      ),
       "{l$base_min} - {l$base_max} /yr", "{l$bonus_min} - {l$bonus_max} /yr")
   ) |>
     mutate(right = purrr::map_chr(right, ~glue::glue(.x)))
@@ -105,7 +109,9 @@ plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
              style = "solid"
            ),
            locations = gt::cells_body()
-        )
+        ) |>
+       gt::tab_header(title = gt::md("Yearly salary")) |>
+      gt::fmt_markdown()
   }
 
   return(title)
