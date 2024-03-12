@@ -47,8 +47,9 @@ plot_salary <- function(.df, x = salary_total, fill = title_general, title = FAL
 #' @examples
 #' data(salaries)
 #' salaries |>  plot_salary_title()
+#'    )
 #'
-plot_salary_title <- function(.df, .return_data = FALSE) {
+plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
 
   l <- list(
     average = mean(.df$salary_total),
@@ -67,19 +68,32 @@ plot_salary_title <- function(.df, .return_data = FALSE) {
 
 
   title <- tibble(
-    left = c('Average is ', 'Total Pay Range ', 'Base Pay ', 'Bonus '),
+    left = c('Average is', 'Total Pay Range', 'Base Pay', 'Bonus'),
     right = c(
       "{l$average} /yr", "{l$total_min} - {l$total_max} /yr",
       "{l$base_min} - {l$base_max} /yr", "{l$bonus_min} - {l$bonus_max} /yr")
   ) |>
-    mutate(
-      left = stringr::str_pad(
-          left, max(nchar(left)) + 4, side = 'right'),
-      right = purrr::map_chr(right, ~glue::glue(.x)) %>%
-        stringr::str_pad(max(nchar(.)), 'left')) |>
-    rowwise() |>
-    mutate(string = glue::glue(left, right)) |>
-    pull(string) |>
-    paste0(collapse = '\n')
+    mutate(right = purrr::map_chr(right, ~glue::glue(.x)))
+
+  if (.gt) {
+     title <- title |>
+       gt::gt() |>
+       gt::cols_align(align = 'right', columns = right) |>
+       gt::tab_options(
+         data_row.padding = gt::px(0),
+         table.border.top.style = "hidden",
+         table.border.bottom.style = "hidden",
+         column_labels.hidden = TRUE) |>
+       gt::tab_style(
+         style = gt::cell_borders(
+           sides = c("top", "bottom"),
+             color = "white",
+             weight = gt::px(1.5),
+             style = "solid"
+           ),
+           locations = gt::cells_body()
+        )
+  }
+
   return(title)
 }

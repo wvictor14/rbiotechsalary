@@ -65,7 +65,7 @@ rb_ui <- function() {
       tokens = list(childrenGap = 10), horizontal = TRUE,
       makeCard(content = filters, size = 4, style = "max-height: 360px;"),
       makeCard(content = shiny.fluent::Stack(
-          shiny::uiOutput('salary_stats_text'),
+          gt::gt_output('salary_stats_text'),
           plotly::plotlyOutput("plot")
         ),
         size = 8,
@@ -95,10 +95,8 @@ rb_server <- function(input, output, session) {
   })
 
   #plot
-  output$salary_stats_text <- shiny::renderUI({
-    plot_salary_title(.salaries()) |>
-      stringr::str_replace_all('\\\n', '<br/>') |>
-      shiny::HTML()
+  output$salary_stats_text <- gt::render_gt({
+    plot_salary_title(.salaries())
   })
   output$plot <- plotly::renderPlotly({
     p <- plot_salary(.salaries())
