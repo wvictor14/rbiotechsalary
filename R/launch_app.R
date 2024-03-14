@@ -70,21 +70,27 @@ rb_ui <- function() {
       size = 4,
       style = "max-height: 250px;"),
       makeCard(content = shiny.fluent::Stack(
-          plotly::plotlyOutput("plot")
-        ),
-        size = 8,
-        style = "max-height: 250px")
+        plotly::plotlyOutput("plot")
+      ),
+      size = 8,
+      style = "max-height: 250px")
     ),
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
       makeCard(
-        content =
-          plotly::plotlyOutput('plot_experience'),
+        content = plotly::plotlyOutput('plot_experience'),
+        size = 6,
+        style = "max-height: 250px"
+      ),
+      makeCard(
+        content = div(
+          style="max-height: 250px; overflow: auto",
+          gt::gt_output("analysis")
+        ),
         size = 6,
         style = "max-height: 250px"
       )
-    ),
-    shiny::uiOutput("analysis")
+    )
   )
 }
 
@@ -113,7 +119,7 @@ rb_server <- function(input, output, session) {
   })
   output$plot <- plotly::renderPlotly({
     plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)')
-    })
+  })
 
   output$plot_experience <- plotly::renderPlotly({
 
@@ -125,18 +131,21 @@ rb_server <- function(input, output, session) {
   })
 
   # render the table + other components
-  output$analysis <- renderUI({
-    #browser()
+  output$analysis <- gt::render_gt({
     items_list <- if(nrow(.salaries()) > 0){
       selected_cols <- .salaries() |>
-        select(
-          title_general, title_detail, location_country, salary_base,
-          bonus_pct, date,
-        ) |>
         mutate(
           date = as.character(date),
           salary_base = scales::dollar(salary_base),
-          bonus_pct = scales::percent(bonus_pct, accuracy = 1))
+          bonus_pct = scales::percent(bonus_pct, accuracy = 1)) |>
+        select(
+          `Job title` = title_general,
+          #title_detail,
+          `Location` = location_country,
+          `Salary (Base)` = salary_base,
+          `Bonus %` = bonus_pct,
+          `Date` = date
+        )
 
       shiny.fluent::DetailsList(
         items = selected_cols,
@@ -146,14 +155,12 @@ rb_server <- function(input, output, session) {
         ),
         constrainMode = 0
       )
+
+      selected_cols |>  gt::gt() |> gt::opt_interactive()
     } else {
       p("No matching salary data.")
     }
-
-    shiny.fluent::Stack(
-      tokens = list(childrenGap = 10), horizontal = TRUE,
-      makeCard("Salaries data", div(style="max-height: 500px; overflow: auto", items_list))
-    )
+    return(items_list)
   })
 
 }
