@@ -127,11 +127,36 @@ plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
 #'
 #' @examples
 #' data(salaries)
-#' salaries_sci <- salaries |> filter(title_general == 'Scientist')
+#' salaries_sci <- salaries |>
+#'   filter(title_general == 'Scientist', location_country == 'United States Of America')
 #' plot_salary_and_experience(salaries_sci)
-plot_salary_and_experience <- function(.df) {
+plot_salary_and_experience <- function(.df, .plotly =TRUE) {
 
-  .df |>  count(years_of_experience)
-  .df |> glimpse()
+  p <- .df |>
+    arrange(years_of_experience) |>
+    mutate(exp_binned = cut(
+      years_of_experience,
+      breaks = c(-Inf, 2, 5, 9, 14, Inf),
+      labels = c('1-2', '3-5', '6-9', '10-14', '15+'))) |>
+    ggplot(aes(x = exp_binned, y = salary_total)) +
+    geom_boxplot(outlier.shape = NA) +
+    theme(
+      panel.border = element_blank(),
+      axis.line = element_line(),
+      axis.title.y = element_blank(),
+      panel.grid.minor.y = element_line(),
+      panel.grid.major.x = element_blank()) +
+    #geom_jitter(position = position_jitter(width = 0.2)) +
+    scale_y_continuous(
+      labels = scales::dollar, limits = c(0, NA),
+      expand = expansion(c(0, 0.1))
+    ) +
+    labs(
+      title = 'Total Compensation by Years of Experience',
+      x = 'Years of Experience')
 
+  if (.plotly) {
+    p <- plotly::ggplotly(p)
+    }
+  p
 }
