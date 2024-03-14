@@ -573,12 +573,57 @@ message(glue("{n_after_filter} / {n_before_filter}  ({p_filt}) remain after filt
 
 ```{r}
 sal_clean_filt |> 
-  count(years_of_experience)
+  count(years_of_experience) |> gt()
+```
+only 1 will be converted to NA
 
-sal_clean_filt |> 
-  count(what_degrees_do_you_have)
+```{r}
+n_before <- sum(is.na(sal_clean_filt$years_of_experience)) 
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(years_of_experience = as.numeric(years_of_experience)) 
+n_after <- sum(is.na(sal_clean_filt$years_of_experience))
+message(glue('# NAs\nbefore: {n_before}\nafter: {n_after}'))
 ```
 
+#### degree
+
+```{r}
+sal_clean_filt |> 
+  count(what_degrees_do_you_have) |>  gt()
+```
+
+contains all degrees, but let's simplify to the highest degree:
+
+e.g. 
+
+- "High School or Equivalent, Bachelors or Equivalent, Masters or Equivalent, PhD or Equivalent"
+- "Bachelors or Equivalent, Masters or Equivalent, PhD or Equivalent" 
+- "Bachelors or Equivalent, PhD or Equivalent"
+- "PhD or Equivalent"
+
+should all just be "PhD"
+
+Below code assumes highest degree is the last listed degree
+
+```{r}
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(experience_highest_degree =  str_extract(
+    what_degrees_do_you_have,
+    '(?<=,|^)[^,]+$'
+    ) |> 
+      str_replace('M\\.D\\.', 'MD') |> 
+      str_remove('or Equivalent') |> 
+      str_replace('MD/Pharm.*', 'MD')
+  ) 
+
+# View Changes
+sal_clean_filt |>  
+  count(is.na(experience_highest_degree), is.na(what_degrees_do_you_have))
+
+sal_clean_filt |>
+  count(experience_highest_degree, what_degrees_do_you_have) |>  
+  gt()
+```
 
 ## Location
 
@@ -715,4 +760,3 @@ sal_clean_filt |>
 ```{r eval = TRUE}
 salaries <- read_csv(here::here('data', 'salary_results_cleaned.csv'))
 use_data(salaries, overwrite = TRUE)
-```
