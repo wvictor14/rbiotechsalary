@@ -49,7 +49,7 @@ plot_salary <- function(.df, x = salary_total, fill = title_general, title = NUL
     labs(
       title = title, color = '',
       x = '', y = '% of jobs')
-  plotly::ggplotly(p, height = 300)
+  plotly::ggplotly(p, height = 250)
 }
 
 
@@ -93,24 +93,24 @@ plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
     mutate(right = purrr::map_chr(right, ~glue::glue(.x)))
 
   if (.gt) {
-     title <- title |>
-       gt::gt() |>
-       gt::cols_align(align = 'right', columns = right) |>
-       gt::tab_options(
-         data_row.padding = gt::px(0),
-         table.border.top.style = "hidden",
-         table.border.bottom.style = "hidden",
-         column_labels.hidden = TRUE) |>
-       gt::tab_style(
-         style = gt::cell_borders(
-           sides = c("top", "bottom"),
-             color = "white",
-             weight = gt::px(1.5),
-             style = "solid"
-           ),
-           locations = gt::cells_body()
-        ) |>
-       gt::tab_header(title = gt::md("Yearly salary")) |>
+    title <- title |>
+      gt::gt() |>
+      gt::cols_align(align = 'right', columns = right) |>
+      gt::tab_options(
+        data_row.padding = gt::px(0),
+        table.border.top.style = "hidden",
+        table.border.bottom.style = "hidden",
+        column_labels.hidden = TRUE) |>
+      gt::tab_style(
+        style = gt::cell_borders(
+          sides = c("top", "bottom"),
+          color = "white",
+          weight = gt::px(1.5),
+          style = "solid"
+        ),
+        locations = gt::cells_body()
+      ) |>
+      gt::tab_header(title = gt::md("Yearly salary")) |>
       gt::fmt_markdown()
   }
 
@@ -129,8 +129,8 @@ plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
 #' data(salaries)
 #' salaries_sci <- salaries |>
 #'   filter(title_general == 'Scientist', location_country == 'United States Of America')
-#' plot_salary_and_experience(salaries_sci)
-plot_salary_and_experience <- function(.df, .plotly =TRUE) {
+#' plot_experience(salaries_sci)
+plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
 
   p <- .df |>
     arrange(years_of_experience) |>
@@ -138,15 +138,15 @@ plot_salary_and_experience <- function(.df, .plotly =TRUE) {
       years_of_experience,
       breaks = c(-Inf, 2, 5, 9, 14, Inf),
       labels = c('1-2', '3-5', '6-9', '10-14', '15+'))) |>
-    ggplot(aes(x = exp_binned, y = salary_total)) +
-    geom_boxplot(outlier.shape = NA) +
+    ggplot(aes(x = exp_binned, y = salary_total, fill = {{fill}})) +
+    geom_boxplot(outlier.shape = NA, position = position_dodge()) +
     theme(
       panel.border = element_blank(),
       axis.line = element_line(),
       axis.title.y = element_blank(),
       panel.grid.minor.y = element_line(),
       panel.grid.major.x = element_blank()) +
-    #geom_jitter(position = position_jitter(width = 0.2)) +
+    paletteer::scale_fill_paletteer_d('ggthemes::Tableau_20', guide ='none') +
     scale_y_continuous(
       labels = scales::dollar, limits = c(0, NA),
       expand = expansion(c(0, 0.1))
@@ -155,8 +155,9 @@ plot_salary_and_experience <- function(.df, .plotly =TRUE) {
       title = 'Total Compensation by Years of Experience',
       x = 'Years of Experience')
 
-  if (.plotly) {
-    p <- plotly::ggplotly(p)
-    }
+  if (.plotly) { suppressWarnings({
+    p <- plotly::ggplotly(p, height = 250) |> plotly::layout(boxmode = "group")
+  })}
+
   p
 }
