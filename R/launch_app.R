@@ -27,7 +27,7 @@ rb_ui <- function() {
       'title',
       multiSelect = TRUE,
       value = 'Scientist',
-      label = 'Job Title',
+      label = NULL,
       options = salaries |>
         mutate(key = title_general, text = title_general) |>
         select(key, text) |>
@@ -51,9 +51,9 @@ rb_ui <- function() {
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
       shiny.fluent::DatePicker.shinyInput(
-        "fromDate", value = as.Date('2022/01/01'), label = "From date"),
+        "fromDate", value = as.Date('2022/01/01')),
       shiny.fluent::DatePicker.shinyInput(
-        "toDate", value = Sys.time() |> lubridate::date(), label = "To date")
+        "toDate", value = Sys.time() |> lubridate::date())
     )
   )
 
@@ -68,12 +68,21 @@ rb_ui <- function() {
         gt::gt_output('salary_stats_text')
       ),
       size = 4,
-      style = "max-height: 300px;"),
+      style = "max-height: 250px;"),
       makeCard(content = shiny.fluent::Stack(
           plotly::plotlyOutput("plot")
         ),
         size = 8,
-        style = "max-height: 300px")
+        style = "max-height: 250px")
+    ),
+    shiny.fluent::Stack(
+      tokens = list(childrenGap = 10), horizontal = TRUE,
+      makeCard(
+        content =
+          plotly::plotlyOutput('plot_experience'),
+        size = 6,
+        style = "max-height: 250px"
+      )
     ),
     shiny::uiOutput("analysis")
   )
@@ -105,6 +114,10 @@ rb_server <- function(input, output, session) {
   output$plot <- plotly::renderPlotly({
     plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)')
     })
+
+  output$plot_experience <- plotly::renderPlotly({
+    plot_experience(.salaries())
+  })
 
   # render the table + other components
   output$analysis <- renderUI({
