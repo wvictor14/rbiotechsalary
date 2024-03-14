@@ -155,9 +155,9 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
       title = 'Total Compensation by Years of Experience',
       x = 'Years of Experience')
 
-  if (.plotly) { suppressWarnings({
+  if (.plotly) {
     p <- plotly::ggplotly(p, height = 250) |> plotly::layout(boxmode = "group")
-  })}
+  }
 
-  p
+  suppressWarnings({ print(p) })
 }

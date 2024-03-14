@@ -116,6 +116,11 @@ rb_server <- function(input, output, session) {
     })
 
   output$plot_experience <- plotly::renderPlotly({
+
+    # suppress warnings for app session
+    storeWarn<- getOption("warn")
+    options(warn = -1)
+
     plot_experience(.salaries())
   })
 
