@@ -116,3 +116,22 @@ plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
 
   return(title)
 }
+
+
+#' Plot salary against years of experience
+#'
+#' @param .df  salary data
+#'
+#' @return ggplot
+#' @export
+#'
+#' @examples
+#' data(salaries)
+#' salaries_sci <- salaries |> filter(title_general == 'Scientist')
+#' plot_salary_and_experience(salaries_sci)
+plot_salary_and_experience <- function(.df) {
+
+  .df |>  count(years_of_experience)
+  .df |> glimpse()
+
+}

@@ -4,7 +4,7 @@
 \alias{plot_salary}
 \title{plot salary histogram}
 \usage{
-plot_salary(.df, x = salary_total, fill = title_general)
+plot_salary(.df, x = salary_total, fill = title_general, title = NULL)
 }
 \arguments{
 \item{.df}{salary data}

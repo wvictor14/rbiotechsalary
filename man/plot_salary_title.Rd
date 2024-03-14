@@ -4,7 +4,7 @@
 \alias{plot_salary_title}
 \title{Make the title for salary histogram}
 \usage{
-plot_salary_title(.df)
+plot_salary_title(.df, .return_data = FALSE, .gt = TRUE)
 }
 \arguments{
 \item{.df}{salaries}
