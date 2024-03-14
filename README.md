@@ -30,12 +30,12 @@ branch `filter-to-sci-track` is to experiment using only cleaned data (scientist
 
 Targeted minimum set of variables:
 
--   [ ] timestamp
+-   [x] timestamp
 -   [ ] role title
 -   [ ] location
 -   [x] salary base
 -   [x] salary bonus
--   [ ] experience years
+-   [x] experience years
 -   [ ] experience degree
 
 ### For app
