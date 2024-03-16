@@ -59,7 +59,7 @@ plot_salary <- function(
     p <- plotly::ggplotly(p, height = 250)
   }
 
-  suppressWarnings({ print(p) })
+  suppressWarnings({ p })
 }
 
 
@@ -169,5 +169,5 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
     p <- plotly::ggplotly(p, height = 250) |> plotly::layout(boxmode = "group")
   }
 
-  suppressWarnings({ print(p) })
+  suppressWarnings({ p })
 }
