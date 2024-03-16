@@ -134,29 +134,27 @@ rb_server <- function(input, output, session) {
   output$analysis <- gt::render_gt({
     items_list <- if(nrow(.salaries()) > 0){
       selected_cols <- .salaries() |>
-        mutate(
-          date = as.character(date),
-          salary_base = scales::dollar(salary_base),
-          bonus_pct = scales::percent(bonus_pct, accuracy = 1)) |>
         select(
-          `Job title` = title_general,
-          #title_detail,
-          `Location` = location_country,
-          `Salary (Base)` = salary_base,
-          `Bonus %` = bonus_pct,
-          `Date` = date
+          title_general,
+          location_country,
+          salary_base,
+          bonus_pct,
+          date
         )
 
-      shiny.fluent::DetailsList(
-        items = selected_cols,
-        columns = tibble(
-          fieldName = colnames(selected_cols),
-          name =  colnames(selected_cols)
-        ),
-        constrainMode = 0
-      )
-
-      selected_cols |>  gt::gt() |> gt::opt_interactive()
+      selected_cols |>
+        gt::gt() |>
+        gt::cols_label(
+          title_general = "Job title",
+          location_country = "Location",
+          salary_base = "Salary (Base)",
+          bonus_pct = "Bonus %",
+          date = "Date"
+        ) |>
+        gt::fmt_date(date) |>
+        gt::fmt_percent(columns = bonus_pct) |>
+        gt::fmt_currency(columns = salary_base) |>
+        gt::opt_interactive()
     } else {
       p("No matching salary data.")
     }
