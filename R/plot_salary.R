@@ -3,11 +3,16 @@
 #' @examples
 #' library(r_biotech_salary)
 #' data(salaries)
-#' plot_salary(salaries)
+#' salaries_sub <- salaries |>
+#'   filter(title_general == 'Scientist',
+#'          stringr::str_detect(location_country, 'United States') )
+#' plot_salary(salaries_sub, .plotly = FALSE)
 #'
 #' @param .df salary data
 #' @export
-plot_salary <- function(.df, x = salary_total, fill = title_general, title = NULL) {
+plot_salary <- function(
+    .df, x = salary_total, fill = title_general, title = NULL,
+    .plotly = TRUE) {
   .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}})
   )
   x_mean <- .df |>  pull({{x}}) |> mean()
@@ -49,7 +54,12 @@ plot_salary <- function(.df, x = salary_total, fill = title_general, title = NUL
     labs(
       title = title, color = '',
       x = '', y = '% of jobs')
-  plotly::ggplotly(p, height = 250)
+
+  if (.plotly) {
+    p <- plotly::ggplotly(p, height = 250)
+  }
+
+  suppressWarnings({ print(p) })
 }
 
 

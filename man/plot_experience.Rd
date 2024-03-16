@@ -4,7 +4,7 @@
 \alias{plot_experience}
 \title{Plot salary against years of experience}
 \usage{
-plot_experience(.df, .plotly = TRUE)
+plot_experience(.df, fill = title_general, .plotly = TRUE)
 }
 \arguments{
 \item{.df}{salary data}

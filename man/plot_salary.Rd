@@ -4,7 +4,13 @@
 \alias{plot_salary}
 \title{plot salary histogram}
 \usage{
-plot_salary(.df, x = salary_total, fill = title_general, title = NULL)
+plot_salary(
+  .df,
+  x = salary_total,
+  fill = title_general,
+  title = NULL,
+  .plotly = TRUE
+)
 }
 \arguments{
 \item{.df}{salary data}
@@ -15,6 +21,9 @@ plot salary histogram
 \examples{
 library(r_biotech_salary)
 data(salaries)
-plot_salary(salaries)
+salaries_sub <- salaries |>
+  filter(title_general == 'Scientist',
+         stringr::str_detect(location_country, 'United States') )
+plot_salary(salaries_sub, .plotly = FALSE)
 
 }
