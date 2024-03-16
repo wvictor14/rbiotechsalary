@@ -1,29 +1,8 @@
-#' plot salary histogram
-#'
-#' @examples
-#' library(r_biotech_salary)
-#' data(salaries)
-#' salaries_sub <- salaries |>
-#'   filter(title_general == 'Scientist',
-#'          stringr::str_detect(location_country, 'United States') )
-#' plot_salary(salaries_sub, .plotly = FALSE)
-#'
-#' @param .df salary data
-#' @export
-plot_salary <- function(
-    .df, x = salary_total, fill = title_general, title = NULL,
-    .plotly = TRUE) {
-  .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}})
-  )
-  x_mean <- .df |>  pull({{x}}) |> mean()
-  x_mean_lab <- x_mean |>  gt::vec_fmt_currency(decimals = 0)
-  if (is.null(title)) {
-    title <- glue::glue("Average is {x_mean_lab}/year")
-  } else {
-    title <- title
-  }
 
-  # stats
+#' @rdname plot_salary
+#' @export
+calculate_salary_stats <- function(.df, x) {
+  x_mean <- .df |>  pull({{x}}) |> mean()
   percentiles <- .df |>  pull({{x}}) |>  quantile(c(0.05, 0.95))
   stats <- c(
     'Average' = x_mean,
@@ -31,6 +10,27 @@ plot_salary <- function(
     tibble::enframe(name = 'stat', 'x') |>
     mutate(stat = forcats::fct(
       stat, levels = c('5th percentile', 'Average', '95th percentile')))
+}
+
+#' plot salary histogram
+#'
+#' @examples
+#' library(r_biotech_salary)
+#' data(salaries)
+#' salaries_sub <- salaries |>
+#'   dplyr::filter(title_general %in% c('Scientist', 'Principal Scientist'),
+#'          stringr::str_detect(location_country, 'United States') )
+#' plot_salary(salaries_sub)
+#'
+#' @param .df salary data
+#' @export
+plot_salary <- function(
+    .df, x = salary_total, fill = title_general, title = '',
+    .type = 'plotly') {
+
+  .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}}))
+
+  stats <- calculate_salary_stats(.df, {{x}})
 
   p <- ggplot(.df, aes(
     x = {{x}}, fill = {{fill}})) +
@@ -51,12 +51,11 @@ plot_salary <- function(
       expand = expansion(mult = c(0, 0))
     ) +
     scale_x_continuous(label = scales::dollar, expand = expansion())  +
-    labs(
-      title = title, color = '',
-      x = '', y = '% of jobs')
+    labs(title = title, color = '', x = '', y = '% of jobs')
 
-  if (.plotly) {
-    p <- plotly::ggplotly(p, height = 250)
+  stopifnot(.type %in% c('plotly', 'ggplot2'))
+  if (.type == 'plotly') {
+    p <- plotly::ggplotly(p, height = '250')
   }
 
   suppressWarnings({ p })
