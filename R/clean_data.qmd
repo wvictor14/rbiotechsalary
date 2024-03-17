@@ -420,13 +420,13 @@ sal_clean_filt <- sal_clean_filt |>
     title_detail = ifelse(
       a,
       role_title_of_current_position |> 
-      str_remove_all(
-        regex('(Associate|Scientist|Principal|Senior)*', ignore_case = TRUE)) |> 
+        str_remove_all(
+          regex('(Associate|Scientist|Principal|Senior)*', ignore_case = TRUE)) |> 
         str_replace_all('[:punct:]+', ' ') # |> 
-       # str_replace_all('\\s{2,}', ' ')
+        # str_replace_all('\\s{2,}', ' ')
       ,
       NA
-    )
+  )
   ) |> 
   
   # title_gen most specific to most general
@@ -459,15 +459,81 @@ Same approach as for Scientist, but these are the levels:
 ```{r}
 sal_clean_filt |> 
   filter(str_detect(
-    role_title_of_current_position, regex('Director', ignore_case = TRUE))) |> 
+    role_title_of_current_position, regex('(Dir(ector)*)|(AD)', ignore_case = TRUE))) |> 
   count(role_title_of_current_position) |>  slice_sample(n = 25) |> gt()
+```
+
+```{r}
+sal_clean_filt <- sal_clean_filt |>
+  mutate(
+    
+    # title category
+    title_category =  
+      ifelse(
+        str_detect(
+          role_title_of_current_position, regex('(Director|\\bAD\\b|\\bDir\\b)', ignore_case = TRUE)),
+        'Director',
+        title_category
+      ),
+    
+    # scratch for concise coding
+    a = title_category == 'Director',
+    
+    # preprocessed 
+    b = role_title_of_current_position |> 
+        str_replace_all('sr\\.?', 'Senior') |> 
+        str_replace_all('\\bAD\\b', 'Associate Director') |> 
+        str_replace_all('\\bAssoc\\.?\\b', 'Associate') |> 
+        str_replace_all('\\bDir\\.?\\b', 'Director') 
+    ,
+    
+    # title detail
+    title_detail = ifelse(
+      a,
+      b |> 
+        
+        # remove the level part + director
+        str_remove_all(
+          regex('(Associate|Director|Senior|Executive)*', ignore_case = TRUE)) |> 
+        str_replace_all('[:punct:]+', ' ') # |> 
+        # str_replace_all('\\s{2,}', ' ')
+      ,
+      title_detail
+  )) |> 
+  
+  # title_gen most specific to most general
+  mutate(title_general = case_when(
+    
+    a & str_detect(
+      b, regex('Executive', ignore_case = TRUE)) ~ 'Executive Director',
+    a & str_detect(
+      b, regex('Senior', ignore_case = TRUE)) ~ 'Senior Director',
+    a & str_detect(
+      b, regex('Associate', ignore_case = TRUE)) ~ 'Associate Director',
+    a ~ 'Director',
+    .default = title_general
+  )) |> 
+  
+  # clean
+  select(-a, -b) 
+sal_clean_filt |> 
+  count(
+    role_title_of_current_position, title_category, 
+    title_general, title_detail) |>
+  slice_sample(n = 20) |>  
+  gt()
+
+sal_clean_filt |>  
+  filter(title_category == 'Director') |>  count(title_general) |> gt()
 ```
 
 - Associate Director
 - Director
 - Senior Director
 - Executive Director
-- VP
+
+#### VP
+
 
 ```{r}
 s_title <- '(Dir(ector)?|VP|AD)'
