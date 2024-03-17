@@ -24,15 +24,15 @@ branch `filter-to-sci-track` is to experiment using only cleaned data (scientist
 -   [ ] add research associate data
 -   [ ] add graphs
     -   [ ] salary by country
-    -   [ ] salary by experience
+    -   [x] salary by experience
 
 ### For cleaning
 
 Targeted minimum set of variables:
 
 -   [x] timestamp
--   [ ] role title
--   [ ] location
+-   [x] role title
+-   [x] location
 -   [x] salary base
 -   [x] salary bonus
 -   [x] experience years
