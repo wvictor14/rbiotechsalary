@@ -355,6 +355,16 @@ sal_clean_filt <- sal_clean_filt |>
 ### Standardize titles
 
 It's a lot of work to standardize titles, so I focus on what I know best, scientist 
+Let me intialize some empty columns
+
+```{r}
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(
+    title_category = NA_character_, 
+    title_general = NA_character_, 
+    title_detail = NA_character_
+  )
+```
 
 #### Scientist
 
@@ -397,12 +407,6 @@ e.g.
 ```{r}
 sal_clean_filt <- sal_clean_filt |>
   mutate(
-    # preprocess
-    title_category = NA_character_,
-    title_category =
-      role_title_of_current_position |> 
-      str_replace_all('sr\\.?', 'Senior') ,
-    
     # title_category
     title_category =  
       ifelse(
@@ -414,7 +418,8 @@ sal_clean_filt <- sal_clean_filt |>
     
     # scratch
     a = title_category == 'Scientist',
-    b = role_title_of_current_position,
+    b = role_title_of_current_position |> 
+      str_replace_all('sr\\.?', 'Senior'),
     
     # title detail
     title_detail = ifelse(
@@ -534,78 +539,72 @@ sal_clean_filt |>
 
 #### VP
 
+There's not many VPs
 
 ```{r}
-s_title <- '(Dir(ector)?|VP|AD)'
-s_levels <- '(Associate|Senior|Executive|Principal|Staff)'
-
-title_clean_dv <- sal_clean_filt |> 
+sal_clean_filt |> 
   filter(str_detect(
-    role_title_of_current_position, 
-    regex(s_title, ignore_case = TRUE))) |>
-  mutate(
-    title_category = role_title_of_current_position |> 
-      str_extract(regex(s_title, ignore_case = TRUE)),
-    title_ = tolower(role_title_of_current_position) |>  
-      
-      # address single cases that are hard to generalize
-      str_replace('\\bdir\\b', 'director') |> 
-      str_replace('ad', 'associate director') |> 
-      str_replace('vp', 'VP') |> 
-      str_replace('svp', 'Senior VP') |> 
-      str_replace('clin ops', 'Clinical Operations') |> 
-      str_replace('operations', 'Operations') |> 
-      # Replace sr with senior
-      str_replace_all(regex('Sr\\.?', ignore_case = TRUE), 'Senior'),
-    
-    # Extract the "level" part of title
-    title_general = str_extract(title_, glue('({s_levels}?\\s?)*{s_title}')) |> 
-      str_trim(),
-    
-    # Put everything else into another variable
-    title_detail = 
-      title_ |> 
-      str_remove(s_title) |> 
-      str_remove_all(s_levels) |> 
-      str_remove_all(',') |> 
-      str_replace_all('/', ' ') |> 
-      str_trim() |> 
-      str_remove('^of ') |> 
-      str_replace("^\\w{1}", toupper),
-    title_general = ifelse(title_general == '', NA, title_general),
-    title_detail = ifelse(title_detail == '', NA, title_detail) |> 
-      forcats::fct() |>  forcats::fct_na_value_to_level('None')
-  ) 
-
-title_clean_dv |> 
-  count(
-    title_category, title_general, title_detail, 
-    role_title_of_current_position) |> 
-  arrange(role_title_of_current_position) |>  slice_sample(n = 25) |> gt() 
+    role_title_of_current_position, regex('(VP|Vice Principal)', ignore_case = TRUE))) |> 
+  count(role_title_of_current_position) |> gt()
 ```
 
-Now join back 
-
 ```{r}
-title_clean_sdv <- title_clean |> 
+sal_clean_filt <- sal_clean_filt |>
+  mutate(
+    title_category =  
+      ifelse(
+        str_detect(
+          role_title_of_current_position, 
+          regex('(VP|Vice Principal)', ignore_case = TRUE)),
+        'VP',
+        title_category
+      ),
+    
+    # scratch for concise coding
+    a = title_category == 'VP',
+    
+    # preprocessed 
+    b = role_title_of_current_position |> 
+        str_replace_all(regex('vp', ignore_case = TRUE), 'VP')
+    ,
+    
+    # title detail
+    title_detail = ifelse(
+      a,
+      b |> 
+        
+        # remove the level part + title_category
+        str_remove_all(
+          regex('S?VP', ignore_case = TRUE)) |> 
+        str_replace_all('[:punct:]+', ' ') |> 
+        str_replace_all('\\s{2,}', ' ') |> 
+        str_trim()
+      ,
+      title_detail
+  )) |> 
   
-  # remove the dir / vp rows that we filled in
-  filter(!str_detect(
-    role_title_of_current_position, regex(s_title, ignore_case = TRUE))) |>
+  # title_gen most specific to most general
+  mutate(title_general = case_when(
+    
+    a & str_detect(
+      b, regex('SVP', ignore_case = TRUE)) ~ 'SVP',
+    a ~ 'VP',
+    .default = title_general
+  )) |> 
   
-  # then add them back in
-  bind_rows(title_clean_dv)
+  # clean
+  select(-a, -b)  
 
-# check results
-stopifnot(nrow(title_clean_sdv) == nrow(title_clean))
-title_clean_sdv |>  select(contains('title')) |>  glimpse()
-
-title_clean_sdv |> 
-  count(title_category, title_general, title_detail) |> 
-  slice_sample(n = 25) |> 
+sal_clean_filt |> 
+  filter(str_detect(
+    role_title_of_current_position, regex('vp', ignore_case = TRUE))) |> 
+  count(
+    role_title_of_current_position, title_category, 
+    title_general, title_detail) |>  
   gt()
 
-title_clean_sdv |>  count(title_category)
+sal_clean_filt |>  
+  filter(title_category == 'VP') |>  count(title_general) |> gt()
 ```
 
 ### Roles that have not been processed
@@ -614,11 +613,10 @@ Look at the remaining roles that I have not tried to process.
 
 
 ```{r}
-title_clean_sdv |>  
-  filter(is.na(title_category)) |>  count(role_title_of_current_position) |> 
-  gt()
+sal_clean_filt |>  
+  filter(is.na(title_category)) |> 
+  pull(role_title_of_current_position) |>  unique()
 ```
-
 
 ### Final filtering
 
