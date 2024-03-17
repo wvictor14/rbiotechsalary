@@ -40,7 +40,7 @@ sheet_names <- c('2024', '2023', '2022')
 
 #read_sheet(google_sheets_url, sheet = '2024', col_types = 'c')
 
-tic()
+tic('done reading google sheets')
 sheet_names |>  
   # read it as character values to avoid list-column headaches
   walk(
@@ -344,14 +344,13 @@ sal_clean_filt |>
 ```
 
 ### filtering
+
 Remove some obvious rows
 
 ```{r}
 sal_clean_filt <- sal_clean_filt |> 
   filter(role_title_of_current_position != 'pimp')
 ```
-
-
 
 ### Standardize titles
 
@@ -760,3 +759,4 @@ sal_clean_filt |>
 ```{r eval = TRUE}
 salaries <- read_csv(here::here('data', 'salary_results_cleaned.csv'))
 use_data(salaries, overwrite = TRUE)
+```
