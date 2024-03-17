@@ -124,7 +124,7 @@ rb_server <- function(input, output, session) {
 
   #plot
   output$salary_stats_text <- gt::render_gt({
-    if (nrow(.salaries() > 0)) {
+    if (nrow(.salaries()) > 0) {
       gt_salary_stats(.salaries())
     } else {
       tibble('No matching salary data' = '') |> gt::gt() |>
