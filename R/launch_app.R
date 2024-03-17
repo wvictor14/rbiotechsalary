@@ -131,7 +131,14 @@ rb_server <- function(input, output, session) {
 
   #plot
   output$salary_stats_text <- gt::render_gt({
-    plot_salary_title(.salaries())
+    if (nrow(.salaries() > 0)) {
+      gt_salary_stats(.salaries())
+    } else {
+      tibble('No matching salary data' = '') |> gt::gt() |>
+        gt::tab_options(
+          table.border.top.style = "hidden",
+          table.border.bottom.style = "hidden")
+    }
   })
   output$plot <- plotly::renderPlotly({
     plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)')
@@ -143,7 +150,11 @@ rb_server <- function(input, output, session) {
     storeWarn<- getOption("warn")
     options(warn = -1)
 
-    plot_experience(.salaries())
+    if (nrow(.salaries()) > 0) {
+      plot_experience(.salaries())
+    } else {
+      p <- ggplot() + theme_minimal(); plotly::ggplotly(p, height = 250)
+    }
   })
 
   # render the table + other components
@@ -167,7 +178,7 @@ rb_server <- function(input, output, session) {
           DT::formatDate('Date', method = 'toLocaleDateString')
         selected_cols
       } else {
-        p("No matching salary data.")
+        tibble() |>  DT::datatable()
       }
       return(items_list)
     })

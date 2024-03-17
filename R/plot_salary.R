@@ -62,15 +62,15 @@ plot_salary <- function(
 }
 
 
-#' Make the title for salary histogram
+#' Create stats table for salary data
 #'
 #' @param .df salaries
 #' @export
 #' @examples
 #' data(salaries)
-#' salaries |>  plot_salary_title()
+#' salaries |>  gt_salary_stats()
 #'
-plot_salary_title <- function(.df, .return_data = FALSE, .gt = TRUE) {
+gt_salary_stats <- function(.df, .return_data = FALSE, .gt = TRUE) {
 
   l <- list(
     average = mean(.df$salary_total),
