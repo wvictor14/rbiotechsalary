@@ -7,7 +7,13 @@
 \usage{
 calculate_salary_stats(.df, x)
 
-plot_salary(.df, x = salary_total, fill = title_general, .type = "plotly")
+plot_salary(
+  .df,
+  x = salary_total,
+  fill = title_general,
+  title = "",
+  .type = "plotly"
+)
 }
 \arguments{
 \item{.df}{salary data}
