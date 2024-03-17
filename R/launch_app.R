@@ -29,11 +29,11 @@ rb_ui <- function() {
       value = 'Scientist',
       label = NULL,
       options = salaries |>
-        mutate(key = title_general, text = title_general) |>
+        mutate(key = title_general, text = as.character(key)) |>
         select(key, text) |>
         distinct()  |>
         arrange(key) |>
-        mutate(across(everything(), ~ifelse(is.na(.x), '(Missing)', .x)))
+        mutate(key = as.character(key))
     ),
     shiny.fluent::Dropdown.shinyInput(
       "location",
@@ -60,7 +60,11 @@ rb_ui <- function() {
   )
 
   shiny.fluent::fluentPage(
-    shiny.fluent::Text(variant = "xxLarge", "r/biotech Salary Tracker is live!"),
+    shiny.fluent::Stack(
+      horizontal = TRUE,
+      shiny.fluent::Text(variant = "xxLarge", "r/biotech Salary Tracker is live!"),
+      tags$pre(tags$span('\t')),
+      shiny.fluent::Text(variant = "xLarge", 'Showing salary data for:')),
     tags$style(".card { padding: 28px; margin-bottom: 28px; }"),
 
     shiny.fluent::Stack(
@@ -69,12 +73,12 @@ rb_ui <- function() {
         filters,
         gt::gt_output('salary_stats_text')
       ),
-      size = 3,
+      size = 4,
       style = "max-height: 250px;"),
       makeCard(content = shiny.fluent::Stack(
         plotly::plotlyOutput("plot")
       ),
-      size = 9,
+      size = 8,
       style = "max-height: 250px")
     ),
     shiny.fluent::Stack(
@@ -84,12 +88,12 @@ rb_ui <- function() {
           style="max-height: 250px; overflow: auto",
           DT::dataTableOutput("table_raw", height = '250px')
         ),
-        size = 5,
+        size = 4,
         style = "max-height: 250px"
       ),
       makeCard(
         content = plotly::plotlyOutput('plot_experience'),
-        size = 7,
+        size = 8,
         style = "max-height: 250px"
       )
     )
@@ -158,7 +162,6 @@ rb_server <- function(input, output, session) {
           arrange(desc(date)) |>
           select(
             `Job title` = title_general,
-            `Location` = location_country,
             `Salary (base)` = salary_base,
             `Bonus %` = bonus_pct,
             `Date` = date
