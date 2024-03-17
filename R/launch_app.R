@@ -39,7 +39,7 @@ rb_ui <- function() {
       "location",
       placeHolder = "Select location",
       multiSelect = TRUE,
-      value = salaries$location_country |> unique() |>  sort(),
+      value = 'United States Of America',
       options =  salaries |>
         mutate(key = location_country, text = location_country) |>
         select(key, text) |>
@@ -50,10 +50,19 @@ rb_ui <- function() {
     shiny.fluent::Stack(
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
-      shiny.fluent::DatePicker.shinyInput(
-        "fromDate", value = as.Date('2022/01/01')),
-      shiny.fluent::DatePicker.shinyInput(
-        "toDate", value = Sys.time() |> lubridate::date())
+      shiny.fluent::ChoiceGroup.shinyInput(
+        'date',
+        options = c('All' , '2024', '2023', '2022') %>%
+          tibble(key = ., text = .),
+        styles = list(flexContainer = list(display = "flex", gap = 10)),
+        value = 'All')
+#      checkboxGroupInput(
+      #  inputId = "test", label = '',
+      #  choices = c('All', '2024', '2023', '2022'), inline = TRUE)
+      #shiny.fluent::DatePicker.shinyInput(
+      #  "fromDate", value = as.Date('2022/01/01')),
+      #shiny.fluent::DatePicker.shinyInput(
+      #  "toDate", value = Sys.time() |> lubridate::date())
     )
   )
 
@@ -103,11 +112,18 @@ rb_ui <- function() {
 rb_server <- function(input, output, session) {
 
   .salaries <- reactive({
-    req(input$fromDate)
+    req(input$date)
+    .date <- switch(
+      input$date,
+      'All' = c('2024', '2023', '2022'),
+      '2024' = '2024',
+      '2023' = '2023',
+      '2022' = '2022'
+    )
+
     salaries |>
       filter(
-        date >= input$fromDate,
-        date <= input$toDate,
+        lubridate::year(date) %in% .date,
         title_general %in% input$title,
         location_country %in% input$location
       )
