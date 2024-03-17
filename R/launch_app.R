@@ -38,7 +38,7 @@ rb_ui <- function() {
     shiny.fluent::Dropdown.shinyInput(
       "location",
       placeHolder = "Select location",
-      multiSelect = TRUE,
+      multiSelect = FALSE,
       value = 'United States Of America',
       options =  salaries |>
         mutate(key = location_country, text = location_country) |>
@@ -56,13 +56,6 @@ rb_ui <- function() {
           tibble(key = ., text = .),
         styles = list(flexContainer = list(display = "flex", gap = 10)),
         value = 'All')
-#      checkboxGroupInput(
-      #  inputId = "test", label = '',
-      #  choices = c('All', '2024', '2023', '2022'), inline = TRUE)
-      #shiny.fluent::DatePicker.shinyInput(
-      #  "fromDate", value = as.Date('2022/01/01')),
-      #shiny.fluent::DatePicker.shinyInput(
-      #  "toDate", value = Sys.time() |> lubridate::date())
     )
   )
 

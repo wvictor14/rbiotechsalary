@@ -89,15 +89,15 @@ gt_salary_stats <- function(.df, .return_data = FALSE, .gt = TRUE) {
 
 
   title <- tibble(
-    left = c('Average is', 'Total Pay Range', 'Base Pay', 'Bonus'),
+    left = c('Average Total Pay', 'Total Pay Range', 'Base Pay', 'Bonus'),
     right = c(
-      '<b><a style="color:#DDAA33FF">{l$average}</b></a> /yr',
+      '<b><a style="color:#DDAA33FF">{l$average}</b></a>',
       glue::glue(
         '<b><a style="color:#004488FF">{l$total_min}</b></a>',
         ' - ',
-        '<b><a style="color:#BB5566FF">{l$total_max}</b></a> /yr'
+        '<b><a style="color:#BB5566FF">{l$total_max}</b></a>'
       ),
-      "{l$base_min} - {l$base_max} /yr", "{l$bonus_min} - {l$bonus_max} /yr")
+      "{l$base_min} - {l$base_max}", "{l$bonus_min} - {l$bonus_max}")
   ) |>
     mutate(right = purrr::map_chr(right, ~glue::glue(.x)))
 
