@@ -67,27 +67,27 @@ rb_ui <- function() {
         filters,
         gt::gt_output('salary_stats_text')
       ),
-      size = 4,
+      size = 3,
       style = "max-height: 250px;"),
       makeCard(content = shiny.fluent::Stack(
         plotly::plotlyOutput("plot")
       ),
-      size = 8,
+      size = 9,
       style = "max-height: 250px")
     ),
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
       makeCard(
-        content = plotly::plotlyOutput('plot_experience'),
-        size = 6,
+        content = div(
+          style="max-height: 250px; overflow: auto",
+          DT::dataTableOutput("table_raw", height = '250px')
+        ),
+        size = 5,
         style = "max-height: 250px"
       ),
       makeCard(
-        content = div(
-          style="max-height: 250px; overflow: auto",
-          gt::gt_output("analysis")
-        ),
-        size = 6,
+        content = plotly::plotlyOutput('plot_experience'),
+        size = 7,
         style = "max-height: 250px"
       )
     )
@@ -131,35 +131,30 @@ rb_server <- function(input, output, session) {
   })
 
   # render the table + other components
-  output$analysis <- gt::render_gt({
-    items_list <- if(nrow(.salaries()) > 0){
-      selected_cols <- .salaries() |>
-        select(
-          title_general,
-          location_country,
-          salary_base,
-          bonus_pct,
-          date
-        )
-
-      selected_cols |>
-        gt::gt() |>
-        gt::cols_label(
-          title_general = "Job title",
-          location_country = "Location",
-          salary_base = "Salary (Base)",
-          bonus_pct = "Bonus %",
-          date = "Date"
-        ) |>
-        gt::fmt_date(date) |>
-        gt::fmt_percent(columns = bonus_pct) |>
-        gt::fmt_currency(columns = salary_base) |>
-        gt::opt_interactive()
-    } else {
-      p("No matching salary data.")
-    }
-    return(items_list)
-  })
+  output$table_raw <- DT::renderDataTable(
+    server = TRUE, expr = {
+      items_list <- if(nrow(.salaries()) > 0){
+        selected_cols <- .salaries() |>
+          arrange(desc(date)) |>
+          select(
+            `Job title` = title_general,
+            `Location` = location_country,
+            `Salary (base)` = salary_base,
+            `Bonus %` = bonus_pct,
+            `Date` = date
+          ) |>
+          DT::datatable(
+            rownames = FALSE,
+            options = list('dom' = 'ftipr')) |>
+          DT::formatCurrency('Salary (base)') |>
+          DT::formatPercentage('Bonus %') |>
+          DT::formatDate('Date', method = 'toLocaleDateString')
+        selected_cols
+      } else {
+        p("No matching salary data.")
+      }
+      return(items_list)
+    })
 
 }
 
