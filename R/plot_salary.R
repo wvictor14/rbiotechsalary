@@ -68,7 +68,7 @@ plot_salary <- function(
 #' @export
 #' @examples
 #' data(salaries)
-#' salaries |>  gt_salary_stats()
+#' salaries |> filter(title_general == 'Scientist') |>   gt_salary_stats()
 #'
 gt_salary_stats <- function(.df, .return_data = FALSE, .gt = TRUE) {
 

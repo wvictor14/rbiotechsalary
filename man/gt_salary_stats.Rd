@@ -14,6 +14,6 @@ Create stats table for salary data
 }
 \examples{
 data(salaries)
-salaries |>  gt_salary_stats()
+salaries |> filter(title_general == 'Scientist') |>   gt_salary_stats()
 
 }
