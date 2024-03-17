@@ -384,71 +384,73 @@ sal_clean_filt |>
 ```
 
 
-Extract **levels** + *general title* + `sub-level` = **Associate** *Scientist* `I`
+Try a different approach:
 
-- There's a lot of "Sr" prefixes, let's replace those with "Senior"
-- Normalize  sub-levels, 1 -> I, 2 -> II
-- Pattern Match to level + general title + subtitle
-- put other detail into another variable
+Hierarchical, see case_when
+
+The order of the statements are impactful
+e.g.
+
+- If they have associate, they will associate scientists
+- If they have associate and "principal" they will be principal scientist
 
 ```{r}
-title_clean_sci <- sal_clean_filt |> 
-  filter(str_detect(
-    role_title_of_current_position, regex('Scientist', ignore_case = TRUE))) |>
+sal_clean_filt <- sal_clean_filt |>
   mutate(
-    title_category = 'Scientist',
-    title_ = tolower(role_title_of_current_position) |>  
-      
-      # address single cases that are hard to generalize
-      str_remove('\\(r') |> # a single case
-      str_replace('scientist ll', 'Scientist II') |>  # someone used "L"s LOL
-      
-      
-      # Replace sr with senior
-      str_replace_all('sr\\.?', 'Senior') |> 
-      str_replace_all('1', 'I') |> 
-      str_replace_all('2', 'II') |>
-      str_replace_all('3', 'III'),
+    # preprocess
+    title_category = NA_character_,
+    title_category =
+      role_title_of_current_position |> 
+      str_replace_all('sr\\.?', 'Senior') ,
     
-    # Extract the "level" part of title
-    title_general = str_extract(
-      title_,
-      '((associate|senior|principal|staff)?\\s?(data\\s?)?)*scientist\\s?[iI]*'
-    ) |> 
-      str_trim(),
-    title_general = ifelse(title_general == '', NA, title_general),
-    title_general = title_general |> str_remove('\\s[iI]+$') |> 
-      str_to_title(), 
+    # title_category
+    title_category =  
+      ifelse(
+        str_detect(
+          role_title_of_current_position, regex('Scientist', ignore_case = TRUE)),
+        'Scientist',
+        title_category
+      ),
     
-    # Put everything else into another variable
-    title_detail = 
-      title_ |> 
-      str_remove('scientist\\s?[iI]*') |> 
-      str_remove_all('[()-]') |> 
-      str_remove_all('(associate|senior|principal|staff)') |> 
-      str_replace_all('/', ' ') |> 
-      str_trim(),
-    title_detail = ifelse(title_detail == '', NA, title_detail),
-    title_detail = title_detail |>  
-      str_to_title() |> 
-      forcats::fct() |> 
-      forcats::fct_na_value_to_level(level = 'None')
-  ) 
-
-title_clean_sci |> 
-  count(title_general, title_detail, role_title_of_current_position) |> 
-  arrange(role_title_of_current_position) |>  slice_sample(n = 25) |> gt() 
-
-# join back to data
-title_clean <- sal_clean_filt |> 
+    # scratch
+    a = title_category == 'Scientist',
+    b = role_title_of_current_position,
+    
+    # title detail
+    title_detail = ifelse(
+      a,
+      role_title_of_current_position |> 
+      str_remove_all(
+        regex('(Associate|Scientist|Principal|Senior)*', ignore_case = TRUE)) |> 
+        str_replace_all('[:punct:]+', ' ') # |> 
+       # str_replace_all('\\s{2,}', ' ')
+      ,
+      NA
+    )
+  ) |> 
   
-  filter(!str_detect(
-    role_title_of_current_position, regex('Scientist', ignore_case = TRUE))) |>
-  bind_rows(title_clean_sci)
+  # title_gen most specific to most general
+  mutate(title_general = case_when(
+    
+    a & str_detect(
+      b, regex('Principal', ignore_case = TRUE)) ~ 'Principal Scientist',
+    a & str_detect(
+      b, regex('Senior', ignore_case = TRUE)) ~ 'Senior Scientist',
+    a & str_detect(
+      b, regex('Associate', ignore_case = TRUE)) ~ 'Associate Scientist',
+    a ~ 'Scientist',
+  )) |> 
+  
+  # clean
+  select(-a, -b)
 
-stopifnot(nrow(title_clean) == nrow(sal_clean_filt))
-glimpse(title_clean |>  select(contains('title')))
+sal_clean_filt |>  
+  count(role_title_of_current_position, title_general, title_detail) |>
+  slice_sample(n = 20) |>  gt()
+
+sal_clean_filt |>  count(title_general) |> gt()
 ```
+
 
 #### Directors and VP
 
@@ -471,7 +473,7 @@ sal_clean_filt |>
 s_title <- '(Dir(ector)?|VP|AD)'
 s_levels <- '(Associate|Senior|Executive|Principal|Staff)'
 
-title_clean_dv <- title_clean |> 
+title_clean_dv <- sal_clean_filt |> 
   filter(str_detect(
     role_title_of_current_position, 
     regex(s_title, ignore_case = TRUE))) |>
@@ -510,7 +512,9 @@ title_clean_dv <- title_clean |>
   ) 
 
 title_clean_dv |> 
-  count(title_category, title_general, title_detail, role_title_of_current_position) |> 
+  count(
+    title_category, title_general, title_detail, 
+    role_title_of_current_position) |> 
   arrange(role_title_of_current_position) |>  slice_sample(n = 25) |> gt() 
 ```
 
@@ -609,10 +613,10 @@ sal_clean_filt <- sal_clean_filt |>
   mutate(experience_highest_degree =  str_extract(
     what_degrees_do_you_have,
     '(?<=,|^)[^,]+$'
-    ) |> 
-      str_replace('M\\.D\\.', 'MD') |> 
-      str_remove('or Equivalent') |> 
-      str_replace('MD/Pharm.*', 'MD')
+  ) |> 
+    str_replace('M\\.D\\.', 'MD') |> 
+    str_remove('or Equivalent') |> 
+    str_replace('MD/Pharm.*', 'MD')
   ) 
 
 # View Changes
