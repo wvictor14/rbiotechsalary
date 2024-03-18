@@ -28,12 +28,7 @@ rb_ui <- function() {
       multiSelect = TRUE,
       value = 'Scientist',
       label = NULL,
-      options = salaries |>
-        mutate(key = title_general, text = as.character(key)) |>
-        select(key, text) |>
-        distinct()  |>
-        arrange(key) |>
-        mutate(key = as.character(key))
+      options = salaries |> make_grouped_options(title_category, title_general)
     ),
     shiny.fluent::Dropdown.shinyInput(
       "location",
