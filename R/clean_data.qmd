@@ -838,6 +838,13 @@ salaries <- salaries |>
         'Executive Director',
         
         'VP', 'SVP'
-      ))
+      ),
+    
+    title_category = title_category |> 
+      forcats::fct() |> 
+      forcats::fct_relevel(
+        'Scientist', 'Director', 'VP'
+      )
+    )
 use_data(salaries, overwrite = TRUE)
 ```
