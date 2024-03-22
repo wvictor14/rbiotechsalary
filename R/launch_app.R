@@ -50,12 +50,10 @@ rb_ui <- function() {
     shiny.fluent::Stack(
       horizontal = TRUE,
       shiny.fluent::DefaultButton.shinyInput(
-        "select_all",
-        text = "Select all"
+        "select_all", text = "Select all"
       ),
       shiny.fluent::DefaultButton.shinyInput(
-        "deselect_all",
-        text = "Deselect all"
+        "deselect_all", text = "Deselect all"
       )
     ),
     shiny.fluent::Stack(
@@ -157,9 +155,25 @@ rb_server <- function(input, output, session) {
       mutate(across(everything(), as.character))
   })
 
-
   observe({
-
+        shiny.fluent::updateDropdown.shinyInput(
+          session = session,
+          inputId = 'location_granular',
+          multiSelect = TRUE,
+          value = .location_granular() |>  pull(key),
+          options =  .location_granular()
+        )
+  })
+  observeEvent(input$deselect_all, {
+    shiny.fluent::updateDropdown.shinyInput(
+      session = session,
+      inputId = 'location_granular',
+      multiSelect = TRUE,
+      value = NULL,
+      options =  .location_granular()
+    )
+  })
+  observeEvent(input$select_all, {
     shiny.fluent::updateDropdown.shinyInput(
       session = session,
       inputId = 'location_granular',
