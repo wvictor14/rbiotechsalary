@@ -145,7 +145,9 @@ rb_server <- function(input, output, session) {
       mutate(across(everything(), as.character))
   })
 
+
   observe({
+
     shiny.fluent::updateDropdown.shinyInput(
       session = session,
       inputId = 'location_granular',
@@ -153,24 +155,6 @@ rb_server <- function(input, output, session) {
       value = .location_granular() |>  pull(key),
       options =  .location_granular()
     )
-  })
-
-  .salaries <- reactive({
-    req(input$date)
-    .date <- switch(
-      input$date,
-      'All' = c('2024', '2023', '2022'),
-      '2024' = '2024',
-      '2023' = '2023',
-      '2022' = '2022'
-    )
-
-    salaries |>
-      filter(
-        lubridate::year(date) %in% .date,
-        title_general %in% input$title,
-        location_country %in% input$location_country
-      )
   })
 
   #plot
