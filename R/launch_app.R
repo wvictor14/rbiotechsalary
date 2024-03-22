@@ -115,8 +115,29 @@ rb_ui <- function() {
 #' @import dplyr ggplot2
 rb_server <- function(input, output, session) {
 
+  .salaries <- reactive({
+    req(input$title)
+    .date <- switch(
+      input$date,
+      'All' = c('2024', '2023', '2022'),
+      '2024' = '2024',
+      '2023' = '2023',
+      '2022' = '2022'
+    )
+
+    salaries |>
+      filter(
+        lubridate::year(date) %in% .date,
+        title_general %in% input$title,
+        location_country %in% input$location_country,
+        location_granular %in% input$location_granular
+      )
+  })
+
+  # reactive inputs
   .location_granular <- eventReactive(input$location_country, {
-    .salaries() |>
+    salaries |>
+      filter(location_country %in% input$location_country) |>
       mutate(key = location_granular, text = location_granular ) |>
       select(key, text) |>
       distinct()  |>
