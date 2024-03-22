@@ -149,6 +149,7 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
       labels = c('1-2', '3-5', '6-9', '10-14', '15+'))) |>
     ggplot(aes(x = exp_binned, y = salary_total, fill = {{fill}})) +
     geom_boxplot(outlier.shape = NA, position = position_dodge()) +
+    theme_minimal() +
     theme(
       panel.border = element_blank(),
       axis.line = element_line(),
