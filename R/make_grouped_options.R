@@ -23,7 +23,7 @@ make_grouped_options <- function(.df, .groups, .choices) {
     summarize(
       itemType = list(DropdownMenuItemType("Header"))
     ) |>
-    mutate(key = {{.groups}}, text = {{.groups}})
+    mutate(key = stringr::str_c( 'Header', {{.groups}}), text = {{.groups}})
 
   bind_rows(.df_headers, .df_choices) |>
     arrange({{.groups}}, itemType)

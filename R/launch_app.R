@@ -80,18 +80,26 @@ rb_ui <- function() {
       tokens = list(childrenGap = 10), horizontal = TRUE,
       makeCard(
         content = div(
-          style="max-height: 250px; overflow: auto",
-          DT::dataTableOutput("table_raw", height = '250px')
+          style="max-height: 275px; overflow: auto",
+          highcharter::highchartOutput('highchart', height = '275px')
         ),
         size = 4,
-        style = "max-height: 250px"
+        style = "max-height: 275px"
       ),
       makeCard(
         content = plotly::plotlyOutput('plot_experience'),
         size = 8,
-        style = "max-height: 250px"
+        style = "max-height: 275px"
       )
-    )
+    ),
+    makeCard(
+      content = div(
+        style="max-height: 600px; overflow: scroll",
+        DT::dataTableOutput("table_raw", height = '600px')
+      ),
+      size = 11,
+      style = "max-height: 600px"
+    ),
   )
 }
 
