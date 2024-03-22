@@ -17,6 +17,7 @@ library(here)
 library(purrr)
 library(glue)
 library(lubridate)
+library(forcats)
 library(dplyr)
 library(tidyr)
 library(gt)
@@ -894,7 +895,6 @@ sal_clean_filt <- sal_clean_filt |>
   select(timestamp, year:day, everything())
 ```
 
-
 # write out the data
 
 ```{r}
@@ -938,7 +938,10 @@ salaries <- salaries |>
       forcats::fct() |> 
       forcats::fct_relevel(
         'Scientist', 'Director', 'VP'
-      )
+      ),
+    
+    location_granular = forcats::fct(location_granular) |> 
+      forcats::fct_relevel(USA)
   )
 use_data(salaries, overwrite = TRUE)
 ```
