@@ -31,7 +31,7 @@ rb_ui <- function() {
       options = salaries |> make_grouped_options(title_category, title_general)
     ),
     shiny.fluent::Dropdown.shinyInput(
-      "location",
+      "location_country",
       placeHolder = "Select location",
       multiSelect = FALSE,
       value = 'United States Of America',
@@ -39,8 +39,12 @@ rb_ui <- function() {
         mutate(key = location_country, text = location_country) |>
         select(key, text) |>
         distinct()  |>
-        arrange(key) |>
-        mutate(across(everything(), ~ifelse(is.na(.x), '(Missing)', .x)))
+        arrange(key)
+    ),
+    shiny.fluent::Dropdown.shinyInput(
+      inputId = "location_granular",
+      placeHolder = "Select sub-location",
+      multiSelect = TRUE
     ),
     shiny.fluent::Stack(
       horizontal = TRUE,
@@ -111,6 +115,25 @@ rb_ui <- function() {
 #' @import dplyr ggplot2
 rb_server <- function(input, output, session) {
 
+  .location_granular <- eventReactive(input$location_country, {
+    .salaries() |>
+      mutate(key = location_granular, text = location_granular ) |>
+      select(key, text) |>
+      distinct()  |>
+      arrange(key) |>
+      mutate(across(everything(), as.character))
+  })
+
+  observe({
+    shiny.fluent::updateDropdown.shinyInput(
+      session = session,
+      inputId = 'location_granular',
+      multiSelect = TRUE,
+      value = .location_granular() |>  pull(key),
+      options =  .location_granular()
+    )
+  })
+
   .salaries <- reactive({
     req(input$date)
     .date <- switch(
@@ -125,7 +148,7 @@ rb_server <- function(input, output, session) {
       filter(
         lubridate::year(date) %in% .date,
         title_general %in% input$title,
-        location_country %in% input$location
+        location_country %in% input$location_country
       )
   })
 
