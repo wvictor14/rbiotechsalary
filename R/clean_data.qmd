@@ -848,8 +848,24 @@ sal_clean_filt |>
   arrange(location_country) |>  gt()
 ```
 
+### location granular
 
-### Completeness
+for selecting within country:
+
+```{r}
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(
+    location_granular = 
+      coalesce(where_is_the_closest_major_city_or_hub, where_are_you_located)
+  )  
+sal_clean_filt |> 
+  count(
+    location_granular, 
+    where_is_the_closest_major_city_or_hub, 
+    where_are_you_located) |>  gt()
+```
+
+# Completeness
 
 Compare the missingness of original location variables vs the cleaned `location_country` variable:
 
@@ -857,7 +873,8 @@ Compare the missingness of original location variables vs the cleaned `location_
 sal_clean_filt |> 
   summarize(
     across(c(
-      location_country, 
+      location_country,
+      location_granular,
       where_are_you_located, 
       what_country_do_you_work_in, 
       where_is_the_closest_major_city_or_hub), 
