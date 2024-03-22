@@ -46,6 +46,18 @@ rb_ui <- function() {
       placeHolder = "Select sub-location",
       multiSelect = TRUE
     ),
+
+    shiny.fluent::Stack(
+      horizontal = TRUE,
+      shiny.fluent::DefaultButton.shinyInput(
+        "select_all",
+        text = "Select all"
+      ),
+      shiny.fluent::DefaultButton.shinyInput(
+        "deselect_all",
+        text = "Deselect all"
+      )
+    ),
     shiny.fluent::Stack(
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
