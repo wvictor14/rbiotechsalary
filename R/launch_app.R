@@ -74,7 +74,7 @@ rb_ui <- function() {
       shiny.fluent::Text(variant = "xxLarge", "r/biotech Salary Tracker is live!"),
       tags$pre(tags$span('\t')),
       shiny.fluent::Text(variant = "xLarge", 'Showing salary data for:')),
-    tags$style(".card { padding: 28px; margin-bottom: 28px; }"),
+    tags$style(".card { padding: 14px; margin-bottom: 14px; }"),
 
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
@@ -83,12 +83,12 @@ rb_ui <- function() {
         gt::gt_output('salary_stats_text')
       ),
       size = 4,
-      style = "max-height: 250px;"),
+      style = "max-height: 300px;"),
       makeCard(content = shiny.fluent::Stack(
         plotly::plotlyOutput("plot")
       ),
       size = 8,
-      style = "max-height: 250px")
+      style = "max-height: 300px")
     ),
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
