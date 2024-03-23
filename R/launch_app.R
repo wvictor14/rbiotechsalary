@@ -31,7 +31,7 @@ rb_ui <- function() {
       options = salaries |> make_grouped_options(title_category, title_general)
     ),
     shiny.fluent::Dropdown.shinyInput(
-      "location",
+      "location_country",
       placeHolder = "Select location",
       multiSelect = FALSE,
       value = 'United States Of America',
@@ -39,8 +39,22 @@ rb_ui <- function() {
         mutate(key = location_country, text = location_country) |>
         select(key, text) |>
         distinct()  |>
-        arrange(key) |>
-        mutate(across(everything(), ~ifelse(is.na(.x), '(Missing)', .x)))
+        arrange(key)
+    ),
+    shiny.fluent::Dropdown.shinyInput(
+      inputId = "location_granular",
+      placeHolder = "Select sub-location",
+      multiSelect = TRUE
+    ),
+
+    shiny.fluent::Stack(
+      horizontal = TRUE,
+      shiny.fluent::DefaultButton.shinyInput(
+        "select_all", text = "Select all"
+      ),
+      shiny.fluent::DefaultButton.shinyInput(
+        "deselect_all", text = "Deselect all"
+      )
     ),
     shiny.fluent::Stack(
       horizontal = TRUE,
@@ -60,7 +74,7 @@ rb_ui <- function() {
       shiny.fluent::Text(variant = "xxLarge", "r/biotech Salary Tracker is live!"),
       tags$pre(tags$span('\t')),
       shiny.fluent::Text(variant = "xLarge", 'Showing salary data for:')),
-    tags$style(".card { padding: 28px; margin-bottom: 28px; }"),
+    tags$style(".card { padding: 14px; margin-bottom: 14px; }"),
 
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
@@ -69,12 +83,12 @@ rb_ui <- function() {
         gt::gt_output('salary_stats_text')
       ),
       size = 4,
-      style = "max-height: 250px;"),
+      style = "max-height: 300px;"),
       makeCard(content = shiny.fluent::Stack(
         plotly::plotlyOutput("plot")
       ),
       size = 8,
-      style = "max-height: 250px")
+      style = "max-height: 300px")
     ),
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
@@ -112,7 +126,7 @@ rb_ui <- function() {
 rb_server <- function(input, output, session) {
 
   .salaries <- reactive({
-    req(input$date)
+    req(input$title)
     .date <- switch(
       input$date,
       'All' = c('2024', '2023', '2022'),
@@ -125,8 +139,48 @@ rb_server <- function(input, output, session) {
       filter(
         lubridate::year(date) %in% .date,
         title_general %in% input$title,
-        location_country %in% input$location
+        location_country %in% input$location_country,
+        location_granular %in% input$location_granular
       )
+  })
+
+  # reactive inputs
+  .location_granular <- eventReactive(input$location_country, {
+    salaries |>
+      filter(location_country %in% input$location_country) |>
+      mutate(key = location_granular, text = location_granular ) |>
+      select(key, text) |>
+      distinct()  |>
+      arrange(key) |>
+      mutate(across(everything(), as.character))
+  })
+
+  observe({
+        shiny.fluent::updateDropdown.shinyInput(
+          session = session,
+          inputId = 'location_granular',
+          multiSelect = TRUE,
+          value = .location_granular() |>  pull(key),
+          options =  .location_granular()
+        )
+  })
+  observeEvent(input$deselect_all, {
+    shiny.fluent::updateDropdown.shinyInput(
+      session = session,
+      inputId = 'location_granular',
+      multiSelect = TRUE,
+      value = NULL,
+      options =  .location_granular()
+    )
+  })
+  observeEvent(input$select_all, {
+    shiny.fluent::updateDropdown.shinyInput(
+      session = session,
+      inputId = 'location_granular',
+      multiSelect = TRUE,
+      value = .location_granular() |>  pull(key),
+      options =  .location_granular()
+    )
   })
 
   #plot

@@ -17,6 +17,7 @@ library(here)
 library(purrr)
 library(glue)
 library(lubridate)
+library(forcats)
 library(dplyr)
 library(tidyr)
 library(gt)
@@ -694,6 +695,18 @@ sal_clean_filt |>
 
 ## Location
 
+```{r}
+sal_clean_filt |> 
+  count(where_is_the_closest_major_city_or_hub, where_are_you_located) |> 
+  gt()
+
+sal_clean_filt |> 
+  count(
+    where_are_you_located, what_country_do_you_work_in,
+    where_is_the_closest_major_city_or_hub) |>  
+  gt()
+```
+
 Location is quite messy data consisting of free-form responses  spread between 3 variables:
 
 - `where_are_you_located` contains Countries (USA, Canada, etc.), states (CO, Carolinas, etc.)
@@ -733,46 +746,127 @@ USA <- c(
   "Other US Location (HI, AK, PR, etc.)"
 )
 
-sal_clean_filt <- sal_clean_filt |> mutate(
-  location_raw_data = ifelse(
-    is.na(where_are_you_located), 
-    what_country_do_you_work_in, 
-    where_are_you_located) |> 
-    tolower(),
-  location_country = case_when(
-    location_raw_data %in% c(
-      tolower(USA), 'co', 'san diego, ca', 'united states') ~ 'United States of America',
-    str_detect(location_raw_data, regex('usa?', ignore_case = TRUE)) ~ 
-      'United States of America',
+usa_locations <- c(
+  'baltimore',
+  'boston',
+  'bay area', 
+  'baltimore',
+  'boulder',
+  'california',
+  'cambridge',
+  'carlsbad',
+  'jersey', 'maine',
+  'chicago',
+  '\\bdc\\b',
+  'denver',
+  'durham',
+  'hayward',
+  'hungary',
+  'indianapolis',
+  'kansas',
+  '\\bla\\b',
+  'los angeles',
+  'maryland',
+  'midwest',
+  'new york',
+  '\\bnj\\b',
+  '\\bny[c]?\\b',
+  'ohio',
+  'philadelphia',
+  'phoenix',
+  'pittsburgh',
+  'raleigh',
+  'san diego',
+  'ridgefield',
+  'rockville',
+  'rtp\\b',
+  'sacramento',
+  'salt lake',
+  'seattle',
+  'san francisco',
+  'socal',
+  'united states',
+  'u\\.s\\.a',
+  'washington'
+) 
+
+usa_locations <- str_c('(', str_c(usa_locations, collapse = '|'), ')')
+
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(
     
-    location_raw_data %in% c(
-      'united kingdom and ireland', 'uk') ~ 'United Kingdom',
+    # prep raw location data
+    location_raw_data = case_when(
+      !is.na(what_country_do_you_work_in) ~ what_country_do_you_work_in,
+      !is.na(where_are_you_located) ~ where_are_you_located, 
+      !is.na(where_is_the_closest_major_city_or_hub) ~ where_is_the_closest_major_city_or_hub,
+      .default = where_is_the_closest_major_city_or_hub
+    ) |> 
+      tolower(),
     
-    
-    location_raw_data %in% 
-      c('canada', 'united states of america',
-        'belgium', 'france', 'spain', 'united kingdom', 'benelux', 'germany',
-        'sweden', 'switzerland', 'denmark',
-        'singapore', 'india', 'australia') ~ location_raw_data,
-    TRUE ~ NA
-    
-  ),
-  location_country = str_to_title(location_country)
-)
+    # matching
+    location_country = case_when(
+      
+      ### usa 
+      location_raw_data %in% c(
+        tolower(USA), 
+        'co', 
+        'san diego, ca', 
+        'united states'
+      ) ~ 'United States of America',
+      
+      location_raw_data |> 
+        str_detect(regex('usa?', ignore_case = TRUE)) ~ 
+        'United States of America', 
+
+      location_raw_data |>
+        str_detect(regex(usa_locations, ignore_case = TRUE), ) ~ 
+        'United States of America',
+      ### UK
+      location_raw_data |> 
+        str_detect('(u\\.k|dundee|ireland)') ~ 'United Kingdom',
+      location_raw_data %in% c(
+        'united kingdom and ireland', 'uk') ~ 'United Kingdom',
+      
+      ### other
+      location_raw_data %in% 
+        c('canada', 'united states of america',
+          'belgium', 'france', 'spain', 'united kingdom', 'benelux', 'germany',
+          'sweden', 'switzerland', 'denmark',
+          'singapore', 'india', 'australia') ~ location_raw_data,
+      
+      location_raw_data |>  str_detect('toronto') ~ 'Canada',
+      TRUE ~ NA
+      
+    ),
+    location_country = str_to_title(location_country)
+  )
 
 sal_clean_filt |> 
-  count(location_country, location_raw_data) |> 
+  count(location_country, location_raw_data,
+        where_are_you_located, what_country_do_you_work_in, 
+        where_is_the_closest_major_city_or_hub) |> 
   arrange(location_country) |>  gt()
 ```
 
+### location granular
+
+for selecting within country:
+
 ```{r}
+sal_clean_filt <- sal_clean_filt |> 
+  mutate(
+    location_granular = 
+      coalesce(where_is_the_closest_major_city_or_hub, where_are_you_located)
+  )  
 sal_clean_filt |> 
   count(
-    where_are_you_located, what_country_do_you_work_in, where_is_the_closest_major_city_or_hub) |>  gt()
-
+    location_granular, 
+    where_is_the_closest_major_city_or_hub, 
+    where_are_you_located) |>  gt()
 ```
 
-### Completeness
+# Completeness
 
 Compare the missingness of original location variables vs the cleaned `location_country` variable:
 
@@ -780,7 +874,8 @@ Compare the missingness of original location variables vs the cleaned `location_
 sal_clean_filt |> 
   summarize(
     across(c(
-      location_country, 
+      location_country,
+      location_granular,
       where_are_you_located, 
       what_country_do_you_work_in, 
       where_is_the_closest_major_city_or_hub), 
@@ -799,7 +894,6 @@ sal_clean_filt <- sal_clean_filt |>
          day = day(timestamp)) |> 
   select(timestamp, year:day, everything())
 ```
-
 
 # write out the data
 
@@ -844,7 +938,10 @@ salaries <- salaries |>
       forcats::fct() |> 
       forcats::fct_relevel(
         'Scientist', 'Director', 'VP'
-      )
-    )
+      ),
+    
+    location_granular = forcats::fct(location_granular) |> 
+      forcats::fct_relevel(USA)
+  )
 use_data(salaries, overwrite = TRUE)
 ```
