@@ -171,3 +171,96 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
 
   suppressWarnings({ p })
 }
+
+#' plot career progression
+#'
+#' @examples
+#' library(r_biotech_salary)
+#' data(salaries)
+#' salaries_sub <- salaries |>
+#'   dplyr::filter(title_general %in% c('Scientist', 'Principal Scientist'),
+#'          stringr::str_detect(location_country, 'United States') )
+#' plot_salary(salaries_sub)
+#'
+#' @param .df salary data
+#' @export
+plot_career_progression <- function(
+    .df, x = date, fill = title_general, title = '',
+    .type = 'plotly') {
+  .df %>%
+    count({{x}}) |>
+    plotly::plot_ly(x = ~{{x}}) |>
+    plotly::add_lines(y = ~n) |>
+    plotly::layout(
+      xaxis = list(rangeslider = (list(type = 'date')))
+    )
+}
+
+
+#' Title
+#'
+#' @return plot
+#' @export
+#'
+#' @examples
+#' gt_career_progression(salaries)
+gt_career_progression <- function(.df) {
+  .df |>
+    arrange(title_general) |>
+    group_by(title_category, title_general) |>
+    dplyr::summarize(
+      total = median(salary_total, na.rm = TRUE),
+      base = median(salary_base, na.rm = TRUE),
+      bonus = median(bonus, na.rm = TRUE),
+      bonus_pct = mean(bonus_pct, na.rm = TRUE)
+    ) |>
+    #ungroup() |>
+    mutate(base_p = base/total) |>
+    relocate(base_p, .after = total) |>
+    select(-base, -bonus_pct) |>
+    gt::gt() |>
+    gt::tab_options(
+      column_labels.border.top.style = 'hidden',
+
+      data_row.padding = gt::px(1)
+    ) |>
+    gt::tab_style(
+      style = cell_borders(style = 'hidden'),
+      locations = cells_body(
+        columns = c(everything(), -title_category))
+    ) |>
+    gt::cols_label(
+      title_general = '',
+      total = 'Salary',
+      base_p = '',
+    #  bonus_pct = 'Bonus (%)'
+    ) |>
+
+    gt::fmt_currency(columns = c(total, bonus), decimals = 0) |>
+    gtExtras::gt_plt_bar_pct(
+      base_p, fill = 'seagreen', background = '#A0CBE8FF'
+    ) |>
+    #gt::fmt_percent(bonus_pct, decimals = 0) |>
+    gt::cols_align(title_general, align = 'right') |>
+    gt::tab_style(
+      style = list(
+        gt::cell_text(color = "seagreen")
+      ),
+      locations = gt::cells_body(
+        columns = total
+      )
+    ) |>
+
+    gt::tab_style(
+      style = list(
+        gt::cell_text(color = "#4E79A7FF")
+      ),
+      locations = gt::cells_body(
+        columns = bonus
+      )
+    )# |>
+    #gtExtras::gt_merge_stack(
+    #  col1 = total, col2 = bonus, palette = c('seagreen', '#4E79A7FF'),
+    #3  font_weight = c('normal', 'normal')
+    #  )
+}

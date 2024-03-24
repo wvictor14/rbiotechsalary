@@ -95,7 +95,7 @@ rb_ui <- function() {
       makeCard(
         content = div(
           style="max-height: 275px; overflow: auto",
-          highcharter::highchartOutput('highchart', height = '275px')
+          gt::gt_output('table_career_progression')
         ),
         size = 4,
         style = "max-height: 275px"
@@ -111,9 +111,9 @@ rb_ui <- function() {
         style="max-height: 600px; overflow: scroll",
         DT::dataTableOutput("table_raw", height = '600px')
       ),
-      size = 11,
+      size = 12,
       style = "max-height: 600px"
-    ),
+    )
   )
 }
 
@@ -198,6 +198,9 @@ rb_server <- function(input, output, session) {
     plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)')
   })
 
+  output$table_career_progression <- gt::render_gt({
+    gt_career_progression(.salaries())
+  })
   output$plot_experience <- plotly::renderPlotly({
 
     # suppress warnings for app session
@@ -218,9 +221,17 @@ rb_server <- function(input, output, session) {
         selected_cols <- .salaries() |>
           arrange(desc(date)) |>
           select(
+            `Location` = location_granular,
             `Job title` = title_general,
+            `Job details` = title_detail,
+            `Field` = biotech_sub_industry,
+            `Company/org` = company_or_institution_name,
             `Salary (base)` = salary_base,
+            `Bonus` = bonus,
             `Bonus %` = bonus_pct,
+            `Experience (yr)` = years_of_experience,
+            `Highest education` = highest_achieved_formal_education,
+
             `Date` = date
           ) |>
           DT::datatable(
