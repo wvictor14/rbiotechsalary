@@ -197,7 +197,7 @@ plot_career_progression <- function(
 }
 
 
-#' Title
+#' table of summarized salary info
 #'
 #' @return plot
 #' @export
@@ -217,34 +217,38 @@ gt_career_progression <- function(.df) {
     #ungroup() |>
     mutate(base_p = base/total) |>
     relocate(base_p, .after = total) |>
-    select(-base, -bonus_pct) |>
+    select(-base) |>
     gt::gt() |>
-    gt::tab_options(
-      column_labels.border.top.style = 'hidden',
 
-      data_row.padding = gt::px(1)
+    # adjust content
+    gt::cols_label(
+      title_general = '',
+      total = 'Total',
+      base_p = 'Base/Bonus',
+      bonus = 'Bonus'
     ) |>
+
+    gt::fmt_currency(columns = c(total, bonus), decimals = 0) |>
+    gt::fmt_percent(bonus_pct, decimals = 0) |>
+    gt::cols_merge(
+      columns = c(bonus, bonus_pct),
+      pattern = "{1} ({2})"
+      )|>
+    gtExtras::gt_plt_bar_pct(
+      base_p, fill = pal_salary()['base'], background = pal_salary()['bonus']
+    ) |>
+    gt::cols_align(title_general, align = 'right') |>
+    gt::cols_align(bonus_pct, align = 'left') |>
+
+    # theming
     gt::tab_style(
       style = cell_borders(style = 'hidden'),
       locations = cells_body(
         columns = c(everything(), -title_category))
     ) |>
-    gt::cols_label(
-      title_general = '',
-      total = 'Salary',
-      base_p = '',
-    #  bonus_pct = 'Bonus (%)'
-    ) |>
-
-    gt::fmt_currency(columns = c(total, bonus), decimals = 0) |>
-    gtExtras::gt_plt_bar_pct(
-      base_p, fill = 'seagreen', background = '#A0CBE8FF'
-    ) |>
-    #gt::fmt_percent(bonus_pct, decimals = 0) |>
-    gt::cols_align(title_general, align = 'right') |>
     gt::tab_style(
       style = list(
-        gt::cell_text(color = "seagreen")
+        gt::cell_text(color = pal_salary()['total'])
       ),
       locations = gt::cells_body(
         columns = total
@@ -253,14 +257,23 @@ gt_career_progression <- function(.df) {
 
     gt::tab_style(
       style = list(
-        gt::cell_text(color = "#4E79A7FF")
+        gt::cell_text(color = pal_salary()['bonus_2'])
       ),
       locations = gt::cells_body(
         columns = bonus
       )
-    )# |>
-    #gtExtras::gt_merge_stack(
-    #  col1 = total, col2 = bonus, palette = c('seagreen', '#4E79A7FF'),
-    #3  font_weight = c('normal', 'normal')
-    #  )
+    ) |>
+    gt::tab_style(
+      style = gt::cell_text(size = 'xx-small',
+        color = "white",
+      ),
+      location = gt::cells_row_groups()
+    ) |>
+
+    gt::tab_options(
+      column_labels.border.top.style = 'hidden',
+      column_labels.border.bottom.style = 'hidden',
+      row_group.padding = gt::px(0),
+      data_row.padding = gt::px(1)
+    )
 }
