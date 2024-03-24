@@ -43,7 +43,7 @@ plot_salary <- function(
       panel.grid.minor = element_blank(),
       axis.line = element_line(),
       legend.position = 'bottom') +
-    paletteer::scale_fill_paletteer_d('ggthemes::Tableau_20', guide ='none') +
+    paletteer::scale_fill_paletteer_d(pal_paletteer(), guide ='none') +
     #004488FF #DDAA33FF #BB5566FF
     paletteer::scale_color_paletteer_d('khroma::highcontrast') +
     scale_y_continuous(
@@ -156,7 +156,7 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
       axis.title.y = element_blank(),
       panel.grid.minor.y = element_line(),
       panel.grid.major.x = element_blank()) +
-    paletteer::scale_fill_paletteer_d('ggthemes::Tableau_20', guide ='none') +
+    paletteer::scale_fill_paletteer_d(pal_paletteer()) +
     scale_y_continuous(
       labels = scales::dollar, limits = c(0, NA),
       expand = expansion(c(0, 0.1))

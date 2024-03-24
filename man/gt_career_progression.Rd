@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_salary.R
 \name{gt_career_progression}
 \alias{gt_career_progression}
-\title{Title}
+\title{table of summarized salary info}
 \usage{
 gt_career_progression(.df)
 }
@@ -10,8 +10,8 @@ gt_career_progression(.df)
 plot
 }
 \description{
-Title
+table of summarized salary info
 }
 \examples{
-plot_career_progression(salaries)
+gt_career_progression(salaries)
 }
