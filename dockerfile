@@ -1,7 +1,7 @@
 
 
 # https://github.com/rocker-org/rocker-versioned2/wiki/shiny-verse_9dec38cb85d0
-FROM rocker/shiny-verse:4.2.3
+FROM rocker/shiny-verse:4.3.3
 
 # Install clusterProfiler and related packages for GSEA
 RUN install2.r --error --skipinstalled \
