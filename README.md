@@ -64,3 +64,16 @@ How to lay these out? by tabs?
 
 -   [ ] gt output for most customized output?
 -   [ ] show TC and breakdown base and bonus concisely
+
+# docker
+
+```bash
+sudo docker container ls
+sudo docker container run -d  -p 3838:3838 mdancho/shinyauth
+sudo docker container exec -it [CONTAINER] bash
+
+
+
+docker build -t rbiotechsalary .
+docker run -p 3838:3838 rbiotechsalary
+```
