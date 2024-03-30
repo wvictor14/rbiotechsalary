@@ -1,4 +1,4 @@
 ^renv$
 ^renv\.lock$
-^r_biotech_salary\.Rproj$
+^rbiotechsalary\.Rproj$
 ^\.Rproj\.user$

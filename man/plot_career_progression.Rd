@@ -19,7 +19,7 @@ plot_career_progression(
 plot career progression
 }
 \examples{
-library(r_biotech_salary)
+library(rbiotechsalary)
 data(salaries)
 salaries_sub <- salaries |>
   dplyr::filter(title_general \%in\% c('Scientist', 'Principal Scientist'),

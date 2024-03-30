@@ -1,4 +1,4 @@
-# r_biotech_salary
+# rbiotechsalary
 
 <!-- badges: start -->
 
@@ -6,11 +6,11 @@
 
 ## Installation
 
-You can install the development version of r_biotech_salary from [GitHub](https://github.com/) with:
+You can install the development version of rbiotechsalary from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("wvictor14/r_biotech_salary")
+devtools::install_github("wvictor14/rbiotechsalary")
 ```
 
 ## Ideas
@@ -75,6 +75,6 @@ sudo docker container run -d  -p 3838:3838 mdancho/shinyauth
 sudo docker container exec -it [CONTAINER] bash
 
 docker build -t rbiotechsalary .
-docker run -p 3838:3838 -v ./shinylog/:/var/log/shiny-server/  rbiotechsalary
+docker run -p 3838:3838  rbiotechsalary
 
 ```

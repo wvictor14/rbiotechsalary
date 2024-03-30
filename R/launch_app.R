@@ -5,7 +5,7 @@ launch_app <- function(options = list(), ...) {
   data(salaries)
   message('salaries loaded')
   
-  version <- paste0('v', as.character(utils::packageVersion('r_biotech_salary')))
+  version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   #shiny::addResourcePath("www", "www")
   
   rb_ui <- rb_ui()

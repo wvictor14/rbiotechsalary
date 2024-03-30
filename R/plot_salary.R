@@ -15,7 +15,7 @@ calculate_salary_stats <- function(.df, x) {
 #' plot salary histogram
 #'
 #' @examples
-#' library(r_biotech_salary)
+#' library(rbiotechsalary)
 #' data(salaries)
 #' salaries_sub <- salaries |>
 #'   dplyr::filter(title_general %in% c('Scientist', 'Principal Scientist'),
@@ -124,7 +124,7 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
 #' plot career progression
 #'
 #' @examples
-#' library(r_biotech_salary)
+#' library(rbiotechsalary)
 #' data(salaries)
 #' salaries_sub <- salaries |>
 #'   dplyr::filter(title_general %in% c('Scientist', 'Principal Scientist'),
