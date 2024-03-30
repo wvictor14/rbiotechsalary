@@ -17,6 +17,14 @@ devtools::install_github("wvictor14/rbiotechsalary")
 
 ? indicate still considering if worth
 
+### deployment
+
+- [x] dockerize
+- [x] decide on hosting service - digital ocean
+- [ ] deploy 
+- [ ] automate software updates
+- [ ] automate data updates
+
 ### General
 
 branch `filter-to-sci-track` is to experiment using only cleaned data (scientist, director, VP)
