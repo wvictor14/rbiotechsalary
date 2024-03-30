@@ -70,11 +70,12 @@ How to lay these out? by tabs?
 for remembering how to docker:
 
 ```bash
-sudo docker container ls
-sudo docker container run -d  -p 3838:3838 mdancho/shinyauth
-sudo docker container exec -it [CONTAINER] bash
+docker container ls
+docker container run -d  -p 3838:3838 mdancho/shinyauth
+docker container exec -it app1 bash
+cd /var/log/shiny-server/
 
 docker build -t rbiotechsalary .
-docker run -p 3838:3838  rbiotechsalary
+docker run --user shiny -p 3838:3838  --name app1 rbiotechsalary
 
 ```
