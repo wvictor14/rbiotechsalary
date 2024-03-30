@@ -24,6 +24,8 @@ devtools::install_github("wvictor14/rbiotechsalary")
 - [ ] deploy 
 - [ ] automate software updates
 - [ ] automate data updates
+    - [ ] target pipeline
+    - [ ] automate new data cleaning and uploading
 
 ### General
 
