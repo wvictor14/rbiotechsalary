@@ -67,13 +67,14 @@ How to lay these out? by tabs?
 
 # docker
 
+for remembering how to docker:
+
 ```bash
 sudo docker container ls
 sudo docker container run -d  -p 3838:3838 mdancho/shinyauth
 sudo docker container exec -it [CONTAINER] bash
 
-
-
 docker build -t rbiotechsalary .
-docker run -p 3838:3838 rbiotechsalary
+docker run -p 3838:3838 -v ./shinylog/:/var/log/shiny-server/  rbiotechsalary
+
 ```

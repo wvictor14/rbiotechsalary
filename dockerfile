@@ -9,15 +9,19 @@ RUN install2.r --error --skipinstalled \
     gt \
     gtExtras \
     paletteer \
-    plotly 
-RUN R -e "devtools::install_github('wvictor14/r_biotech_salary')"
+    plotly \
+    DT
 
-# copy app files
+# install app
+WORKDIR /home/app/
+COPY . .
+RUN R -e "devtools::install()"
+
+# copy app files to shiny server folder
 RUN rm -rf /srv/shiny-server/sample-apps
-COPY inst/application/* /srv/shiny-server/rbiotechsalary
+COPY inst/application/* /srv/shiny-server/rbiotechsalary/
 
+# run the app
 USER shiny
-
 EXPOSE 3838
-
 CMD ["/usr/bin/shiny-server"]
