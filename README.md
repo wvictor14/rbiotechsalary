@@ -86,6 +86,8 @@ docker container exec -it app1 bash
 cd /var/log/shiny-server/
 
 docker build -t rbiotechsalary .
-docker run --user shiny -p 3838:3838  --name app1 rbiotechsalary
+docker push victor2wy/rbiotechsalary # push to dockerhub
 
+docker run --user shiny -p 3838:3838  --name app1 rbiotechsalary # local
+docker run -dp 3838:3838 victor2wy/rbiotechsalary #dockerhub
 ```
