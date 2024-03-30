@@ -1,27 +1,29 @@
 #' @export
 #' @import shiny shiny.fluent
-launch_app <- function(..., salaries = NULL) {
-
-  if (is.null(data)) {
-    data(salaries)
-    salaries |>  glimpse()
-    message('salaries loaded')
-  }
-
+launch_app <- function(options = list(), ...) {
+  
+  data(salaries)
+  message('salaries loaded')
+  
   version <- paste0('v', as.character(utils::packageVersion('r_biotech_salary')))
   #shiny::addResourcePath("www", "www")
-
+  
   rb_ui <- rb_ui()
   rb_server <- rb_server
-
-  shiny::shinyApp(rb_ui, rb_server, options = list(launch.browser = TRUE), ...)
+  
+  shiny::shinyApp(
+    rb_ui, 
+    rb_server, 
+    options = list(launch.browser = TRUE), 
+    ...
+  )
 }
 
 #' app ui
 #'
 #' @export
 rb_ui <- function() {
-
+  
   filters <- tagList(
     shiny.fluent::Dropdown.shinyInput(
       'title',
@@ -46,7 +48,7 @@ rb_ui <- function() {
       placeHolder = "Select sub-location",
       multiSelect = TRUE
     ),
-
+    
     shiny.fluent::Stack(
       horizontal = TRUE,
       shiny.fluent::DefaultButton.shinyInput(
@@ -67,7 +69,7 @@ rb_ui <- function() {
         value = 'All')
     )
   )
-
+  
   shiny.fluent::fluentPage(
     shiny.fluent::Stack(
       horizontal = TRUE,
@@ -75,7 +77,7 @@ rb_ui <- function() {
       tags$pre(tags$span('\t')),
       shiny.fluent::Text(variant = "xLarge", 'Showing salary data for:')),
     tags$style(".card { padding: 14px; margin-bottom: 14px; }"),
-
+    
     shiny.fluent::Stack(
       tokens = list(childrenGap = 10), horizontal = TRUE,
       makeCard(content = shiny.fluent::Stack(
@@ -124,7 +126,7 @@ rb_ui <- function() {
 #' @export
 #' @import dplyr ggplot2
 rb_server <- function(input, output, session) {
-
+  
   .salaries <- reactive({
     req(input$title)
     .date <- switch(
@@ -134,7 +136,7 @@ rb_server <- function(input, output, session) {
       '2023' = '2023',
       '2022' = '2022'
     )
-
+    
     salaries |>
       filter(
         lubridate::year(date) %in% .date,
@@ -143,7 +145,7 @@ rb_server <- function(input, output, session) {
         location_granular %in% input$location_granular
       )
   })
-
+  
   # reactive inputs
   .location_granular <- eventReactive(input$location_country, {
     salaries |>
@@ -154,15 +156,15 @@ rb_server <- function(input, output, session) {
       arrange(key) |>
       mutate(across(everything(), as.character))
   })
-
+  
   observe({
-        shiny.fluent::updateDropdown.shinyInput(
-          session = session,
-          inputId = 'location_granular',
-          multiSelect = TRUE,
-          value = .location_granular() |>  pull(key),
-          options =  .location_granular()
-        )
+    shiny.fluent::updateDropdown.shinyInput(
+      session = session,
+      inputId = 'location_granular',
+      multiSelect = TRUE,
+      value = .location_granular() |>  pull(key),
+      options =  .location_granular()
+    )
   })
   observeEvent(input$deselect_all, {
     shiny.fluent::updateDropdown.shinyInput(
@@ -182,7 +184,7 @@ rb_server <- function(input, output, session) {
       options =  .location_granular()
     )
   })
-
+  
   #plot
   output$salary_stats_text <- gt::render_gt({
     if (nrow(.salaries()) > 0) {
@@ -197,23 +199,23 @@ rb_server <- function(input, output, session) {
   output$plot <- plotly::renderPlotly({
     plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)')
   })
-
+  
   output$table_career_progression <- gt::render_gt({
     gt_career_progression(.salaries())
   })
   output$plot_experience <- plotly::renderPlotly({
-
+    
     # suppress warnings for app session
     storeWarn<- getOption("warn")
     options(warn = -1)
-
+    
     if (nrow(.salaries()) > 0) {
       plot_experience(.salaries())
     } else {
       p <- ggplot() + theme_minimal(); plotly::ggplotly(p, height = 250)
     }
   })
-
+  
   # render the table + other components
   output$table_raw <- DT::renderDataTable(
     server = TRUE, expr = {
@@ -231,7 +233,7 @@ rb_server <- function(input, output, session) {
             `Bonus %` = bonus_pct,
             `Experience (yr)` = years_of_experience,
             `Highest education` = highest_achieved_formal_education,
-
+            
             `Date` = date
           ) |>
           DT::datatable(
@@ -246,13 +248,13 @@ rb_server <- function(input, output, session) {
       }
       return(items_list)
     })
-
+  
 }
 
 #' @export
 makeCard <- function(title = NULL, content, size = 12, style = "") {
-
-
+  
+  
   div(
     class = glue::glue("card ms-depth-8 ms-sm{size} ms-xl{size}"),
     style = style,

@@ -109,8 +109,8 @@ gt_career_progression <- function(.df) {
 
     # theming
     gt::tab_style(
-      style = cell_borders(style = 'hidden'),
-      locations = cells_body(
+      style = gt::cell_borders(style = 'hidden'),
+      locations = gt::cells_body(
         columns = c(everything(), -title_category))
     ) |>
     gt::tab_style(
