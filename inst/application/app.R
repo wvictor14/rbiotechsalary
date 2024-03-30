@@ -1,2 +1,2 @@
-library(r_biotech_salary)
+library(rbiotechsalary)
 launch_app()
