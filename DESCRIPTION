@@ -17,7 +17,7 @@ Imports:
     gt,
     gtExtras,
     lubridate,
-    paletteer,
+    paletteer (>= 1.6.0),
     plotly,
     scales,
     shiny,
