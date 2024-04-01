@@ -17,6 +17,7 @@ RUN R -e "devtools::install()"
 
 # user
 RUN useradd -ms /bin/bash shiny
+RUN chmod -R 777 /home/app
 USER shiny
 
 # run the app
