@@ -81,13 +81,19 @@ for remembering how to docker:
 
 ```bash
 docker container ls
-docker container run -d  -p 3838:3838 mdancho/shinyauth
-docker container exec -it app1 bash
-cd /var/log/shiny-server/
 
+# stop and remove
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+
+# build and push
 docker build -t rbiotechsalary .
+docker tag rbiotechsalary victor2wy/rbiotechsalary
 docker push victor2wy/rbiotechsalary # push to dockerhub
 
-docker run --user shiny -p 3838:3838  --name app1 rbiotechsalary # local
-docker run -dp 3838:3838 victor2wy/rbiotechsalary #dockerhub
+docker pull victor2wy/rbiotechsalary:latest
+
+# run
+docker run --user shiny -p 3838:3838  rbiotechsalary # local
+docker run --user shiny -dp 3838:3838 victor2wy/rbiotechsalary #dockerhub
 ```
