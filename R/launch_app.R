@@ -1,6 +1,13 @@
+#' launch rbiotechsalary app
+#' 
 #' @export
-#' @import shiny shiny.fluent
-launch_app <- function(options = list(), ...) {
+#' @import shiny bslib
+#' @examples \dontrun{
+#' 
+#'  # dev ui without server
+#'  launch_app(server = function(input, output) {})
+#' }
+launch_app <- function(options = list(), ui = rb_ui, server = rb_server, ...) {
   
   data(salaries)
   message('salaries loaded')
@@ -8,15 +15,7 @@ launch_app <- function(options = list(), ...) {
   version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   #shiny::addResourcePath("www", "www")
   
-  rb_ui <- rb_ui()
-  rb_server <- rb_server
-  
-  shiny::shinyApp(
-    rb_ui, 
-    rb_server, 
-    options = list(launch.browser = TRUE), 
-    ...
-  )
+  shiny::shinyApp(ui, server,  options = list(launch.browser = TRUE), ...)
 }
 
 #' app ui
