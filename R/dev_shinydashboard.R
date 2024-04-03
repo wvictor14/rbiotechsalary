@@ -18,8 +18,7 @@ rb_ui2 <- function() {
       title = "One", 
       p("First page content."),
       filters_ui('filters'),
-      
-      gt::gt_output('salary_stats_text')
+      table_salary_stats_ui('table_salary_stats')
     ),
     nav_panel(title = "Two", p("Second page content.")),
     nav_spacer(),
@@ -36,16 +35,6 @@ rb_ui2 <- function() {
 rb_server_2 <- function(input, output, session) {
   
   .salaries <- filters_server('filters')
+  table_salary_stats_server('table_salary_stats', .salaries)
   
-  # table salary stats
-  output$salary_stats_text <- gt::render_gt({
-    if (nrow(.salaries()) > 0) {
-      gt_salary_stats(.salaries())
-    } else {
-      tibble('No matching salary data' = '') |> gt::gt() |>
-        gt::tab_options(
-          table.border.top.style = "hidden",
-          table.border.bottom.style = "hidden")
-    }
-  })
 }
