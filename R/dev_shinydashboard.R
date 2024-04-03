@@ -12,16 +12,18 @@ rb_ui2 <- function() {
     target = "_blank"
   )
   
-  page_navbar(
-    title = "My App",
+  page_fillable(
+    theme = bs_theme(bootswatch = "flatly", version = 5),
+    title = "r/biotech salary",
     nav_panel(
       title = "One", 
       p("First page content."),
       filters_ui('filters'),
-      table_salary_stats_ui('table_salary_stats'),
       
-      plotly::plotlyOutput("plot"),
-      
+      layout_columns(
+        table_salary_stats_ui('table_salary_stats'),
+        plotly::plotlyOutput("plot")
+      ),
       gt::gt_output('table_career_progression'),
       plotly::plotlyOutput('plot_experience'),
       table_raw_ui("table_raw")
@@ -45,7 +47,9 @@ rb_server_2 <- function(input, output, session) {
   
   
   output$plot <- plotly::renderPlotly({
-    plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)')
+    plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)') |>  
+      plotly::config(displayModeBar = FALSE) |> 
+      plotly::layout(margin = list(t = 0, b = 0, l = 0, r = 0))
   })
   
   

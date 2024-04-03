@@ -12,7 +12,8 @@ plot_salary(
   x = salary_total,
   fill = title_general,
   title = "",
-  .type = "plotly"
+  .type = "plotly",
+  height = NULL
 )
 }
 \arguments{

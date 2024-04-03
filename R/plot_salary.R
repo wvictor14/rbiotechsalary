@@ -26,7 +26,7 @@ calculate_salary_stats <- function(.df, x) {
 #' @export
 plot_salary <- function(
     .df, x = salary_total, fill = title_general, title = '',
-    .type = 'plotly') {
+    .type = 'plotly', height = NULL) {
 
   .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}}))
   stats <- calculate_salary_stats(.df, {{x}})
@@ -65,7 +65,7 @@ plot_salary <- function(
 
   stopifnot(.type %in% c('plotly', 'ggplot2'))
   if (.type == 'plotly') {
-    p <- plotly::ggplotly(p, height = '250')
+    p <- plotly::ggplotly(p, height = NULL)
   }
 
   suppressWarnings({ p })
