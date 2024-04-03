@@ -111,7 +111,7 @@ rb_ui <- function() {
     makeCard(
       content = div(
         style="max-height: 600px; overflow: scroll",
-        DT::dataTableOutput("table_raw", height = '600px')
+        table_raw_ui("table_raw")
       ),
       size = 12,
       style = "max-height: 600px"
@@ -217,37 +217,7 @@ rb_server <- function(input, output, session) {
   })
   
   # render the table + other components
-  output$table_raw <- DT::renderDataTable(
-    server = TRUE, expr = {
-      items_list <- if(nrow(.salaries()) > 0){
-        selected_cols <- .salaries() |>
-          arrange(desc(date)) |>
-          select(
-            `Location` = location_granular,
-            `Job title` = title_general,
-            `Job details` = title_detail,
-            `Field` = biotech_sub_industry,
-            `Company/org` = company_or_institution_name,
-            `Salary (base)` = salary_base,
-            `Bonus` = bonus,
-            `Bonus %` = bonus_pct,
-            `Experience (yr)` = years_of_experience,
-            `Highest education` = highest_achieved_formal_education,
-            
-            `Date` = date
-          ) |>
-          DT::datatable(
-            rownames = FALSE,
-            options = list('dom' = 'ftipr')) |>
-          DT::formatCurrency('Salary (base)') |>
-          DT::formatPercentage('Bonus %') |>
-          DT::formatDate('Date', method = 'toLocaleDateString')
-        selected_cols
-      } else {
-        tibble() |>  DT::datatable()
-      }
-      return(items_list)
-    })
+  table_raw_server('table_raw', .salaries)
   
 }
 
