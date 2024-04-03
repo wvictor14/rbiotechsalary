@@ -14,7 +14,8 @@ rb_ui2 <- function() {
     title = "My App",
     nav_panel(
       title = "One", 
-      p("First page content.")
+      p("First page content."),
+      filters_ui()
     ),
     nav_panel(title = "Two", p("Second page content.")),
     nav_spacer(),

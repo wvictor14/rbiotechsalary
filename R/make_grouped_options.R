@@ -30,6 +30,6 @@ make_grouped_options <- function(.df, .groups, .choices) {
 }
 
 DropdownMenuItemType <- function(type) {
-  JS(paste0("jsmodule['@fluentui/react'].DropdownMenuItemType."), type)
+  shiny.fluent::JS(paste0("jsmodule['@fluentui/react'].DropdownMenuItemType."), type)
 }
 
