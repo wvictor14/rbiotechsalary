@@ -12,5 +12,7 @@ new ui
 \examples{
 \dontrun{
   launch_app(ui = rb_ui2, server = function(input, output) {})
+  launch_app(ui = rb_ui2, server = rb_server_2)
+  
 }
 }
