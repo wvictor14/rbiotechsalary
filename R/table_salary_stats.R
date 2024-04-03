@@ -1,23 +1,29 @@
+#' table salary stats ui
+#' @export
 table_salary_stats_ui <- function(id, ...) {
   tagList(
     gt::gt_output(NS(id, 'salary_stats'), ...)
   )
 }
-table_salary_stats_server <- function(id, .salaries) {
+#' table salary stats server
+#' @export
+table_salary_stats_server <- function(id, .salaries, ...) {
   stopifnot(is.reactive(.salaries))
   moduleServer(id, function(input, output, session) {
     
-    output$salary_stats <- gt::render_gt({
-      if (nrow(.salaries()) > 0) {
-        table_salary_stats(.salaries())
-      } else {
-        tibble('No matching salary data' = '') |> 
-          gt::gt() |>
-          gt::tab_options(
-            table.border.top.style = "hidden",
-            table.border.bottom.style = "hidden")
-      }
-    })
+    output$salary_stats <- gt::render_gt(
+      ...,
+      expr = {
+        if (nrow(.salaries()) > 0) {
+          table_salary_stats(.salaries())
+        } else {
+          tibble('No matching salary data' = '') |> 
+            gt::gt() |>
+            gt::tab_options(
+              table.border.top.style = "hidden",
+              table.border.bottom.style = "hidden")
+        }
+      })
   })
 }
 
