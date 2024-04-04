@@ -8,11 +8,12 @@ table_raw_ui <- function(id, ...) {
 
 #' table_raw server 
 #' @export
-table_raw_server <- function(id, .salaries) {
+table_raw_server <- function(id, .salaries, ...) {
   stopifnot(is.reactive(.salaries))
   moduleServer(id, function(input, output, session) {
     
     output$table_raw <- gt::render_gt(
+      ...,
       expr  = {
         .table <- if (nrow(.salaries()) > 0) {
           selected_cols <- .salaries() |>

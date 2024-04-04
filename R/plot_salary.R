@@ -25,8 +25,7 @@ calculate_salary_stats <- function(.df, x) {
 #' @param .df salary data
 #' @export
 plot_salary <- function(
-    .df, x = salary_total, fill = title_general, title = '',
-    .type = 'plotly', height = NULL) {
+    .df, x = salary_total, fill = title_general, height = NULL) {
 
   .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}}))
   stats <- calculate_salary_stats(.df, {{x}})
@@ -61,14 +60,9 @@ plot_salary <- function(
       expand = expansion(mult = c(0, 0))
     ) +
     scale_x_continuous(label = scales::dollar, expand = expansion())  +
-    labs(title = title, color = '', x = '', y = '% of jobs')
-
-  stopifnot(.type %in% c('plotly', 'ggplot2'))
-  if (.type == 'plotly') {
-    p <- plotly::ggplotly(p, height = NULL)
-  }
-
-  suppressWarnings({ p })
+    labs(color = '', x = '', y = '% of jobs')
+  
+  p
 }
 
 
