@@ -21,11 +21,16 @@ rb_ui2 <- function() {
       filters_ui('filters'),
       
       layout_columns(
+        col_widths = c(4, 8),
         table_salary_stats_ui('table_salary_stats'),
         plotly::plotlyOutput("plot")
       ),
-      gt::gt_output('table_career_progression'),
-      plotly::plotlyOutput('plot_experience'),
+      
+      layout_columns(
+        col_widths = c(4, 8),
+        gt::gt_output('table_career_progression'),
+        plotly::plotlyOutput('plot_experience')
+      ),
       table_raw_ui("table_raw")
     ),
     nav_panel(title = "Two", p("Second page content.")),
