@@ -3,16 +3,16 @@
 rb_server <- function(input, output, session) {
   
   .salaries <- filters_server('filters')
-  
+
+  # panel 1 ----
   value_boxes_stats_server('value_boxes', .salaries)
-  
   output$plot_salary_histogram <- plotly::renderPlotly({
     if (nrow(.salaries()) == 0 ) return(NULL)
-    
     plot_salary_histogram(.salaries(), salary_total)
   })
+  table_raw_server('table_raw', .salaries, height = gt::px(400))
   
-  
+  # panel 2 ----
   output$table_career_progression <- gt::render_gt({
     gt_career_progression(.salaries())
   })
@@ -29,8 +29,4 @@ rb_server <- function(input, output, session) {
       plotly::ggplotly(p)
     }
   })
-  
-  # render the table + other components
-  table_raw_server('table_raw', .salaries, height = gt::px(400))
-  
 }

@@ -20,17 +20,19 @@ rb_ui <- function() {
   page_navbar(
     theme = bs_theme(
       version = 5, 
-      #presets = 'shiny',
       fg = '#161C21',
       bg = '#EEE8D5',
       'primary' = .colors$primary
     ),
     title = "r/biotech salary",
     fillable = FALSE,
+    
     sidebar = sidebar(
       p('Choose your role'),
       filters_ui('filters')
     ),
+    
+    ### panel 1 ----
     nav_panel(
       title = "Salaries", 
       
@@ -46,6 +48,8 @@ rb_ui <- function() {
         )
       )
     ),
+    
+    ### panel 2 ----
     nav_panel(
       title = "Career progression", 
       card(
