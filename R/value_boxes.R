@@ -41,14 +41,15 @@ value_boxes_stats_server <- function(id, .salaries) {
   moduleServer(id, function(input, output, session) {
     
     # value boxes
-    output$plot_sparkline_average <- plotly::renderPlotly(
+    output$plot_sparkline_average <- plotly::renderPlotly({
+      if (nrow(.salaries()) == 0 ) return(NULL)
+      
       .salaries() |>
-        
         # take most recent 100 submissions for sparkline
         arrange(desc(date)) |> 
         slice(1:100) |> 
         plot_sparkline(color = '#41AB5DFF')
-    )
+    })
     
     stats <- reactive({
       .salaries() |> 
@@ -63,14 +64,17 @@ value_boxes_stats_server <- function(id, .salaries) {
           .label = glue::glue("{name}: {round(value, digits = -3)/1000}K")
         )
     })
+    
     output$text_average <- renderUI({
       .text <- stats() |> 
         filter(name == 'Total') |> pull(value) |>  round(digits = -3) |> 
         scales::dollar()
+      if (is.na(.text)) { .text <- 'No data.'}
       HTML(paste0(.text, "<br>"))
     })
     
     output$text_ave_breakdown <- renderUI({
+      if (any(is.na(stats()$value))) { return(HTML('')) }
       HTML(
         stats() |> filter(name != 'Total') |> pull(.label) |>  paste0(collapse = '<br>') 
       )

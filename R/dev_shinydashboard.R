@@ -79,6 +79,7 @@ rb_server_2 <- function(input, output, session) {
   value_boxes_stats_server('value_boxes', .salaries)
   
   output$plot_salary_histogram <- plotly::renderPlotly({
+    if (nrow(.salaries()) == 0 ) return(NULL)
     
     plot_salary_histogram(.salaries(), salary_total)
   })
