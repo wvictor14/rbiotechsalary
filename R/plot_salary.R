@@ -65,8 +65,34 @@ plot_salary <- function(
   p
 }
 
-
-
+#' plot salary histogram v2
+#' @export
+#' @examples
+#'
+#' plot_salary_histogram(salaries, x = salary_total)
+#' 
+plot_salary_histogram <- function(.df, x, color = '#41AB5DFF', font_color = '#EEE8D5') {
+  x <- .df |>  pull({{x}})
+  
+  plotly::plot_ly() |> 
+    plotly::add_histogram(
+      x = x,
+      color = I(color),
+      hovertemplate ='Salary Range: %{x}<br>%{y} jobs<extra></extra>'
+    ) |> 
+    plotly::config(displayModeBar = FALSE) |> 
+    plotly::layout(
+      margin = list(t = 0, b = 0, l = 0, r = 0),
+      plot_bgcolor  = "rgba(0, 0, 0, 0)",
+      paper_bgcolor = "rgba(0, 0, 0, 0)",
+      yaxis = list(visible = FALSE, showgrid = FALSE),
+      xaxis = list(title = ''),
+      font = list(color = font_color, size = 20) ,
+      hoverlabel = list(
+        font = list(size=15, color = font_color), 
+        bgcolor = '#161C21')
+    )
+}
 
 #' Plot salary against years of experience
 #'
