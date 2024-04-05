@@ -4,7 +4,12 @@
 \alias{gt_dark_mode}
 \title{stylize to dark mode}
 \usage{
-gt_dark_mode(gt_object, ...)
+gt_dark_mode(
+  gt_object,
+  .color_dark = "#00000000",
+  .color_light = "#EEE8D5",
+  ...
+)
 }
 \arguments{
 \item{gt_object}{gt table}
@@ -16,4 +21,13 @@ gt table
 }
 \description{
 stylize to dark mode
+}
+\examples{
+  
+salaries |> slice(1:20) |>  gt_table_raw() |>  gt_dark_mode()
+salaries |> slice(1:20) |>  gt_table_raw() |>  
+gt::tab_style(
+style = gt::cell_fill(alpha = 0), locations = list(gt::cells_body()))  |> 
+gt::opt_interactive()
+
 }
