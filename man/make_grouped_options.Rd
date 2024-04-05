@@ -2,19 +2,12 @@
 % Please edit documentation in R/make_grouped_options.R
 \name{make_grouped_options}
 \alias{make_grouped_options}
-\title{Make grouped choices for shiny.fluent::dropDown}
+\title{makes grouped options list for selectize input}
 \usage{
 make_grouped_options(.df, .groups, .choices)
 }
-\arguments{
-\item{.df}{salaries}
-
-\item{.groups}{group column}
-
-\item{.choices}{options column}
-}
 \description{
-Make grouped choices for shiny.fluent::dropDown
+makes grouped options list for selectize input
 }
 \examples{
 make_grouped_options(salaries, title_category, title_general)

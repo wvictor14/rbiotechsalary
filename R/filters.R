@@ -4,17 +4,9 @@ filters_ui <- function(id, ...) {
   tagList(
     
     selectizeInput(
-      NS(id, "title2"), 
+      NS(id, "title"), 
       label = NULL, 
-      choices = make_grouped_options_2(salaries, title_category, title_general) 
-    ),
-    
-    shiny.fluent::Dropdown.shinyInput(
-      NS(id, 'title'),
-      multiSelect = TRUE,
-      value = 'Scientist',
-      label = NULL,
-      options = salaries |> make_grouped_options(title_category, title_general)
+      choices = make_grouped_options(salaries, title_category, title_general) 
     ),
     shiny.fluent::Dropdown.shinyInput(
       NS(id, "location_country"),
