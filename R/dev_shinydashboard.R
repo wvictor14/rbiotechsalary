@@ -3,7 +3,6 @@
 #' @examples \dontrun{
 #'   launch_app(ui = rb_ui2, server = function(input, output) {})
 #'   launch_app(ui = rb_ui2, server = rb_server_2)
-#'   
 #' }
 rb_ui2 <- function() {
   link_github <- tags$a(
@@ -80,15 +79,8 @@ rb_server_2 <- function(input, output, session) {
   value_boxes_stats_server('value_boxes', .salaries)
   
   output$plot_salary_histogram <- plotly::renderPlotly({
-    p <- plot_salary(.salaries()) + 
-      labs(title = 'Total Compensation (Base + Bonus)')
-    plotly::ggplotly(p) |> 
-      plotly::config(displayModeBar = FALSE) |> 
-      plotly::layout(
-        margin = list(t = 0, b = 0, l = 0, r = 0),
-        plot_bgcolor  = "rgba(0, 0, 0, 0)",
-        paper_bgcolor = "rgba(0, 0, 0, 0)"
-      )
+    
+    plot_salary_histogram(.salaries(), salary_total)
   })
   
   

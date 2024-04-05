@@ -26,7 +26,7 @@ filters_ui <- function(id, ...) {
       label = 'More precise location',
       choices = NULL,
       options = list(plugins= list(
-        #'remove_button', 
+        #      'remove_button', 
         'clear_button'
         )),
       multiple = TRUE
