@@ -26,10 +26,18 @@ filters_ui <- function(id, ...) {
       inputId = NS(id, "location_granular2"),
       label = NULL,
       choices = NULL,
+      options = list(plugins= list('remove_button', 'clear_button')),
       #options = list(
       #  `actions-box` = TRUE), 
       multiple = TRUE
     ),
+    
+    layout_columns(
+      actionButton(
+        NS(id, "select_all2"), label = "Select all"
+      )
+    ),
+    
     shiny.fluent::Dropdown.shinyInput(
       inputId = NS(id, "location_granular"),
       placeHolder = "Select sub-location",
@@ -80,6 +88,14 @@ filters_server <- function(id) {
         inputId = 'location_granular2',
         choices = .location_granular() |>  pull(key),
         selected = .location_granular() |>  pull(key) 
+      )
+    })
+    observeEvent(input$select_all2, {
+      updateSelectizeInput(
+        session = session,
+        inputId = 'location_granular2',
+        choices = .location_granular() |>  pull(key),
+        selected = .location_granular() |>  pull(key)
       )
     })
     
