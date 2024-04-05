@@ -2,7 +2,14 @@
 #' @export
 filters_ui <- function(id, ...) {
   tagList(
-    
+    tags$head(
+      # Note the wrapping of the string in HTML()
+      tags$style(HTML("
+      .selectize-input {
+        max-height: 102px;
+        overflow-y: auto;
+      }
+      "))),
     selectizeInput(
       NS(id, "title"), 
       label = NULL, 
@@ -13,6 +20,15 @@ filters_ui <- function(id, ...) {
       label = NULL, 
       selected = 'United States Of America',
       choices = salaries |> pull(location_country) |>  unique() |>  sort()
+    ),
+    #shinyWidgets::pickerInput(
+     selectizeInput( 
+      inputId = NS(id, "location_granular2"),
+      label = NULL,
+      choices = NULL,
+      #options = list(
+      #  `actions-box` = TRUE), 
+      multiple = TRUE
     ),
     shiny.fluent::Dropdown.shinyInput(
       inputId = NS(id, "location_granular"),
@@ -56,6 +72,15 @@ filters_server <- function(id) {
         distinct()  |>
         arrange(key) |>
         mutate(across(everything(), as.character))
+    })
+    observe({
+      #shinyWidgets::updatePickerInput(
+      updateSelectizeInput(
+        session = session,
+        inputId = 'location_granular2',
+        choices = .location_granular() |>  pull(key),
+        selected = .location_granular() |>  pull(key) 
+      )
     })
     
     
