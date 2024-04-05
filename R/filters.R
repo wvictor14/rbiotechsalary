@@ -60,28 +60,27 @@ filters_server <- function(id) {
     # location input reactives
     .location_granular <- eventReactive(input$location_country, {
       salaries |>
-        filter(location_country %in% input$location_country) |>
-        mutate(key = location_granular, text = location_granular ) |>
-        select(key, text) |>
-        distinct()  |>
-        arrange(key) |>
-        mutate(across(everything(), as.character))
+        filter(
+          location_country %in% input$location_country) |>
+        pull(location_granular) |> 
+        unique() |> 
+        sort()
     })
     observe({
       #shinyWidgets::updatePickerInput(
       updateSelectizeInput(
         session = session,
         inputId = 'location_granular',
-        choices = .location_granular() |>  pull(key),
-        selected = .location_granular() |>  pull(key) 
+        choices = .location_granular(),
+        selected = .location_granular() 
       )
     })
     observeEvent(input$select_all, {
       updateSelectizeInput(
         session = session,
         inputId = 'location_granular',
-        choices = .location_granular() |>  pull(key),
-        selected = .location_granular() |>  pull(key)
+        choices = .location_granular(),
+        selected = .location_granular()
       )
     })
     
