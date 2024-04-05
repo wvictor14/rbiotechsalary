@@ -11,31 +11,63 @@ rb_ui2 <- function() {
     href = "https://github.com/wvictor14/rbiotechsalary",
     target = "_blank"
   )
-  
-  page_fillable(
-    theme = bs_theme(bootswatch = "flatly", version = 5),
-    title = "r/biotech salary",
-    nav_panel(
-      title = "One", 
-      p("First page content."),
-      filters_ui('filters'),
-      
-      layout_columns(
-        table_salary_stats_ui('table_salary_stats'),
-        plotly::plotlyOutput("plot")
-      ),
-      gt::gt_output('table_career_progression'),
-      plotly::plotlyOutput('plot_experience'),
-      table_raw_ui("table_raw")
+  .colors <- list(
+    'primary' = '#41AB5DFF'
+  )
+  page_navbar(
+    theme = bs_theme(
+      version = 5, 
+      #presets = 'shiny',
+      fg = '#161C21',
+      bg = '#EEE8D5',
+      'primary' = .colors$primary
     ),
-    nav_panel(title = "Two", p("Second page content.")),
+    title = "r/biotech salary",
+    fillable = FALSE,
+    sidebar = sidebar(
+      p('Choose your role'),
+      filters_ui('filters')
+    ),
+    nav_panel(
+      title = "Salaries", 
+      
+      layout_columns(value_boxes_stats_ui('value_boxes')),
+      
+      plotly::plotlyOutput("plot_salary_histogram"),
+      
+      card(
+        full_screen = TRUE,
+        min_height = '400px',
+        card_body(
+          table_raw_ui("table_raw")
+        )
+      )
+    ),
+    nav_panel(
+      title = "Career progression", 
+      card(
+        full_screen = TRUE,
+        card_body(
+          min_height = '300px',
+          layout_columns(
+            col_widths = c(4, 8),
+            gt::gt_output('table_career_progression'),
+            plotly::plotlyOutput('plot_experience')
+          )
+        )
+      )
+    ),
     nav_spacer(),
     nav_menu(
       title = "Links",
       align = "right",
       nav_item(link_github)
+    ),
+    nav_item(
+      input_dark_mode(id = "dark_mode", mode = "dark")
     )
   )
+  
 }
 
 #' updated server function
@@ -43,13 +75,20 @@ rb_ui2 <- function() {
 rb_server_2 <- function(input, output, session) {
   
   .salaries <- filters_server('filters')
+  
   table_salary_stats_server('table_salary_stats', .salaries)
+  value_boxes_stats_server('value_boxes', .salaries)
   
-  
-  output$plot <- plotly::renderPlotly({
-    plot_salary(.salaries(), title = 'Total Compensation (Base + Bonus)') |>  
+  output$plot_salary_histogram <- plotly::renderPlotly({
+    p <- plot_salary(.salaries()) + 
+      labs(title = 'Total Compensation (Base + Bonus)')
+    plotly::ggplotly(p) |> 
       plotly::config(displayModeBar = FALSE) |> 
-      plotly::layout(margin = list(t = 0, b = 0, l = 0, r = 0))
+      plotly::layout(
+        margin = list(t = 0, b = 0, l = 0, r = 0),
+        plot_bgcolor  = "rgba(0, 0, 0, 0)",
+        paper_bgcolor = "rgba(0, 0, 0, 0)"
+      )
   })
   
   
@@ -65,13 +104,12 @@ rb_server_2 <- function(input, output, session) {
     if (nrow(.salaries()) > 0) {
       plot_experience(.salaries())
     } else {
-      p <- ggplot() + theme_minimal(); plotly::ggplotly(p, height = 250)
+      p <- ggplot() + theme_minimal()
+      plotly::ggplotly(p)
     }
   })
   
   # render the table + other components
-  table_raw_server('table_raw', .salaries)
-  
-  
+  table_raw_server('table_raw', .salaries, height = gt::px(400))
   
 }

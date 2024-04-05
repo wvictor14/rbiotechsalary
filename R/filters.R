@@ -2,48 +2,45 @@
 #' @export
 filters_ui <- function(id, ...) {
   tagList(
-    shiny.fluent::Dropdown.shinyInput(
-      NS(id, 'title'),
-      multiSelect = TRUE,
-      value = 'Scientist',
-      label = NULL,
-      options = salaries |> make_grouped_options(title_category, title_general)
+    tags$head(
+      # Note the wrapping of the string in HTML()
+      tags$style(HTML("
+      .selectize-input {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      "))),
+    selectizeInput(
+      NS(id, "title"), 
+      label = NULL, 
+      choices = make_grouped_options(salaries, title_category, title_general) 
     ),
-    shiny.fluent::Dropdown.shinyInput(
-      NS(id, "location_country"),
-      placeHolder = "Select location",
-      multiSelect = FALSE,
-      value = 'United States Of America',
-      options =  salaries |>
-        mutate(key = location_country, text = location_country) |>
-        select(key, text) |>
-        distinct()  |>
-        arrange(key)
+    selectizeInput(
+      NS(id, "location_country"), 
+      label = 'Country', 
+      selected = 'United States Of America',
+      choices = salaries |> pull(location_country) |>  unique() |>  sort()
     ),
-    shiny.fluent::Dropdown.shinyInput(
+    selectizeInput( 
       inputId = NS(id, "location_granular"),
-      placeHolder = "Select sub-location",
-      multiSelect = TRUE
+      label = 'More precise location',
+      choices = NULL,
+      options = list(plugins= list(
+        #'remove_button', 
+        'clear_button'
+        )),
+      multiple = TRUE
     ),
     
-    shiny.fluent::Stack(
-      horizontal = TRUE,
-      shiny.fluent::DefaultButton.shinyInput(
-        NS(id, "select_all"), text = "Select all"
-      ),
-      shiny.fluent::DefaultButton.shinyInput(
-        NS(id, "deselect_all"), text = "Deselect all"
-      )
+    actionButton(
+      NS(id, "select_all"), label = "Select all"
     ),
-    shiny.fluent::Stack(
-      horizontal = TRUE,
-      tokens = list(childrenGap = 10),
-      shiny.fluent::ChoiceGroup.shinyInput(
-        NS(id, 'date'),
-        options = c('All' , '2024', '2023', '2022') %>%
-          tibble(key = ., text = .),
-        styles = list(flexContainer = list(display = "flex", gap = 10)),
-        value = 'All')
+    
+    radioButtons(
+      NS(id, 'date'),
+      label = 'Date',
+      choices = c('All' , '2024', '2023', '2022'),
+      selected = 'All'
     )
   )
 }
@@ -56,46 +53,36 @@ filters_server <- function(id) {
     # location input reactives
     .location_granular <- eventReactive(input$location_country, {
       salaries |>
-        filter(location_country %in% input$location_country) |>
-        mutate(key = location_granular, text = location_granular ) |>
-        select(key, text) |>
-        distinct()  |>
-        arrange(key) |>
-        mutate(across(everything(), as.character))
+        filter(
+          location_country %in% input$location_country) |>
+        pull(location_granular) |> 
+        unique() |> 
+        sort()
     })
-    
-    
     observe({
-      shiny.fluent::updateDropdown.shinyInput(
+      #shinyWidgets::updatePickerInput(
+      updateSelectizeInput(
         session = session,
         inputId = 'location_granular',
-        multiSelect = TRUE,
-        value = .location_granular() |>  pull(key),
-        options =  .location_granular()
-      )
-    })
-    observeEvent(input$deselect_all, {
-      shiny.fluent::updateDropdown.shinyInput(
-        session = session,
-        inputId = 'location_granular',
-        multiSelect = TRUE,
-        value = NULL,
-        options =  .location_granular()
+        choices = .location_granular(),
+        selected = .location_granular() 
       )
     })
     observeEvent(input$select_all, {
-      shiny.fluent::updateDropdown.shinyInput(
+      updateSelectizeInput(
         session = session,
         inputId = 'location_granular',
-        multiSelect = TRUE,
-        value = .location_granular() |>  pull(key),
-        options =  .location_granular()
+        choices = .location_granular(),
+        selected = .location_granular()
       )
     })
     
     # return filtered salary data
     reactive({
-      req(input$title)
+      req(.location_granular())
+      req(input$location_country)
+      req(input$date)
+      
       .date <- switch(
         input$date,
         'All' = c('2024', '2023', '2022'),
