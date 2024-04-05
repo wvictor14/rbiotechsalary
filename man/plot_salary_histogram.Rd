@@ -4,13 +4,11 @@
 \alias{plot_salary_histogram}
 \title{plot salary histogram v2}
 \usage{
-plot_salary_histogram(.df, x, color = "#41AB5DFF")
+plot_salary_histogram(.df, x, color = "#41AB5DFF", font_color = "#EEE8D5")
 }
 \description{
 plot salary histogram v2
 }
 \examples{
-
 plot_salary_histogram(salaries, x = salary_total)
-
 }
