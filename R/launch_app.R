@@ -1,7 +1,7 @@
 #' launch rbiotechsalary app
 #' 
 #' @export
-#' @import shiny bslib
+#' @import shiny bslib dplyr
 #' @examples \dontrun{
 #' 
 #'  launch_app()
