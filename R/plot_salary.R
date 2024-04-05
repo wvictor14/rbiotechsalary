@@ -25,7 +25,7 @@ calculate_salary_stats <- function(.df, x) {
 #' @param .df salary data
 #' @export
 plot_salary <- function(
-    .df, x = salary_total, fill = title_general, height = NULL) {
+    .df, x = salary_total, fill = title_general) {
 
   .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}}))
   stats <- calculate_salary_stats(.df, {{x}})

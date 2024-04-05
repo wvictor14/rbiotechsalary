@@ -171,7 +171,7 @@ plot_sparkline <- function(.df, color = 'white') {
       paper_bgcolor = "transparent",
       plot_bgcolor = "transparent"
     ) %>%
-    config(displayModeBar = F) %>%
+    plotly::config(displayModeBar = F) %>%
     htmlwidgets::onRender(
       "function(el) {
       var ro = new ResizeObserver(function() {
