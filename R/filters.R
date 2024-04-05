@@ -94,7 +94,8 @@ filters_server <- function(id) {
     
     # return filtered salary data
     reactive({
-      req(input$title)
+      req(.location_granular())
+      
       .date <- switch(
         input$date,
         'All' = c('2024', '2023', '2022'),

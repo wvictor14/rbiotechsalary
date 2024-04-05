@@ -75,8 +75,10 @@ rb_ui2 <- function() {
 rb_server_2 <- function(input, output, session) {
   
   .salaries <- filters_server('filters')
+  
   table_salary_stats_server('table_salary_stats', .salaries)
   value_boxes_stats_server('value_boxes', .salaries)
+  
   output$plot_salary_histogram <- plotly::renderPlotly({
     p <- plot_salary(.salaries()) + 
       labs(title = 'Total Compensation (Base + Bonus)')
@@ -85,8 +87,7 @@ rb_server_2 <- function(input, output, session) {
       plotly::layout(
         margin = list(t = 0, b = 0, l = 0, r = 0),
         plot_bgcolor  = "rgba(0, 0, 0, 0)",
-        paper_bgcolor = "rgba(0, 0, 0, 0)",
-        fig_bgcolor   = "rgba(0, 0, 0, 0)"
+        paper_bgcolor = "rgba(0, 0, 0, 0)"
       )
   })
   
