@@ -6,7 +6,7 @@ filters_ui <- function(id, ...) {
       # Note the wrapping of the string in HTML()
       tags$style(HTML("
       .selectize-input {
-        max-height: 102px;
+        max-height: 200px;
         overflow-y: auto;
       }
       "))),
@@ -22,37 +22,23 @@ filters_ui <- function(id, ...) {
       choices = salaries |> pull(location_country) |>  unique() |>  sort()
     ),
     #shinyWidgets::pickerInput(
-     selectizeInput( 
-      inputId = NS(id, "location_granular2"),
+    selectizeInput( 
+      inputId = NS(id, "location_granular"),
       label = NULL,
       choices = NULL,
-      options = list(plugins= list('remove_button', 'clear_button')),
+      options = list(plugins= list(
+        #'remove_button', 
+        'clear_button'
+        )),
       #options = list(
       #  `actions-box` = TRUE), 
       multiple = TRUE
     ),
     
-    layout_columns(
-      actionButton(
-        NS(id, "select_all2"), label = "Select all"
-      )
+    actionButton(
+      NS(id, "select_all"), label = "Select all"
     ),
     
-    shiny.fluent::Dropdown.shinyInput(
-      inputId = NS(id, "location_granular"),
-      placeHolder = "Select sub-location",
-      multiSelect = TRUE
-    ),
-    
-    shiny.fluent::Stack(
-      horizontal = TRUE,
-      shiny.fluent::DefaultButton.shinyInput(
-        NS(id, "select_all"), text = "Select all"
-      ),
-      shiny.fluent::DefaultButton.shinyInput(
-        NS(id, "deselect_all"), text = "Deselect all"
-      )
-    ),
     shiny.fluent::Stack(
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
@@ -85,46 +71,17 @@ filters_server <- function(id) {
       #shinyWidgets::updatePickerInput(
       updateSelectizeInput(
         session = session,
-        inputId = 'location_granular2',
+        inputId = 'location_granular',
         choices = .location_granular() |>  pull(key),
         selected = .location_granular() |>  pull(key) 
       )
     })
-    observeEvent(input$select_all2, {
+    observeEvent(input$select_all, {
       updateSelectizeInput(
         session = session,
-        inputId = 'location_granular2',
+        inputId = 'location_granular',
         choices = .location_granular() |>  pull(key),
         selected = .location_granular() |>  pull(key)
-      )
-    })
-    
-    
-    observe({
-      shiny.fluent::updateDropdown.shinyInput(
-        session = session,
-        inputId = 'location_granular',
-        multiSelect = TRUE,
-        value = .location_granular() |>  pull(key),
-        options =  .location_granular()
-      )
-    })
-    observeEvent(input$deselect_all, {
-      shiny.fluent::updateDropdown.shinyInput(
-        session = session,
-        inputId = 'location_granular',
-        multiSelect = TRUE,
-        value = NULL,
-        options =  .location_granular()
-      )
-    })
-    observeEvent(input$select_all, {
-      shiny.fluent::updateDropdown.shinyInput(
-        session = session,
-        inputId = 'location_granular',
-        multiSelect = TRUE,
-        value = .location_granular() |>  pull(key),
-        options =  .location_granular()
       )
     })
     
