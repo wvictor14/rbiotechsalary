@@ -4,7 +4,6 @@
 #' @export
 #' @examples
 #' make_grouped_options(salaries, title_category, title_general)
-#'
 #' @param .df salaries
 #' @param .groups group column
 #' @param .choices options column
@@ -33,3 +32,14 @@ DropdownMenuItemType <- function(type) {
   shiny.fluent::JS(paste0("jsmodule['@fluentui/react'].DropdownMenuItemType."), type)
 }
 
+#' makes grouped options list for selectize input
+#' 
+#' @export
+#' @examples
+#' make_grouped_options_2(salaries, title_category, title_general)
+make_grouped_options_2 <- function(.df, .groups, .choices) {
+  salaries |> 
+    distinct({{.groups}}, {{.choices}}) |> 
+    summarize(.by = {{.groups}}, choices = list(unique({{.choices}}))) |> 
+    tibble::deframe()
+}

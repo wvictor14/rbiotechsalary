@@ -18,5 +18,4 @@ Make grouped choices for shiny.fluent::dropDown
 }
 \examples{
 make_grouped_options(salaries, title_category, title_general)
-
 }

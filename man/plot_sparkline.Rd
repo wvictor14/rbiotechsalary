@@ -4,7 +4,7 @@
 \alias{plot_sparkline}
 \title{sparkline for salary average showcase value box}
 \usage{
-plot_sparkline(.df)
+plot_sparkline(.df, color = "white")
 }
 \description{
 sparkline for salary average showcase value box

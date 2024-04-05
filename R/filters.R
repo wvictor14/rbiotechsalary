@@ -2,6 +2,13 @@
 #' @export
 filters_ui <- function(id, ...) {
   tagList(
+    
+    selectizeInput(
+      NS(id, "title2"), 
+      label = NULL, 
+      choices = make_grouped_options_2(salaries, title_category, title_general) 
+    ),
+    
     shiny.fluent::Dropdown.shinyInput(
       NS(id, 'title'),
       multiSelect = TRUE,
