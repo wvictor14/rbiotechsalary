@@ -153,13 +153,13 @@ plot_basic_salary_stats <- function(.df) {
 #' sparkline for salary average showcase value box 
 #' 
 #' @export
-plot_sparkline <- function(.df) {
+plot_sparkline <- function(.df, color = 'white') {
   
   .df |> 
     plotly::plot_ly() %>%
     plotly::add_lines(
       x = ~date, y = ~salary_total,
-      color = I("white"), span = I(1),
+      color = I(color), span = I(1),
       fill = 'tozeroy', alpha = 0.2
     ) %>%
     plotly::layout(
@@ -167,7 +167,7 @@ plot_sparkline <- function(.df) {
       yaxis = list(visible = F, showgrid = F, title = ""),
       hovermode = "x",
       margin = list(t = 0, r = 0, l = 0, b = 0),
-      font = list(color = "white"),
+      font = list(color = color),
       paper_bgcolor = "transparent",
       plot_bgcolor = "transparent"
     ) %>%

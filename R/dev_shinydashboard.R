@@ -11,9 +11,15 @@ rb_ui2 <- function() {
     href = "https://github.com/wvictor14/rbiotechsalary",
     target = "_blank"
   )
-  
+  .colors <- list(
+    'primary' = '#41AB5DFF'
+  )
   page_navbar(
-    theme = bs_theme(version = 5),
+    theme = bs_theme(
+      version = 5, 
+      #presets = 'shiny', 
+      'primary' = .colors$primary
+    ),
     title = "r/biotech salary",
     fillable = FALSE,
     sidebar = sidebar(
@@ -27,30 +33,37 @@ rb_ui2 <- function() {
         value_box(
           title = "Average Salary", 
           value = uiOutput('text_average'),
-          theme = value_box_theme(bg = "#287A28", fg = "#FFFFFF"),
+          theme= 'text-success',
+          #theme = value_box_theme(bg = "#287A28", fg = "#FFFFFF"),
           showcase = plotly::plotlyOutput('plot_sparkline_average'), 
-          showcase_layout = "top right", 
+          showcase_layout = "left center", 
           full_screen = TRUE,
           fill = TRUE, 
           height = NULL,
           uiOutput('text_ave_breakdown')
         ),
-        card(
-          card_title(
-            p('Base')
-          ),
-          card_body(
-            p('$100k')
-          )
+        value_box(
+          title = "Number of Survey Respondents", 
+          value = p('631'),
+          theme= 'text-success',
+          #theme = value_box_theme(bg = "#287A28", fg = "#FFFFFF"),
+          showcase = bsicons::bs_icon('person-lines-fill'),
+          showcase_layout = "left center", 
+          full_screen = TRUE,
+          fill = TRUE, 
+          height = NULL
         ),
-        card(
-          card_title(
-            p('Bonus')
-          ),
-          card_body(
-            p('$15k')
-          )
-        )
+        value_box(
+          title = "Placeholder", 
+          value = p('Sixty-one'),
+          theme= 'text-success',
+          #theme = value_box_theme(bg = "#287A28", fg = "#FFFFFF"),
+          showcase = bsicons::bs_icon('currency-exchange'),
+          showcase_layout = "left center", 
+          full_screen = TRUE,
+          fill = TRUE, 
+          height = NULL
+        ),
       ),
       
       plotly::plotlyOutput("plot"),
@@ -82,6 +95,9 @@ rb_ui2 <- function() {
       title = "Links",
       align = "right",
       nav_item(link_github)
+    ),
+    nav_item(
+      input_dark_mode(id = "dark_mode", mode = "dark")
     )
   )
   
@@ -101,7 +117,7 @@ rb_server_2 <- function(input, output, session) {
       # take most recent 100 submissions for sparkline
       arrange(desc(date)) |> 
       slice(1:100) |> 
-      plot_sparkline()
+      plot_sparkline(color = '#41AB5DFF')
   )
   
   stats <- reactive({
@@ -160,6 +176,10 @@ rb_server_2 <- function(input, output, session) {
   # render the table + other components
   table_raw_server('table_raw', .salaries, height = gt::px(400))
   
-  
+  observeEvent(input$dark_mode, {
+    if (input$dark_mode == "dark") {
+      showNotification("Welcome to the dark side!")
+    }
+  })
   
 }
