@@ -8,16 +8,11 @@ filters_ui <- function(id, ...) {
       label = NULL, 
       choices = make_grouped_options(salaries, title_category, title_general) 
     ),
-    shiny.fluent::Dropdown.shinyInput(
-      NS(id, "location_country"),
-      placeHolder = "Select location",
-      multiSelect = FALSE,
-      value = 'United States Of America',
-      options =  salaries |>
-        mutate(key = location_country, text = location_country) |>
-        select(key, text) |>
-        distinct()  |>
-        arrange(key)
+    selectizeInput(
+      NS(id, "location_country"), 
+      label = NULL, 
+      selected = 'United States Of America',
+      choices = salaries |> pull(location_country) |>  unique() |>  sort()
     ),
     shiny.fluent::Dropdown.shinyInput(
       inputId = NS(id, "location_granular"),
@@ -95,6 +90,8 @@ filters_server <- function(id) {
     # return filtered salary data
     reactive({
       req(.location_granular())
+      req(input$location_country)
+      req(input$date)
       
       .date <- switch(
         input$date,
