@@ -4,7 +4,6 @@ rb_server <- function(input, output, session) {
   
   .salaries <- filters_server('filters')
   
-  table_salary_stats_server('table_salary_stats', .salaries)
   value_boxes_stats_server('value_boxes', .salaries)
   
   output$plot_salary_histogram <- plotly::renderPlotly({
