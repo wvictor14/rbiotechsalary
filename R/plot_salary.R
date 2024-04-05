@@ -25,8 +25,7 @@ calculate_salary_stats <- function(.df, x) {
 #' @param .df salary data
 #' @export
 plot_salary <- function(
-    .df, x = salary_total, fill = title_general, title = '',
-    .type = 'plotly') {
+    .df, x = salary_total, fill = title_general) {
 
   .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}}))
   stats <- calculate_salary_stats(.df, {{x}})
@@ -61,18 +60,39 @@ plot_salary <- function(
       expand = expansion(mult = c(0, 0))
     ) +
     scale_x_continuous(label = scales::dollar, expand = expansion())  +
-    labs(title = title, color = '', x = '', y = '% of jobs')
-
-  stopifnot(.type %in% c('plotly', 'ggplot2'))
-  if (.type == 'plotly') {
-    p <- plotly::ggplotly(p, height = '250')
-  }
-
-  suppressWarnings({ p })
+    labs(color = '', x = '', y = '% of jobs')
+  
+  p
 }
 
-
-
+#' plot salary histogram v2
+#' @export
+#' @examples
+#' plot_salary_histogram(salaries, x = salary_total)
+plot_salary_histogram <- function(.df, x, color = '#41AB5DFF', font_color = '#EEE8D5') {
+  x <- .df |>  pull({{x}})
+  
+  plotly::plot_ly() |> 
+    plotly::add_histogram(
+      x = x,
+      nbinsx  = 30,
+      color = I(color),
+      hovertemplate ='Salary Range: %{x}<br>%{y} jobs<extra></extra>'
+    ) |> 
+    plotly::config(displayModeBar = FALSE) |> 
+    plotly::layout(
+      margin = list(t = 0, b = 0, l = 0, r = 0),
+      plot_bgcolor  = "rgba(0, 0, 0, 0)",
+      paper_bgcolor = "rgba(0, 0, 0, 0)",
+      yaxis = list(fixedrange = TRUE,visible = FALSE, showgrid = FALSE),
+      xaxis = list(title = ''),
+      font = list(color = font_color, size = 20) ,
+      hoverlabel = list(
+        font = list(size=15, color = font_color), 
+        bgcolor = '#161C21'),
+      bargap = 0.1
+    )
+}
 
 #' Plot salary against years of experience
 #'

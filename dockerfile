@@ -3,7 +3,8 @@ FROM rocker/tidyverse:4.3.3
 
 # Install clusterProfiler and related packages for GSEA
 RUN install2.r --error --skipinstalled \
-    shiny.fluent \
+    bslib \
+    bsicons \ 
     gt \
     gtExtras \
     paletteer \

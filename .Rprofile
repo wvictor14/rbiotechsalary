@@ -19,3 +19,7 @@ theme_set(
 )
 
 palette_okabeito <-"khroma::okabeito"
+
+colors_green_3 <- c("#A1D99BFF", "#74C476FF", "#41AB5DFF" )
+colors_green_c <- paletteer::paletteer_d("RColorBrewer::Greens")
+options(ggplot2.discrete.fill= colors_green_3)
