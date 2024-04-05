@@ -17,21 +17,18 @@ filters_ui <- function(id, ...) {
     ),
     selectizeInput(
       NS(id, "location_country"), 
-      label = NULL, 
+      label = 'Country', 
       selected = 'United States Of America',
       choices = salaries |> pull(location_country) |>  unique() |>  sort()
     ),
-    #shinyWidgets::pickerInput(
     selectizeInput( 
       inputId = NS(id, "location_granular"),
-      label = NULL,
+      label = 'More precise location',
       choices = NULL,
       options = list(plugins= list(
         #'remove_button', 
         'clear_button'
         )),
-      #options = list(
-      #  `actions-box` = TRUE), 
       multiple = TRUE
     ),
     
@@ -39,15 +36,11 @@ filters_ui <- function(id, ...) {
       NS(id, "select_all"), label = "Select all"
     ),
     
-    shiny.fluent::Stack(
-      horizontal = TRUE,
-      tokens = list(childrenGap = 10),
-      shiny.fluent::ChoiceGroup.shinyInput(
-        NS(id, 'date'),
-        options = c('All' , '2024', '2023', '2022') %>%
-          tibble(key = ., text = .),
-        styles = list(flexContainer = list(display = "flex", gap = 10)),
-        value = 'All')
+    radioButtons(
+      NS(id, 'date'),
+      label = 'Date',
+      choices = c('All' , '2024', '2023', '2022'),
+      selected = 'All'
     )
   )
 }
