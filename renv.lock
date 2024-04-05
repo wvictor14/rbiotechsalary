@@ -180,6 +180,20 @@
       ],
       "Hash": "68bd2b066e1fe780bbf62fc8bcc36de3"
     },
+    "bsicons": {
+      "Package": "bsicons",
+      "Version": "0.1.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "cli",
+        "htmltools",
+        "rlang",
+        "utils"
+      ],
+      "Hash": "d8f892fbd94d0b9b1f6d688b05b8633c"
+    },
     "bslib": {
       "Package": "bslib",
       "Version": "0.6.1",
@@ -591,6 +605,22 @@
       ],
       "Hash": "52ef83f93f74833007f193b2d4c159a2"
     },
+    "ggrepel": {
+      "Package": "ggrepel",
+      "Version": "0.9.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "Rcpp",
+        "ggplot2",
+        "grid",
+        "rlang",
+        "scales",
+        "withr"
+      ],
+      "Hash": "cc3361e234c4a5050e29697d675764aa"
+    },
     "gh": {
       "Package": "gh",
       "Version": "1.4.0",
@@ -958,16 +988,6 @@
         "rlang"
       ],
       "Hash": "b8552d117e1b808b09a832f589b79035"
-    },
-    "logger": {
-      "Package": "logger",
-      "Version": "0.3.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "utils"
-      ],
-      "Hash": "c145edf05cc128e6ffcfa5d872c46329"
     },
     "lubridate": {
       "Package": "lubridate",
@@ -1622,7 +1642,7 @@
     },
     "shiny": {
       "Package": "shiny",
-      "Version": "1.8.0",
+      "Version": "1.8.1.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1632,7 +1652,6 @@
         "cachem",
         "commonmark",
         "crayon",
-        "ellipsis",
         "fastmap",
         "fontawesome",
         "glue",
@@ -1652,38 +1671,7 @@
         "withr",
         "xtable"
       ],
-      "Hash": "3a1f41807d648a908e3c7f0334bf85e6"
-    },
-    "shiny.fluent": {
-      "Package": "shiny.fluent",
-      "Version": "0.3.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "htmltools",
-        "jsonlite",
-        "rlang",
-        "shiny",
-        "shiny.react"
-      ],
-      "Hash": "588f81f264112d7c85f9b9e3c92ffc8d"
-    },
-    "shiny.react": {
-      "Package": "shiny.react",
-      "Version": "0.3.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "glue",
-        "htmltools",
-        "jsonlite",
-        "logger",
-        "purrr",
-        "rlang",
-        "shiny"
-      ],
-      "Hash": "ef9e3966d3cd63ea006296bd7b7d4dcb"
+      "Hash": "54b26646816af9960a4c64d8ceec75d6"
     },
     "skimr": {
       "Package": "skimr",

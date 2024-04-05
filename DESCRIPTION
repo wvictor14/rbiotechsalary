@@ -19,7 +19,8 @@ Imports:
     plotly,
     scales,
     shiny,
-    shiny.fluent
+    bslib,
+    htmlwidgets
 Suggests: 
     devtools,
     tictoc

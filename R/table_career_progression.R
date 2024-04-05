@@ -1,5 +1,3 @@
-
-
 #' table of summarized salary info
 #'
 #' @return plot
