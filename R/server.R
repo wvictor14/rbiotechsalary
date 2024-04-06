@@ -28,7 +28,7 @@ rb_server <- function(input, output, session) {
     if (nrow(.salaries()) == 0 ) return(NULL)
     plot_salary_histogram(.salaries(), salary_total)
   })
-  table_raw_server('table_raw', .salaries, height = gt::px(400))
+  table_raw_server('table_raw', .salaries)
   
   # panel 2 ----
 }
