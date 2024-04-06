@@ -35,8 +35,8 @@ table_raw_server <- function(id, .salaries, .slice = 1:20, ...) {
         
         .salaries() |>
           arrange(desc(date)) |>
-          slice(.slice) |>
-          rt_table_raw()
+          #slice(.slice) |>
+          rt_table_raw(server = TRUE)
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()
@@ -84,7 +84,7 @@ gt_table_raw <- function(.df) {
 #' 
 #' salaries |> slice(1:20) |>  rt_table_raw()
 #' 
-rt_table_raw <- function(.df) {
+rt_table_raw <- function(.df, ...) {
   .df |> 
     select(
       `Location` = location_granular,
@@ -102,6 +102,7 @@ rt_table_raw <- function(.df) {
       `Date` = date
     ) |>
     reactable::reactable(
+      ...,
       searchable = TRUE,
       highlight = TRUE,
       elementId = "table-raw",
