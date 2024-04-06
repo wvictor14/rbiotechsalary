@@ -1,8 +1,20 @@
+
+showHideButton = function(id){
+  actionButton(
+    id,
+    "Show/hide additional columns",
+    onclick = "Reactable.setHiddenColumns('table-raw', prevColumns => {
+        return prevColumns.length === 0 ? ['Job details', 'Field', 'Company/org', 'Highest education'] : []
+      })"
+  )
+}
+
 #' table_raw ui
 #' @export
 table_raw_ui <- function(id, ...) {
   tagList(
     #gt::gt_output(NS(id, "table_raw", ...))
+    showHideButton(NS(id, 'toggle_button')),
     reactable::reactableOutput(NS(id, "table_raw", ...))
   )
 }
@@ -25,10 +37,14 @@ table_raw_server <- function(id, .salaries, .slice = 1:20, ...) {
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()
-        
-        
       }
     )
+    
+    
+    observeEvent(input$toggle_button, {
+      # Send a message to the JavaScript handler when the button is clicked
+      session$sendCustomMessage('toggleColumns', NULL)
+    })
   })
 }
 
