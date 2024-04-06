@@ -85,7 +85,7 @@ gt_table_raw <- function(.df) {
 #' salaries |> slice(1:20) |>  rt_table_raw()
 #' 
 rt_table_raw <- function(.df, ...) {
-  .df |> 
+  .df_select <- .df |> 
     select(
       `Location` = location_granular,
       `Job title` = title_general,
@@ -100,7 +100,8 @@ rt_table_raw <- function(.df, ...) {
       `Highest education` = highest_achieved_formal_education,
       
       `Date` = date
-    ) |>
+    )
+  .df_select |> 
     reactable::reactable(
       ...,
       searchable = TRUE,
@@ -147,14 +148,23 @@ rt_table_raw <- function(.df, ...) {
         `Salary (Total)` = reactable::colDef(
           format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0)
         ),
-        `Base` = reactable::colDef(
-          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
-        ),
+       # `Base` = reactable::colDef(
+      #    format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
+      #  ),
         `Bonus` = reactable::colDef(
           format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
         ),
         `Bonus %` = reactable::colDef(
           format = reactable::colFormat(percent = TRUE, digits = 0)
+        ),
+        
+        `Base` = reactable::colDef(
+          name = 'Salary (Total|Base|Bonus)',
+          cell = reactablefmtr::merge_column(
+            data = .df_select,
+            merged_name = 'Bonus',
+            merged_position = 'below'
+          )
         ),
         
         # hidden by default:
