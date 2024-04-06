@@ -1,4 +1,6 @@
-
+#' show hide button on reactable
+#' 
+#' taken from https://github.com/glin/reactable/issues/319
 showHideButton = function(id){
   actionButton(
     id,
@@ -89,7 +91,8 @@ rt_table_raw <- function(.df) {
       `Job details` = title_detail,
       `Field` = biotech_sub_industry,
       `Company/org` = company_or_institution_name,
-      `Salary (base)` = salary_base,
+      `Salary (Total)` = salary_total,
+      `Base` = salary_base,
       `Bonus` = bonus,
       `Bonus %` = bonus_pct,
       `Experience (yr)` = years_of_experience,
@@ -120,6 +123,20 @@ rt_table_raw <- function(.df) {
         )
       ),
       columns = list(
+        `Salary (Total)` = reactable::colDef(
+          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0)
+        ),
+        `Base` = reactable::colDef(
+          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
+        ),
+        `Bonus` = reactable::colDef(
+          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
+        ),
+        `Bonus %` = reactable::colDef(
+          format = reactable::colFormat(percent = TRUE, digits = 0)
+        ),
+        
+        # hidden by default:
         `Job details` = reactable::colDef(show = FALSE),
         `Field` = reactable::colDef(show = FALSE),
         `Company/org` = reactable::colDef(show = FALSE),
