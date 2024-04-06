@@ -4,8 +4,21 @@
 \alias{plot_sparkline}
 \title{sparkline for salary average showcase value box}
 \usage{
-plot_sparkline(.df, color = "white")
+plot_sparkline(.df, x, y, color = "white")
 }
 \description{
 sparkline for salary average showcase value box
+}
+\examples{
+
+
+plot_sparkline(salaries, x = date, y = salary_total, color = 'seagreen')
+
+# user density
+salaries |>  
+  count(date) |>  
+  mutate(x = cumsum(n))  |> 
+  plot_sparkline(date, x, color = 'seagreen')
+
+
 }
