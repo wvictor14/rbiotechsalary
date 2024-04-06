@@ -1,8 +1,22 @@
+#' show hide button on reactable
+#' 
+#' taken from https://github.com/glin/reactable/issues/319
+showHideButton = function(id){
+  actionButton(
+    id,
+    "Show/hide additional columns",
+    onclick = "Reactable.setHiddenColumns('table-raw', prevColumns => {
+        return prevColumns.length === 0 ? ['Job details', 'Field', 'Company/org', 'Highest education'] : []
+      })"
+  )
+}
+
 #' table_raw ui
 #' @export
 table_raw_ui <- function(id, ...) {
   tagList(
     #gt::gt_output(NS(id, "table_raw", ...))
+    showHideButton(NS(id, 'toggle_button')),
     reactable::reactableOutput(NS(id, "table_raw", ...))
   )
 }
@@ -25,10 +39,14 @@ table_raw_server <- function(id, .salaries, .slice = 1:20, ...) {
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()
-        
-        
       }
     )
+    
+    
+    observeEvent(input$toggle_button, {
+      # Send a message to the JavaScript handler when the button is clicked
+      session$sendCustomMessage('toggleColumns', NULL)
+    })
   })
 }
 
@@ -58,7 +76,6 @@ gt_table_raw <- function(.df) {
     gt::gt() 
 }
 
-
 #' reactable table showing raw data
 #' 
 #' @export
@@ -74,7 +91,8 @@ rt_table_raw <- function(.df) {
       `Job details` = title_detail,
       `Field` = biotech_sub_industry,
       `Company/org` = company_or_institution_name,
-      `Salary (base)` = salary_base,
+      `Salary (Total)` = salary_total,
+      `Base` = salary_base,
       `Bonus` = bonus,
       `Bonus %` = bonus_pct,
       `Experience (yr)` = years_of_experience,
@@ -85,22 +103,44 @@ rt_table_raw <- function(.df) {
     reactable::reactable(
       searchable = TRUE,
       highlight = TRUE,
+      elementId = "table-raw",
+      
+      
       theme = reactable::reactableTheme(
-        
-        # Dark mode theme 
         style = list(
           color = "#EEE8D5",
           backgroundColor = "#222627",
           fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
         ),
         highlightColor = "#393C3D",
-        cellPadding = "0px 0px",
+        borderWidth = '0px',
+        #cellPadding = "0px 0px",
         searchInputStyle = list(
-          borderColor = '#EEE8D5',
-          borderWidth = '0.5px',
-          backgroundColor = '#1E2122',
+          borderColor = 'transparent', #'#EEE8D5',
+          borderWidth = '0px',
+          backgroundColor = '#393C3D',
           width = "25%"
         )
+      ),
+      columns = list(
+        `Salary (Total)` = reactable::colDef(
+          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0)
+        ),
+        `Base` = reactable::colDef(
+          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
+        ),
+        `Bonus` = reactable::colDef(
+          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
+        ),
+        `Bonus %` = reactable::colDef(
+          format = reactable::colFormat(percent = TRUE, digits = 0)
+        ),
+        
+        # hidden by default:
+        `Job details` = reactable::colDef(show = FALSE),
+        `Field` = reactable::colDef(show = FALSE),
+        `Company/org` = reactable::colDef(show = FALSE),
+        `Highest education` = reactable::colDef(show = FALSE)
       )
     )
 }
