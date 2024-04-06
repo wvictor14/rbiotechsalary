@@ -1,4 +1,4 @@
-value_boxes_stats_ui <- function(id, bg = '#1D262E', fg = '#41AB5DFF') {
+value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
   
   layout_column_wrap(
     #width = '350px',

@@ -27,18 +27,18 @@ filters_ui <- function(id, ...) {
       accordion_panel(
         "More precise location",
         div(
-          style = "margin-bottom:-10px; height:60px",
+          style = "margin-bottom:-10px; height:60px; width:100%",
           div(
-            style = 'display:inline-block',
+            style = 'display:block;float:left',
             actionButton(
               NS(id, "select_all"), label = "Select all", style = 'width: 100%'
             )
           ),
           div(
-            style = 'display:inline-block',
+            style = 'display:block;float:right',
             actionButton(
               NS(id, "deselect_all"), label = "Clear",
-              style = 'width: 100%'
+              style = 'width:100%'
             )
           )
         ),

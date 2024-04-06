@@ -20,7 +20,7 @@ rb_ui <- function() {
   page_navbar(
     theme = bs_theme(
       version = 5, 
-      fg = '#1D262E',
+      fg = '#0c1014', #'#1D262E',
       bg = '#EEE8D5',
       primary = .colors$primary
     ),

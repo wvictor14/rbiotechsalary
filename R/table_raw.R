@@ -90,15 +90,15 @@ rt_table_raw <- function(.df) {
         # Dark mode theme 
         style = list(
           color = "#EEE8D5",
-          backgroundColor = "#32393F",
+          backgroundColor = "#222627",
           fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
         ),
-        highlightColor = "#1D262E",
+        highlightColor = "#393C3D",
         cellPadding = "0px 0px",
         searchInputStyle = list(
           borderColor = '#EEE8D5',
           borderWidth = '0.5px',
-          backgroundColor = '#32393F',
+          backgroundColor = '#1E2122',
           width = "25%"
         )
       )
