@@ -41,7 +41,7 @@ rb_ui <- function() {
       plotly::plotlyOutput("plot_salary_histogram"),
       card(
         full_screen = TRUE,
-        min_height = '400px',
+        height = '80vh',
         card_body(
           table_raw_ui("table_raw")
         )
