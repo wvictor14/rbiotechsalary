@@ -1,5 +1,8 @@
 value_boxes_stats_ui <- function(id) {
-  layout_columns(
+  
+  layout_column_wrap(
+    #width = '350px',
+    fixed_width = FALSE,
     value_box(
       title = "Average Salary", 
       value = uiOutput(NS(id, 'text_average')),
@@ -23,15 +26,15 @@ value_boxes_stats_ui <- function(id) {
       height = NULL
     ),
     value_box(
-      title = "Placeholder", 
-      value = p('Sixty-one'),
+      title = "Average Years of Experience", 
+      value = textOutput(NS(id, 'text_ave_yoe')),
       theme = value_box_theme(bg = "#32393F", fg = "#41AB5DFF"),
-      showcase = bsicons::bs_icon('currency-exchange'),
+      showcase = bsicons::bs_icon('clock-history'),
       showcase_layout = "left center", 
       full_screen = TRUE,
       fill = TRUE, 
       height = NULL
-    ),
+    )
   )
 }
 value_boxes_stats_server <- function(id, .salaries) {
@@ -79,7 +82,6 @@ value_boxes_stats_server <- function(id, .salaries) {
     })
     
     # value box 2 ----
-    
     output$plot_sparkline_users <- plotly::renderPlotly({
       if (nrow(.salaries()) == 0 ) return(NULL)
       .salaries() |>  
@@ -93,5 +95,14 @@ value_boxes_stats_server <- function(id, .salaries) {
       if (nrow(.salaries()) == 0) { return(HTML('')) }
       nrow(.salaries())
     })
+    
+    
+    # value box 3 ----
+    output$text_ave_yoe <- renderText({
+      if (nrow(.salaries()) == 0) { return(HTML('')) }
+      .salaries() |>  pull(years_of_experience) |> mean(na.rm = TRUE) |> 
+        round(digits = 1)
+    })
+    
   })
 }
