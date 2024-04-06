@@ -3,8 +3,8 @@ value_boxes_stats_ui <- function(id) {
     value_box(
       title = "Average Salary", 
       value = uiOutput(NS(id, 'text_average')),
-      theme= 'text-success',
-      #theme = value_box_theme(bg = "#287A28", fg = "#FFFFFF"),
+      #theme= 'text-success',
+      theme = value_box_theme(bg = "#32393F", fg = "#41AB5DFF"),
       showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_average')), 
       showcase_layout = "left center", 
       full_screen = TRUE,
@@ -14,10 +14,9 @@ value_boxes_stats_ui <- function(id) {
     ),
     value_box(
       title = "Number of Survey Respondents", 
-      value = p('631'),
-      theme= 'text-success',
-      #theme = value_box_theme(bg = "#287A28", fg = "#FFFFFF"),
-      showcase = bsicons::bs_icon('person-lines-fill'),
+      value = textOutput(NS(id, 'n_respondents')),
+      theme = value_box_theme(bg = "#32393F", fg = "#41AB5DFF"),
+      showcase =plotly::plotlyOutput(NS(id, 'plot_sparkline_users')),
       showcase_layout = "left center", 
       full_screen = TRUE,
       fill = TRUE, 
@@ -26,8 +25,7 @@ value_boxes_stats_ui <- function(id) {
     value_box(
       title = "Placeholder", 
       value = p('Sixty-one'),
-      theme= 'text-success',
-      #theme = value_box_theme(bg = "#287A28", fg = "#FFFFFF"),
+      theme = value_box_theme(bg = "#32393F", fg = "#41AB5DFF"),
       showcase = bsicons::bs_icon('currency-exchange'),
       showcase_layout = "left center", 
       full_screen = TRUE,
@@ -40,7 +38,7 @@ value_boxes_stats_server <- function(id, .salaries) {
   stopifnot(is.reactive(.salaries))
   moduleServer(id, function(input, output, session) {
     
-    # value boxes
+    # value box 1
     output$plot_sparkline_average <- plotly::renderPlotly({
       if (nrow(.salaries()) == 0 ) return(NULL)
       
@@ -48,7 +46,7 @@ value_boxes_stats_server <- function(id, .salaries) {
         # take most recent 100 submissions for sparkline
         arrange(desc(date)) |> 
         slice(1:100) |> 
-        plot_sparkline(color = '#41AB5DFF')
+        plot_sparkline(x = date, y = salary_total, color = '#41AB5DFF')
     })
     
     stats <- reactive({
@@ -78,6 +76,22 @@ value_boxes_stats_server <- function(id, .salaries) {
       HTML(
         stats() |> filter(name != 'Total') |> pull(.label) |>  paste0(collapse = '<br>') 
       )
+    })
+    
+    # value box 2 ----
+    
+    output$plot_sparkline_users <- plotly::renderPlotly({
+      if (nrow(.salaries()) == 0 ) return(NULL)
+      .salaries() |>  
+        count(date) |>  
+        mutate(x = cumsum(n))  |> 
+        plot_sparkline(date, x, color = '#41AB5DFF')
+    })
+    
+    
+    output$n_respondents <- renderText({
+      if (nrow(.salaries()) == 0) { return(HTML('')) }
+      nrow(.salaries())
     })
   })
 }

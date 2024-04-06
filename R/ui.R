@@ -20,26 +20,25 @@ rb_ui <- function() {
   page_navbar(
     theme = bs_theme(
       version = 5, 
-      fg = '#161C21',
+      fg = '#1D262E',
       bg = '#EEE8D5',
-      'primary' = .colors$primary
+      primary = .colors$primary
     ),
     title = "r/biotech salary",
     fillable = FALSE,
     
     sidebar = sidebar(
+      width = 300,
       p('Choose your role'),
       filters_ui('filters')
     ),
     
     ### panel 1 ----
     nav_panel(
-      title = "Salaries", 
-      
+      title = "Salaries",
+      h1(textOutput('content_title')),
       layout_columns(value_boxes_stats_ui('value_boxes')),
-      
       plotly::plotlyOutput("plot_salary_histogram"),
-      
       card(
         full_screen = TRUE,
         min_height = '400px',

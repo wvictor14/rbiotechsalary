@@ -1,12 +1,26 @@
 #' sparkline for salary average showcase value box 
 #' 
 #' @export
-plot_sparkline <- function(.df, color = 'white') {
+#' @examples
+#' 
+#' 
+#' plot_sparkline(salaries, x = date, y = salary_total, color = 'seagreen')
+#' 
+#' # user density
+#' salaries |>  
+#'   count(date) |>  
+#'   mutate(x = cumsum(n))  |> 
+#'   plot_sparkline(date, x, color = 'seagreen')
+#' 
+#' 
+plot_sparkline <- function(.df, x, y, color = 'white') {
   
-  .df |> 
-    plotly::plot_ly() %>%
+  .x <- .df |> pull({{x}})
+  .y <- .df |>  pull({{y}})
+  
+  plotly::plot_ly() %>%
     plotly::add_lines(
-      x = ~date, y = ~salary_total,
+      x = .x, y = .y,
       color = I(color), span = I(1),
       fill = 'tozeroy', alpha = 0.2
     ) %>%
