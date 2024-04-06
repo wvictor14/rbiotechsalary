@@ -1,4 +1,4 @@
-value_boxes_stats_ui <- function(id) {
+value_boxes_stats_ui <- function(id, bg = '#1D262E', fg = '#41AB5DFF') {
   
   layout_column_wrap(
     #width = '350px',
@@ -7,7 +7,7 @@ value_boxes_stats_ui <- function(id) {
       title = "Average Salary", 
       value = uiOutput(NS(id, 'text_average')),
       #theme= 'text-success',
-      theme = value_box_theme(bg = "#32393F", fg = "#41AB5DFF"),
+      theme = value_box_theme(bg = bg, fg = fg),
       showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_average')), 
       showcase_layout = "left center", 
       full_screen = TRUE,
@@ -18,7 +18,7 @@ value_boxes_stats_ui <- function(id) {
     value_box(
       title = "Number of Survey Respondents", 
       value = textOutput(NS(id, 'n_respondents')),
-      theme = value_box_theme(bg = "#32393F", fg = "#41AB5DFF"),
+      theme = value_box_theme(bg = bg, fg = fg),
       showcase =plotly::plotlyOutput(NS(id, 'plot_sparkline_users')),
       showcase_layout = "left center", 
       full_screen = TRUE,
@@ -28,7 +28,7 @@ value_boxes_stats_ui <- function(id) {
     value_box(
       title = "Average Years of Experience", 
       value = textOutput(NS(id, 'text_ave_yoe')),
-      theme = value_box_theme(bg = "#32393F", fg = "#41AB5DFF"),
+      theme = value_box_theme(bg = bg, fg = fg),
       showcase = bsicons::bs_icon('clock-history'),
       showcase_layout = "left center", 
       full_screen = TRUE,
