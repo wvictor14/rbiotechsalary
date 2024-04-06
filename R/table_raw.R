@@ -7,7 +7,8 @@ showHideButton = function(id){
     "Show/hide additional columns",
     onclick = "Reactable.setHiddenColumns('table-raw', prevColumns => {
         return prevColumns.length === 0 ? ['Job details', 'Field', 'Company/org', 'Highest education'] : []
-      })"
+      })",
+    style = 'height:35px; padding-left:0.5rem; padding-top:0.5rem; padding-bottom:0.5rem; border:none'
   )
 }
 
@@ -116,11 +117,30 @@ rt_table_raw <- function(.df) {
         borderWidth = '0px',
         #cellPadding = "0px 0px",
         searchInputStyle = list(
+          
+          paddingLeft = "0.5rem",
+          paddingTop = "0.5rem",
+          paddingBottom = "0.5rem",
+          borderRadius = '2px',
+          display = 'inline-block',
+          align = 'left',
           borderColor = 'transparent', #'#EEE8D5',
           borderWidth = '0px',
-          backgroundColor = '#393C3D',
-          width = "25%"
+          border  = 'none',
+          backgroundColor = '#222627',
+          highlightColor = "#393C3D",
+          width = "100%",
+          
+          backgroundRepeat = "no-repeat",
+          "&:focus" = list(backgroundColor = "#393C3D", border = "none"),
+          "&:hover, &:focus" = list( color = '#EEE8D5'),
+          "::placeholder" = list(color = 'grey'),
+          "&:hover::placeholder, &:focus::placeholder" = list(color = '#EEE8D5')
         )
+      ),
+      
+      language = reactable::reactableLang(
+        searchPlaceholder = "Search Raw Data"
       ),
       columns = list(
         `Salary (Total)` = reactable::colDef(
