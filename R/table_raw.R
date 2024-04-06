@@ -58,7 +58,6 @@ gt_table_raw <- function(.df) {
     gt::gt() 
 }
 
-
 #' reactable table showing raw data
 #' 
 #' @export
@@ -85,22 +84,30 @@ rt_table_raw <- function(.df) {
     reactable::reactable(
       searchable = TRUE,
       highlight = TRUE,
+      elementId = "table-raw",
+      
+      
       theme = reactable::reactableTheme(
-        
-        # Dark mode theme 
         style = list(
           color = "#EEE8D5",
           backgroundColor = "#222627",
           fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
         ),
         highlightColor = "#393C3D",
-        cellPadding = "0px 0px",
+        borderWidth = '0px',
+        #cellPadding = "0px 0px",
         searchInputStyle = list(
-          borderColor = '#EEE8D5',
-          borderWidth = '0.5px',
-          backgroundColor = '#1E2122',
+          borderColor = 'transparent', #'#EEE8D5',
+          borderWidth = '0px',
+          backgroundColor = '#393C3D',
           width = "25%"
         )
+      ),
+      columns = list(
+        `Job details` = reactable::colDef(show = FALSE),
+        `Field` = reactable::colDef(show = FALSE),
+        `Company/org` = reactable::colDef(show = FALSE),
+        `Highest education` = reactable::colDef(show = FALSE)
       )
     )
 }
