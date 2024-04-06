@@ -103,7 +103,6 @@ filters_server <- function(id) {
       req(.location_granular())
       req(input$location_country)
       req(input$date)
-      
       .date <- switch(
         input$date,
         'All' = c('2024', '2023', '2022'),
@@ -112,13 +111,14 @@ filters_server <- function(id) {
         '2022' = '2022'
       )
       
-      salaries |>
-        filter(
-          lubridate::year(date) %in% .date,
-          title_general %in% input$title,
-          location_country %in% input$location_country,
-          location_granular %in% input$location_granular
-        )
+      .out <- list(
+        .date = .date,
+        title = input$title,
+        location_country = input$location_country,
+        location_granular = .location_granular()
+      )
+      
+      return(.out)
     })
     
   })

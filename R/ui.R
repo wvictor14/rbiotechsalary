@@ -35,8 +35,8 @@ rb_ui <- function() {
     
     ### panel 1 ----
     nav_panel(
-      title = "Salaries", 
-      
+      title = "Salaries",
+      h1(textOutput('content_title')),
       layout_columns(value_boxes_stats_ui('value_boxes')),
       plotly::plotlyOutput("plot_salary_histogram"),
       card(
