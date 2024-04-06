@@ -31,20 +31,4 @@ rb_server <- function(input, output, session) {
   table_raw_server('table_raw', .salaries, height = gt::px(400))
   
   # panel 2 ----
-  output$table_career_progression <- gt::render_gt({
-    gt_career_progression(.salaries())
-  })
-  output$plot_experience <- plotly::renderPlotly({
-    
-    # suppress warnings for app session
-    storeWarn<- getOption("warn")
-    options(warn = -1)
-    
-    if (nrow(.salaries()) > 0) {
-      plot_experience(.salaries())
-    } else {
-      p <- ggplot() + theme_minimal()
-      plotly::ggplotly(p)
-    }
-  })
 }

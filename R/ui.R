@@ -55,11 +55,7 @@ rb_ui <- function() {
         full_screen = TRUE,
         card_body(
           min_height = '300px',
-          layout_columns(
-            col_widths = c(4, 8),
-            gt::gt_output('table_career_progression'),
-            plotly::plotlyOutput('plot_experience')
-          )
+          p('Nothing here yet!')
         )
       )
     ),
