@@ -20,7 +20,8 @@ Imports:
     scales,
     shiny,
     bslib,
-    htmlwidgets
+    htmlwidgets,
+    reactable
 Suggests: 
     devtools,
     tictoc
