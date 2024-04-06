@@ -35,7 +35,7 @@ filters_ui <- function(id, ...) {
             )
           ),
           div(
-            style = 'display:block;float:right',
+            style = 'display:flex;float:right',
             actionButton(
               NS(id, "deselect_all"), label = "Clear",
               style = 'width:100%'
