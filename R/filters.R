@@ -21,20 +21,41 @@ filters_ui <- function(id, ...) {
       selected = 'United States Of America',
       choices = salaries |> pull(location_country) |>  unique() |>  sort()
     ),
-    selectizeInput( 
-      inputId = NS(id, "location_granular"),
-      label = 'More precise location',
-      choices = NULL,
-      options = list(plugins= list(
-        #      'remove_button', 
-        'clear_button'
-        )),
-      multiple = TRUE
+    
+    accordion(
+      open = FALSE,
+      accordion_panel(
+        "More precise location",
+        div(
+          style = "margin-bottom:-10px; height:60px",
+          div(
+            style = 'display:inline-block',
+            actionButton(
+              NS(id, "select_all"), label = "Select all", style = 'width: 100%'
+            )
+          ),
+          div(
+            style = 'display:inline-block',
+            actionButton(
+              NS(id, "deselect_all"), label = "Clear",
+              style = 'width: 100%'
+            )
+          )
+        ),
+        
+        selectizeInput( 
+          inputId = NS(id, "location_granular"),
+          label = NULL,
+          choices = NULL,
+          options = list(plugins= list(
+            'remove_button'
+            # 'clear_button'
+          )),
+          multiple = TRUE
+        )
+      )
     ),
     
-    actionButton(
-      NS(id, "select_all"), label = "Select all"
-    ),
     
     radioButtons(
       NS(id, 'date'),
