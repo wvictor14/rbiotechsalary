@@ -15,13 +15,16 @@ rb_server <- function(input, output, session) {
   })
   
   # panel 1 ----
-  output$content_title <- renderText(
+   content_title <- reactive(
     glue::glue(
       "{role} Salaries in {country}",
       role = .filters()$title,
       country = .filters()$location_country
     ) |>  as.character()
   )
+  
+  output$content_title_1 <- renderText(content_title())
+  output$content_title_2 <- renderText(content_title())
   
   value_boxes_stats_server('value_boxes', .salaries)
   output$plot_salary_histogram <- plotly::renderPlotly({

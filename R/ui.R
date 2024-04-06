@@ -54,14 +54,14 @@ rb_ui <- function() {
     ### panel 1 ----
     nav_panel(
       title = "Salaries",
-      h1(textOutput('content_title')),
+      h1(textOutput('content_title_1')),
       layout_columns(value_boxes_stats_ui('value_boxes')),
       plotly::plotlyOutput("plot_salary_histogram"),
     ),
     
     nav_panel(
       title = 'Raw data',
-      h1(textOutput('content_title')),
+      h1(textOutput('content_title_2')),
       table_raw_ui("table_raw")
     ),
     ### panel career progression ----
