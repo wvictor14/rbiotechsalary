@@ -11,6 +11,10 @@ RUN install2.r --error --skipinstalled \
     plotly \
     DT
 
+# dev version reactable for server side processing
+RUN installGithub.r glin/reactable \
+    && rm -rf /tmp/downloaded_packages/
+
 # install app
 WORKDIR /home/app/
 COPY . .
