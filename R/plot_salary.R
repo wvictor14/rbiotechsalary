@@ -26,10 +26,10 @@ calculate_salary_stats <- function(.df, x) {
 #' @export
 plot_salary <- function(
     .df, x = salary_total, fill = title_general) {
-
+  
   .df <- .df |>  filter(!is.na({{x}}), !is.na({{fill}}))
   stats <- calculate_salary_stats(.df, {{x}})
-
+  
   p <- ggplot(.df, aes(
     x = {{x}}, fill = {{fill}})) +
     geom_vline(
@@ -107,7 +107,7 @@ plot_salary_histogram <- function(.df, x, color = '#41AB5DFF', font_color = '#EE
 #'   filter(title_general == 'Scientist', location_country == 'United States Of America')
 #' plot_experience(salaries_sci)
 plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
-
+  
   p <- .df |>
     arrange(years_of_experience) |>
     mutate(exp_binned = cut(
@@ -133,11 +133,11 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
     labs(
       title = 'Total Compensation by Years of Experience',
       x = 'Years of Experience')
-
+  
   if (.plotly) {
     p <- plotly::ggplotly(p, height = 250) |> plotly::layout(boxmode = "group")
   }
-
+  
   suppressWarnings({ p })
 }
 
@@ -149,19 +149,54 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
 #' salaries_sub <- salaries |>
 #'   dplyr::filter(title_general %in% c('Scientist', 'Principal Scientist'),
 #'          stringr::str_detect(location_country, 'United States') )
-#' plot_salary(salaries_sub)
+#' plot_career_progression(salaries_sub)
 #'
 #' @param .df salary data
 #' @export
 plot_career_progression <- function(
-    .df, x = date, fill = title_general, title = '',
-    .type = 'plotly') {
-  .df %>%
-    count({{x}}) |>
-    plotly::plot_ly(x = ~{{x}}) |>
-    plotly::add_lines(y = ~n) |>
+    .df, x = years_of_experience, y = salary_total,
+    color = '#41AB5D', font_color = '#EEE8D5') {
+  
+  summarized <- salaries |> 
+    summarize(
+      .by = years_of_experience,
+      salary_total = mean(salary_total),
+      n = n()
+    ) |> 
+    filter(across(everything(), ~!is.na(.x))) |> 
+    mutate(.text = glue::glue(
+      "${sal}<br>{years_of_experience} years of experience",
+      sal = round(salary_total, -3) |>  scales::number()))
+  
+  x <- summarized$years_of_experience;
+  y <- summarized$salary_total;
+  size <- summarized$n
+  text <- summarized$.text
+  
+  plotly::plot_ly(
+    x = x, y = y, type = 'scatter', mode = 'markers', 
+    size = size, hovertext = text, hoverinfo = 'text',
+    marker = list(
+      #size = 10,
+      sizeref = 0.05,
+      color = color,
+      opacity = 0.75,
+      cliponaxis = FALSE,
+      line = list(width = 0)
+    )
+  ) |> 
+    plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
-      xaxis = list(rangeslider = (list(type = 'date')))
+      margin = list(t = 0, b = 0, l = 0, r = 0),
+      plot_bgcolor  = 'black', #"rgba(0, 0, 0, 0)",
+      paper_bgcolor = 'black', #"rgba(0, 0, 0, 0)",
+      yaxis = list(visible = TRUE, showgrid = FALSE, layer = 'below traces'),
+      xaxis = list(title = '',  zeroline = FALSE, layer = 'below traces'),
+      font = list(color = font_color, size = 20) ,
+      hoverlabel = list(
+        font = list(size=15, color = font_color), 
+        bgcolor = '#161C21'
+      )
     )
 }
 

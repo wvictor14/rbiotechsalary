@@ -43,7 +43,6 @@ filters_ui <- function(id, ...) {
             )
           )
         ),
-        
         selectizeInput( 
           inputId = NS(id, "location_granular"),
           label = NULL,
@@ -56,7 +55,6 @@ filters_ui <- function(id, ...) {
         )
       )
     ),
-    
     
     radioButtons(
       NS(id, 'date'),
