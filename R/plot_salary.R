@@ -155,7 +155,7 @@ plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
 #' @export
 plot_career_progression <- function(
     .df, x = years_of_experience, y = salary_total,
-    color = '#41AB5D', font_color = '#EEE8D5') {
+    color = '#41AB5D', font_color = '#EEE8D5', bg_color = 'black') {
   
   summarized <- salaries |> 
     summarize(
@@ -163,10 +163,12 @@ plot_career_progression <- function(
       salary_total = mean(salary_total),
       n = n()
     ) |> 
-    filter(across(everything(), ~!is.na(.x))) |> 
+    filter(if_all(everything(), ~!is.na(.x))) |> 
     mutate(.text = glue::glue(
-      "${sal}<br>{years_of_experience} years of experience",
-      sal = round(salary_total, -3) |>  scales::number()))
+      '${sal}', '{years_of_experience} years of experience',
+      '{n} salaries',
+      .sep = '<br>',
+      sal = round(salary_total, -3) |>  scales::number(big.mark = ',')))
   
   x <- summarized$years_of_experience;
   y <- summarized$salary_total;
@@ -188,11 +190,22 @@ plot_career_progression <- function(
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
       margin = list(t = 0, b = 0, l = 0, r = 0),
-      plot_bgcolor  = 'black', #"rgba(0, 0, 0, 0)",
-      paper_bgcolor = 'black', #"rgba(0, 0, 0, 0)",
-      yaxis = list(visible = TRUE, showgrid = FALSE, layer = 'below traces'),
-      xaxis = list(title = '',  zeroline = FALSE, layer = 'below traces'),
-      font = list(color = font_color, size = 20) ,
+      plot_bgcolor  = bg_color, #"rgba(0, 0, 0, 0)",
+      paper_bgcolor = bg_color, #"rgba(0, 0, 0, 0)",
+      yaxis = list(
+        visible = TRUE, 
+        showgrid = FALSE, 
+        layer = 'below traces',
+        tickprefix = '$'
+      ),
+      xaxis = list(
+        title = 'Years of Experience',  
+        showgrid = FALSE, 
+        zeroline = FALSE, 
+        layer = 'below traces'
+      ),
+      font = list(color = font_color, size = 20),
+      hovermode = 'x',
       hoverlabel = list(
         font = list(size=15, color = font_color), 
         bgcolor = '#161C21'

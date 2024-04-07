@@ -36,6 +36,8 @@ rb_server <- function(input, output, session) {
   table_raw_server('table_raw', .salaries)
   
   # career progression
-  
+  output$plot_career_progression <- plotly::renderPlotly({
+    plot_career_progression(.salaries(), bg_color = "rgba(0, 0, 0, 0)")
+  })
   
 }
