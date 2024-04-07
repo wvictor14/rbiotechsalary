@@ -21,7 +21,7 @@ devtools::install_github("wvictor14/rbiotechsalary")
 
 - [x] dockerize
 - [x] decide on hosting service - digital ocean
-- [ ] deploy 
+- [x] deploy
 - [ ] automate software updates
 - [ ] automate data updates
     - [ ] target pipeline
@@ -29,12 +29,8 @@ devtools::install_github("wvictor14/rbiotechsalary")
 
 ### General
 
-branch `filter-to-sci-track` is to experiment using only cleaned data (scientist, director, VP)
-
 -   [ ] add research associate data
--   [ ] add graphs
-    -   [ ] salary by country
-    -   [x] salary by experience
+-   [ ] add other departments like product dev, clinical, business etc.
 
 ### For cleaning
 
@@ -46,7 +42,6 @@ Targeted minimum set of variables:
 -   [x] salary base
 -   [x] salary bonus
 -   [x] experience years
--   [ ] experience degree
 
 ### For app
 
@@ -54,26 +49,23 @@ Targeted minimum set of variables:
 
 -   [x] add filter by location
 -   [x] add filter by timestamp
-    -   [ ] ?select by year, or by all
+    -   [x] select by year, or by all
 -   [x] add filter by role title
--   [ ] ?filter by background experience (\# of years, degree)
 
 **Salary graphs**
 
 How to lay these out? by tabs?
 
--   [ ] salary x experience
+-   [x] salary x experience
 -   [x] histogram
-    -   [ ] add bonus / TC
-
+    -   [ ] toggle between base / total
     -   [ ] show median in text + line
-
     -   [ ] show range (10th and 90th percentile?)
 
 **Table**
 
--   [ ] gt output for most customized output?
--   [ ] show TC and breakdown base and bonus concisely
+-   [ ] reactable winner over gt and DT -> server side processing, feature-ful and looks good
+-   [x] show TC and breakdown base and bonus concisely - `merge_cols()`
 
 # docker
 
