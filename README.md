@@ -27,6 +27,15 @@ devtools::install_github("wvictor14/rbiotechsalary")
     - [ ] target pipeline
     - [ ] automate new data cleaning and uploading
 
+# goals of this project
+
+1. focus on a core set of features to enable quick development and iteration
+2. convey salary information
+    -  enable relevant queries with customized search based on normalized (cleaned) data for role titles, and location data
+    -  convey salary information concisely through summarized statistics and visualization 
+3. Promote community involvement and open-source frameworks
+    - allow user to explore raw data
+
 ### General
 
 -   [ ] add research associate data
