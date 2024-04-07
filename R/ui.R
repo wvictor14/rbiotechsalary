@@ -67,11 +67,12 @@ rb_ui <- function() {
     ### panel career progression ----
     nav_panel(
       title = "Career progression", 
+      h1('Average Total Compensation by Years of Experience'),
       card(
         full_screen = TRUE,
         card_body(
           min_height = '300px',
-          p('Nothing here yet!')
+          plotly::plotlyOutput('plot_career_progression')
         )
       )
     ),

@@ -31,7 +31,13 @@ rb_server <- function(input, output, session) {
     if (nrow(.salaries()) == 0 ) return(NULL)
     plot_salary_histogram(.salaries(), salary_total)
   })
+  
+  # raw data panel
   table_raw_server('table_raw', .salaries)
   
-  # panel 2 ----
+  # career progression
+  output$plot_career_progression <- plotly::renderPlotly({
+    plot_career_progression(.salaries(), bg_color = "rgba(0, 0, 0, 0)")
+  })
+  
 }
