@@ -26,6 +26,7 @@ filters_ui <- function(id, ...) {
       open = FALSE,
       accordion_panel(
         "More precise location",
+        p('These responses are not processed.', style = 'color:#f9b928'),
         div(
           style = "margin-bottom:-10px; height:60px; width:100%",
           div(
