@@ -154,10 +154,12 @@ rt_table_raw <- function(.df, ...) {
       language = reactable::reactableLang(
         searchPlaceholder = "Search Raw Data"
       ),
+      showSortable = TRUE,
       columns = list(
         base_bonus = reactable::colDef(
           show = TRUE,
-          name = 'Base | Bonus'
+          name = 'Base | Bonus',
+          sortable = FALSE
           ),
         `Total Compensation` = reactable::colDef(
           format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0)
