@@ -9,9 +9,10 @@ RUN install2.r --error --skipinstalled \
     gtExtras \
     paletteer \
     plotly \
-    DT
+    DT \
+    htmlwidgets
 
-# dev version reactable for server side processing
+# dev version reactable for server side
 RUN installGithub.r glin/reactable \
     && rm -rf /tmp/downloaded_packages/
 
