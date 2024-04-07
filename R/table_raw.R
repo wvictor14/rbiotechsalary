@@ -86,21 +86,28 @@ gt_table_raw <- function(.df) {
 #' 
 rt_table_raw <- function(.df, ...) {
   .df_select <- .df |> 
-    select(
-      `Location` = location_granular,
-      `Job title` = title_general,
-      `Job details` = title_detail,
-      `Field` = biotech_sub_industry,
-      `Company/org` = company_or_institution_name,
-      `Salary (Total)` = salary_total,
-      `Base` = salary_base,
-      `Bonus` = bonus,
-      `Bonus %` = bonus_pct,
-      `Experience (yr)` = years_of_experience,
-      `Highest education` = highest_achieved_formal_education,
-      
-      `Date` = date
-    )
+    mutate(
+      base_bonus = glue::glue(
+        "${.base}K | {.bonus}K ({.bonus_p})",
+        .base = round(salary_base, -3)/1000, .bonus = round(bonus, -3)/1000,
+        .bonus_p = scales::percent(bonus_pct, accuracy = 1)
+        
+      )
+    ) |> 
+  select(
+    `Location` = location_granular,
+    `Job title` = title_general,
+    `Job details` = title_detail,
+    `Field` = biotech_sub_industry,
+    `Company/org` = company_or_institution_name,
+    `Total Compensation` = salary_total,
+    base_bonus,
+    `Experience (yr)` = years_of_experience,
+    `Highest education` = highest_achieved_formal_education,
+    
+    `Date` = date
+    
+  )
   .df_select |> 
     reactable::reactable(
       ...,
@@ -118,12 +125,15 @@ rt_table_raw <- function(.df, ...) {
         highlightColor = "#393C3D",
         borderWidth = '0px',
         #cellPadding = "0px 0px",
+        headerStyle = list(
+          color = 'seagreen'
+        ),
         searchInputStyle = list(
           
           paddingLeft = "0.5rem",
           paddingTop = "0.5rem",
           paddingBottom = "0.5rem",
-          borderRadius = '2px',
+          borderRadius = '4px',
           display = 'inline-block',
           align = 'left',
           borderColor = 'transparent', #'#EEE8D5',
@@ -145,26 +155,12 @@ rt_table_raw <- function(.df, ...) {
         searchPlaceholder = "Search Raw Data"
       ),
       columns = list(
-        `Salary (Total)` = reactable::colDef(
+        base_bonus = reactable::colDef(
+          show = TRUE,
+          name = 'Base | Bonus'
+          ),
+        `Total Compensation` = reactable::colDef(
           format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0)
-        ),
-       # `Base` = reactable::colDef(
-      #    format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
-      #  ),
-        `Bonus` = reactable::colDef(
-          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0),
-        ),
-        `Bonus %` = reactable::colDef(
-          format = reactable::colFormat(percent = TRUE, digits = 0)
-        ),
-        
-        `Base` = reactable::colDef(
-          name = 'Salary (Total|Base|Bonus)',
-          cell = reactablefmtr::merge_column(
-            data = .df_select,
-            merged_name = 'Bonus',
-            merged_position = 'below'
-          )
         ),
         
         # hidden by default:
