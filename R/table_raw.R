@@ -98,12 +98,10 @@ rt_table_raw <- function(.df, ...) {
     `YOE` = years_of_experience,
     `Total` = salary_total,
     base_bonus,
+    `Company` = company_or_institution_name,
     `Location` = location_granular,
     `Field` = biotech_sub_industry,
-    `Company/org` = company_or_institution_name,
-    `Experience (yr)` = years_of_experience,
     `Highest education` = highest_achieved_formal_education,
-    
     `Date` = date
     
   )
@@ -112,6 +110,7 @@ rt_table_raw <- function(.df, ...) {
       ...,
       searchable = TRUE,
       highlight = TRUE,
+      resizable = TRUE,
       elementId = "table-raw",
       theme = reactable::reactableTheme(
         style = list(
@@ -162,17 +161,23 @@ rt_table_raw <- function(.df, ...) {
           show = TRUE,
           name = 'Base | Bonus',
           sortable = FALSE,
-          minWidth = 145
+          width = 145,
+          
+          style = list(color = 'grey'),
+          headerStyle = list(color = 'grey')
           ),
-        `Total Compensation` = reactable::colDef(
-          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0)
+        `Total` = reactable::colDef(
+          width = 100,
+          format = reactable::colFormat(
+            prefix = "$", separators = TRUE, digits = 0
+            )
         ),
         
         # hidden by default:
         `Job title` = reactable::colDef(show = FALSE),
         `Job details` = reactable::colDef(show = FALSE),
         `Field` = reactable::colDef(show = FALSE),
-        `Company/org` = reactable::colDef(show = FALSE),
+        #`Company` = reactable::colDef(show = FALSE),
         `Highest education` = reactable::colDef(show = FALSE)
       )
     )
