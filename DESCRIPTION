@@ -20,7 +20,8 @@ Imports:
     shiny,
     bslib,
     htmlwidgets,
-    reactable
+    reactable,
+    bsicons
 Suggests: 
     bench,
     callr,
