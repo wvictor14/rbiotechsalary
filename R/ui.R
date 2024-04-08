@@ -10,6 +10,8 @@
 #' }
 rb_ui <- function() {
   
+  
+  version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   link_add_data <- shiny::tags$a(
     bsicons::bs_icon("plus-lg"), " Add Your Salary",
     href = "https://docs.google.com/forms/d/e/1FAIpQLSeXpPvkjdf8EPRU_cAdyMAUFVjgx67nyVgDxV7TNHeFkR2k9A/viewform",
@@ -44,6 +46,14 @@ rb_ui <- function() {
     ),
     title = "r/biotech salaries",
     fillable = FALSE,
+    
+    footer = tags$footer(
+      style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
+      p(
+        style = "margin: 0; color: #888;",
+        glue::glue("rbiotechsalary {version}")
+      )
+    ),
     
     sidebar = sidebar(
       width = 300,
