@@ -21,7 +21,8 @@ Imports:
     bslib,
     htmlwidgets,
     reactable,
-    bsicons
+    bsicons,
+    forcats
 Suggests: 
     bench,
     callr,
