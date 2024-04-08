@@ -28,4 +28,4 @@ USER shiny
 
 # run the app
 EXPOSE 3838
-CMD ["R", "-e", "--vanilla", "shiny::runApp('/home/app/inst/application/', port = 3838, host = '0.0.0.0')"]
+CMD ["R",  "--vanilla", "-e", "shiny::runApp('/home/app/inst/application/', port = 3838, host = '0.0.0.0')"]
