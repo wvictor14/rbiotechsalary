@@ -6,7 +6,7 @@ showHideButton = function(id){
     id,
     "Show/hide additional columns",
     onclick = "Reactable.setHiddenColumns('table-raw', prevColumns => {
-        return prevColumns.length === 0 ? ['Job details', 'Field', 'Company/org', 'Highest education'] : []
+        return prevColumns.length === 0 ? ['Job title', 'Job details', 'Field', 'Company/org', 'Highest education'] : []
       })",
     style = 'height:35px; padding-left:0.5rem; padding-top:0.5rem; padding-bottom:0.5rem; border:none'
   )
@@ -95,14 +95,13 @@ rt_table_raw <- function(.df, ...) {
   select(
     `Job title` = title_general,
     `Job details` = title_detail,
-    `Total Compensation` = salary_total,
+    `YOE` = years_of_experience,
+    `Total` = salary_total,
     base_bonus,
+    `Company` = company_or_institution_name,
     `Location` = location_granular,
     `Field` = biotech_sub_industry,
-    `Company/org` = company_or_institution_name,
-    `Experience (yr)` = years_of_experience,
     `Highest education` = highest_achieved_formal_education,
-    
     `Date` = date
     
   )
@@ -111,6 +110,7 @@ rt_table_raw <- function(.df, ...) {
       ...,
       searchable = TRUE,
       highlight = TRUE,
+      resizable = TRUE,
       elementId = "table-raw",
       theme = reactable::reactableTheme(
         style = list(
@@ -152,23 +152,32 @@ rt_table_raw <- function(.df, ...) {
       ),
       showSortable = TRUE,
       columns = list(
-        `Job title` = reactable::colDef(
-          minWidth = 150
+        `YOE` = reactable::colDef(
+          #style = list(color = 'grey'),
+          #headerStyle = list(color = 'grey'),
+          width = 60
         ),
         base_bonus = reactable::colDef(
           show = TRUE,
           name = 'Base | Bonus',
           sortable = FALSE,
-          minWidth = 145
+          width = 145,
+          
+          style = list(color = 'grey'),
+          headerStyle = list(color = 'grey')
           ),
-        `Total Compensation` = reactable::colDef(
-          format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0)
+        `Total` = reactable::colDef(
+          width = 100,
+          format = reactable::colFormat(
+            prefix = "$", separators = TRUE, digits = 0
+            )
         ),
         
         # hidden by default:
+        `Job title` = reactable::colDef(show = FALSE),
         `Job details` = reactable::colDef(show = FALSE),
         `Field` = reactable::colDef(show = FALSE),
-        `Company/org` = reactable::colDef(show = FALSE),
+        #`Company` = reactable::colDef(show = FALSE),
         `Highest education` = reactable::colDef(show = FALSE)
       )
     )
