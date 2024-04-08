@@ -45,8 +45,6 @@ rb_ui <- function() {
       primary = .colors$primary
     ),
     title = "r/biotech salaries",
-    fillable = FALSE,
-    
     footer = tags$footer(
       style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
       p(
@@ -56,8 +54,9 @@ rb_ui <- function() {
     ),
     
     sidebar = sidebar(
+      #title = 'Filter salaries',
+      gap = '1px',
       width = 300,
-      htmltools::p('Choose your role'),
       filters_ui('filters')
     ),
     

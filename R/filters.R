@@ -3,27 +3,31 @@
 filters_ui <- function(id, ...) {
   tagList(
     tags$head(
-      # Note the wrapping of the string in HTML()
+      #restrict height to 1 line and apply scroll if overflow 
       tags$style(HTML("
       .selectize-input {
         max-height: 200px;
         overflow-y: auto;
       }
-      "))),
-    selectizeInput(
-      NS(id, "title"), 
-      label = NULL, 
-      choices = make_grouped_options(salaries, title_category, title_general) 
+      "))
     ),
-    selectizeInput(
-      NS(id, "location_country"), 
-      label = 'Country', 
-      selected = 'United States Of America',
-      choices = salaries |> pull(location_country) |>  unique() |>  sort()
-    ),
-    
     accordion(
-      open = FALSE,
+      open = NULL,
+      accordion_panel(
+        'Choose role & country',
+        selectizeInput(
+          NS(id, "title"), 
+          label = NULL, 
+          selected = 'Scientist',
+          choices = make_grouped_options(salaries, title_category, title_general) 
+        ),
+        selectizeInput(
+          NS(id, "location_country"),
+          label = NULL,
+          selected = 'United States Of America',
+          choices = salaries |> pull(location_country) |>  unique() |>  sort()
+        )
+      ),
       accordion_panel(
         "More precise location",
         p('These responses are not processed.', style = 'color:#f9b928'),
