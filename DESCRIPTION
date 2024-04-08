@@ -22,7 +22,12 @@ Imports:
     htmlwidgets,
     reactable
 Suggests: 
+    bench,
+    callr,
     devtools,
+    httpuv,
+    httr2,
+    pryr,
     tictoc
 Depends: 
     R (>= 2.10)
