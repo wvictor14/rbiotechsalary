@@ -180,10 +180,11 @@ plot_career_progression <- function(
     hovertext = text, hoverinfo = 'text',
     marker = list(
       size = size,
-      sizeref = 1,
+      sizeref = 0.02,
       sizemin = 6,
+      sizemode = 'area',
       color = color,
-      opacity = 0.75,
+      opacity = 0.90,
       cliponaxis = FALSE,
       line = list(width = 0)
     )
@@ -197,13 +198,21 @@ plot_career_progression <- function(
         visible = TRUE, 
         showgrid = FALSE, 
         layer = 'below traces',
-        tickprefix = '$'
+        tickprefix = '$',
+        rangemode = "tozero",
+        showspikes = TRUE,
+        spikecolor = '#EEE8D5',
+        spikethickness = -2,
+        spikesides = FALSE
       ),
       xaxis = list(
         title = 'Years of Experience',  
         showgrid = FALSE, 
         zeroline = FALSE, 
-        layer = 'below traces'
+        layer = 'below traces',
+        showspikes = TRUE,
+        spikecolor = '#EEE8D5',
+        spikethickness = -2
       ),
       font = list(color = font_color, size = 20),
       hovermode = 'x',
