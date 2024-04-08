@@ -10,7 +10,5 @@ rt_table_raw(.df, ...)
 reactable table showing raw data
 }
 \examples{
-
 salaries |> slice(1:20) |>  rt_table_raw()
-
 }
