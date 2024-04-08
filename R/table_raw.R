@@ -81,9 +81,7 @@ gt_table_raw <- function(.df) {
 #' 
 #' @export
 #' @examples
-#' 
 #' salaries |> slice(1:20) |>  rt_table_raw()
-#' 
 rt_table_raw <- function(.df, ...) {
   .df_select <- .df |> 
     mutate(
@@ -95,13 +93,13 @@ rt_table_raw <- function(.df, ...) {
       )
     ) |> 
   select(
-    `Location` = location_granular,
     `Job title` = title_general,
     `Job details` = title_detail,
-    `Field` = biotech_sub_industry,
-    `Company/org` = company_or_institution_name,
     `Total Compensation` = salary_total,
     base_bonus,
+    `Location` = location_granular,
+    `Field` = biotech_sub_industry,
+    `Company/org` = company_or_institution_name,
     `Experience (yr)` = years_of_experience,
     `Highest education` = highest_achieved_formal_education,
     
@@ -154,6 +152,9 @@ rt_table_raw <- function(.df, ...) {
       ),
       showSortable = TRUE,
       columns = list(
+        `Job title` = reactable::colDef(
+          minWidth = 150
+        ),
         base_bonus = reactable::colDef(
           show = TRUE,
           name = 'Base | Bonus',
