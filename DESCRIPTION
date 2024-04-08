@@ -1,6 +1,6 @@
 Package: rbiotechsalary
 Title: Visualizes reddit's r/biotech salary data
-Version: 0.1.14
+Version: 0.1.15
 Authors@R: 
     person("Victor", "Yuan", , "victor.2wy@gmail.com", role = c("aut", "cre"))
 Description: Dashboard to visualize r/biotech salary data
