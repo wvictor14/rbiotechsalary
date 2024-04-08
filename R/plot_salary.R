@@ -90,55 +90,9 @@ plot_salary_histogram <- function(.df, x, color = '#41AB5DFF', font_color = '#EE
       hoverlabel = list(
         font = list(size=15, color = font_color), 
         bgcolor = '#161C21'),
-      bargap = 0.1
+      bargap = 0.1,
+      dragmode = FALSE
     )
-}
-
-#' Plot salary against years of experience
-#'
-#' @param .df  salary data
-#'
-#' @return ggplot
-#' @export
-#'
-#' @examples
-#' data(salaries)
-#' salaries_sci <- salaries |>
-#'   filter(title_general == 'Scientist', location_country == 'United States Of America')
-#' plot_experience(salaries_sci)
-plot_experience <- function(.df, fill = title_general, .plotly =TRUE) {
-  
-  p <- .df |>
-    arrange(years_of_experience) |>
-    mutate(exp_binned = cut(
-      years_of_experience,
-      breaks = c(-Inf, 2, 5, 9, 14, Inf),
-      labels = c('1-2', '3-5', '6-9', '10-14', '15+'))) |>
-    ggplot(aes(x = exp_binned, y = salary_total, fill = {{fill}})) +
-    geom_boxplot(outlier.shape = NA, position = position_dodge()) +
-    theme_minimal() +
-    theme(
-      panel.border = element_blank(),
-      axis.line = element_line(),
-      axis.title.y = element_blank(),
-      panel.grid.minor.y = element_line(),
-      panel.grid.major.x = element_blank(),
-      legend.title = element_blank()
-    ) +
-    paletteer::scale_fill_paletteer_d(pal_paletteer()) +
-    scale_y_continuous(
-      labels = scales::dollar, limits = c(0, NA),
-      expand = expansion(c(0, 0.1))
-    ) +
-    labs(
-      title = 'Total Compensation by Years of Experience',
-      x = 'Years of Experience')
-  
-  if (.plotly) {
-    p <- plotly::ggplotly(p, height = 250) |> plotly::layout(boxmode = "group")
-  }
-  
-  suppressWarnings({ p })
 }
 
 #' plot career progression
@@ -180,7 +134,7 @@ plot_career_progression <- function(
     hovertext = text, hoverinfo = 'text',
     marker = list(
       size = size,
-      sizeref = 0.02,
+      sizeref = 0.05,
       sizemin = 6,
       sizemode = 'area',
       color = color,
@@ -203,6 +157,7 @@ plot_career_progression <- function(
         showspikes = TRUE,
         spikecolor = '#EEE8D5',
         spikethickness = -2,
+        spikedistance = 1,
         spikesides = FALSE
       ),
       xaxis = list(
@@ -212,6 +167,7 @@ plot_career_progression <- function(
         layer = 'below traces',
         showspikes = TRUE,
         spikecolor = '#EEE8D5',
+        spikedistance = 1,
         spikethickness = -2
       ),
       font = list(color = font_color, size = 20),

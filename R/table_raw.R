@@ -114,8 +114,6 @@ rt_table_raw <- function(.df, ...) {
       searchable = TRUE,
       highlight = TRUE,
       elementId = "table-raw",
-      
-      
       theme = reactable::reactableTheme(
         style = list(
           color = "#EEE8D5",
@@ -150,7 +148,7 @@ rt_table_raw <- function(.df, ...) {
           "&:hover::placeholder, &:focus::placeholder" = list(color = '#EEE8D5')
         )
       ),
-      
+      wrap = FALSE,
       language = reactable::reactableLang(
         searchPlaceholder = "Search Raw Data"
       ),
@@ -159,7 +157,8 @@ rt_table_raw <- function(.df, ...) {
         base_bonus = reactable::colDef(
           show = TRUE,
           name = 'Base | Bonus',
-          sortable = FALSE
+          sortable = FALSE,
+          minWidth = 145
           ),
         `Total Compensation` = reactable::colDef(
           format = reactable::colFormat(prefix = "$", separators = TRUE, digits = 0)
