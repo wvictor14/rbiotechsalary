@@ -6,7 +6,7 @@ showHideButton = function(id){
     id,
     "Show/hide additional columns",
     onclick = "Reactable.setHiddenColumns('table-raw', prevColumns => {
-        return prevColumns.length === 0 ? ['Job details', 'Field', 'Company/org', 'Highest education'] : []
+        return prevColumns.length === 0 ? ['Job title', 'Job details', 'Field', 'Company/org', 'Highest education'] : []
       })",
     style = 'height:35px; padding-left:0.5rem; padding-top:0.5rem; padding-bottom:0.5rem; border:none'
   )
@@ -95,7 +95,8 @@ rt_table_raw <- function(.df, ...) {
   select(
     `Job title` = title_general,
     `Job details` = title_detail,
-    `Total Compensation` = salary_total,
+    `YOE` = years_of_experience,
+    `Total` = salary_total,
     base_bonus,
     `Location` = location_granular,
     `Field` = biotech_sub_industry,
@@ -152,8 +153,10 @@ rt_table_raw <- function(.df, ...) {
       ),
       showSortable = TRUE,
       columns = list(
-        `Job title` = reactable::colDef(
-          minWidth = 150
+        `YOE` = reactable::colDef(
+          #style = list(color = 'grey'),
+          #headerStyle = list(color = 'grey'),
+          width = 60
         ),
         base_bonus = reactable::colDef(
           show = TRUE,
@@ -166,6 +169,7 @@ rt_table_raw <- function(.df, ...) {
         ),
         
         # hidden by default:
+        `Job title` = reactable::colDef(show = FALSE),
         `Job details` = reactable::colDef(show = FALSE),
         `Field` = reactable::colDef(show = FALSE),
         `Company/org` = reactable::colDef(show = FALSE),
