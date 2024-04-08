@@ -157,7 +157,7 @@ plot_career_progression <- function(
     .df, x = years_of_experience, y = salary_total,
     color = '#41AB5D', font_color = '#EEE8D5', bg_color = 'black') {
   
-  summarized <- salaries |> 
+  summarized <- .df |> 
     summarize(
       .by = years_of_experience,
       salary_total = mean(salary_total),
@@ -177,10 +177,11 @@ plot_career_progression <- function(
   
   plotly::plot_ly(
     x = x, y = y, type = 'scatter', mode = 'markers', 
-    size = size, hovertext = text, hoverinfo = 'text',
+    hovertext = text, hoverinfo = 'text',
     marker = list(
-      #size = 10,
-      sizeref = 0.05,
+      size = size,
+      sizeref = 1,
+      sizemin = 6,
       color = color,
       opacity = 0.75,
       cliponaxis = FALSE,
