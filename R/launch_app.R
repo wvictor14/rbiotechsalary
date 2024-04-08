@@ -17,7 +17,7 @@ launch_app <- function(options = list(), ui = rb_ui, server = rb_server, ...) {
   
   version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   #shiny::addResourcePath("www", "www")
-  message('Loading bersion ', version)
+  message('Running rbiotechsalary version ', version)
   
   shiny::shinyApp(ui, server,  options = list(launch.browser = TRUE), ...)
 }

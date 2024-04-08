@@ -6,10 +6,11 @@
 \usage{
 plot_career_progression(
   .df,
-  x = date,
-  fill = title_general,
-  title = "",
-  .type = "plotly"
+  x = years_of_experience,
+  y = salary_total,
+  color = "#41AB5D",
+  font_color = "#EEE8D5",
+  bg_color = "black"
 )
 }
 \arguments{
@@ -24,6 +25,6 @@ data(salaries)
 salaries_sub <- salaries |>
   dplyr::filter(title_general \%in\% c('Scientist', 'Principal Scientist'),
          stringr::str_detect(location_country, 'United States') )
-plot_salary(salaries_sub)
+plot_career_progression(salaries_sub)
 
 }

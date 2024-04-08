@@ -1,3 +1,5 @@
+#' Value boxes ui
+#' @export
 value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
   
   layout_column_wrap(
@@ -37,6 +39,8 @@ value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
     )
   )
 }
+#' Value boxes server
+#' @export
 value_boxes_stats_server <- function(id, .salaries) {
   stopifnot(is.reactive(.salaries))
   moduleServer(id, function(input, output, session) {

@@ -4,7 +4,7 @@
 \alias{rt_table_raw}
 \title{reactable table showing raw data}
 \usage{
-rt_table_raw(.df)
+rt_table_raw(.df, ...)
 }
 \description{
 reactable table showing raw data
