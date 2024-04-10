@@ -68,14 +68,58 @@ plot_salary <- function(
 #' plot salary histogram v2
 #' @export
 #' @examples
-#' plot_salary_histogram(salaries, x = salary_total)
-plot_salary_histogram <- function(.df, x, color = '#41AB5DFF', font_color = '#EEE8D5') {
-  x <- .df |>  pull({{x}})
+#' plot_salary_histogram(salaries, x = salary_total, font_color = 'black', hover_bg = 'white')
+plot_salary_histogram <- function(
+    .df, x, color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21') {
+  
+  # create plot data
+  .plot_data <- .df |> 
+    pull(salary_total) |>  
+    hist(plot = FALSE, breaks = 30) |>  
+    as.list() |> 
+    purrr::keep_at(c('counts', 'mids')) |>  
+    bind_cols()  
+  
+  ## stats
+  .stats <- .df |> 
+    summarize(med = median({{x}}, na.rm = TRUE),
+              q10 = quantile({{x}}, c(0.1)),
+              q90 = quantile({{x}}, c(0.9))) |> 
+    tidyr::pivot_longer(everything()) |>  tibble::deframe() |>  as.list() 
+  
+  # round to nearest bin
+  .stats <- .stats |>  
+    purrr::map(\(x) {
+      ind <- abs(.plot_data$mids - x) |>  which.min()
+      .plot_data |> slice(ind) |>  dplyr::pull(mids)
+    })
+  
+  annotations = list(
+    list(
+      text = "Median", x = .stats$med, y = 0.8, yref = "paper",
+      color = font_color, font = list(size = 20),
+      xanchor = "center", yanchor = "bottom", showarrow = FALSE
+    ),
+    list(
+      text = "10th", x = .stats$q10, y = 0.8, yref = "paper",
+      font = list(size = 20, color = 'grey'),
+      xanchor = "center", yanchor = "bottom", showarrow = FALSE
+    ),
+    list(
+      text = "90th", x = .stats$q90, y = 0.8, yref = "paper",
+      color = 'grey', font = list(size = 20),
+      xanchor = "center", yanchor = "bottom", showarrow = FALSE
+    )
+  )
+  
+  ## extend y axis to zero and upper limit by 10%
+  .y_range <- c( 0, max(.plot_data$counts)*1.45 ) |> round()
   
   plotly::plot_ly() |> 
-    plotly::add_histogram(
-      x = x,
-      nbinsx  = 30,
+    
+    plotly::add_bars(
+      x = .plot_data$mids,
+      y = .plot_data$counts,
       color = I(color),
       hovertemplate ='Salary Range: %{x}<br>%{y} jobs<extra></extra>'
     ) |> 
@@ -84,15 +128,39 @@ plot_salary_histogram <- function(.df, x, color = '#41AB5DFF', font_color = '#EE
       margin = list(t = 0, b = 0, l = 0, r = 0),
       plot_bgcolor  = "rgba(0, 0, 0, 0)",
       paper_bgcolor = "rgba(0, 0, 0, 0)",
-      yaxis = list(fixedrange = TRUE,visible = FALSE, showgrid = FALSE),
+      yaxis = list(
+        fixedrange = TRUE,
+        visible = FALSE, 
+        showgrid = FALSE,
+        range = .y_range
+      ),
       xaxis = list(title = ''),
       font = list(color = font_color, size = 20) ,
       hoverlabel = list(
         font = list(size=15, color = font_color), 
-        bgcolor = '#161C21'),
+        bgcolor = hover_bg),
       bargap = 0.1,
-      dragmode = FALSE
+      dragmode = FALSE,
+      shapes = list(
+        vline(.stats$med, color = font_color), 
+        vline(.stats$q10, color = 'grey'), 
+        vline(.stats$q90, color = 'grey')
+      ),
+      annotations = annotations
     )
+}
+
+vline <- function(x = 0, y1 = 0.8, color = "seagreen") {
+  list(
+    type = "line",
+    y0 = 0,
+    y1 = y1,
+    yref = "paper",
+    x0 = x,
+    x1 = x,
+    width = -2,
+    line = list(color = color, dash = "dash")
+  )
 }
 
 #' plot career progression
