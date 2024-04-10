@@ -106,13 +106,13 @@ plot_salary_histogram <- function(
     )
   }
   annotations = list(
-    make_text("Median", .stats$med, 0.8, 20, font_color),
-    make_text("10th", .stats$q10, 0.8, 20, 'grey'),
-    make_text("90th", .stats$q90, 0.8, 20, 'grey')
+    make_text("Median", .stats$med, 0.9, 20, font_color),
+    make_text("10th", .stats$q10, 0.9, 20, 'grey'),
+    make_text("90th", .stats$q90, 0.9, 20, 'grey')
   )
   
-  ## extend y axis to zero and upper limit by 10%
-  .y_range <- c( 0, max(.plot_data$counts)*1.45 ) |> round()
+  ## extend y axis range to zero and upper limit by multiplier
+  .y_range <- c( 0, max(.plot_data$counts)*1.2 ) |> round()
   
   plotly::plot_ly() |> 
     
@@ -151,7 +151,7 @@ plot_salary_histogram <- function(
     )
 }
 
-vline <- function(x = 0, y1 = 0.8, color = "seagreen") {
+vline <- function(x = 0, y1 = 0.9, color = "seagreen") {
   list(
     type = "line",
     y0 = 0,
