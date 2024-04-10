@@ -31,6 +31,8 @@ library(usethis)
 
 # preprocess excel data
 
+[link to google sheets](https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit#gid=491268892)
+
 I extract the sheets into separate csv files so that they can display on github and be more easily used.
 
 ```{r process-sheets, eval = FALSE}
