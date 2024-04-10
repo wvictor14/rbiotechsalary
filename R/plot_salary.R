@@ -72,13 +72,18 @@ plot_salary <- function(
 plot_salary_histogram <- function(
     .df, x, color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21') {
   
-  # create plot data
-  .plot_data <- .df |> 
-    pull(salary_total) |>  
-    hist(plot = FALSE, breaks = 30) |>  
-    as.list() |> 
-    purrr::keep_at(c('counts', 'mids')) |>  
-    bind_cols()  
+  # create plot data, start with hist to generate cuts and counts
+  .plot_data <- hist(.df$salary_total, plot = FALSE, breaks = 30) |> 
+    with(data.frame(
+      stats::embed(breaks,2), 
+      counts = counts,
+      mids = mids
+    )) |> 
+    tibble::tibble() |> 
+    mutate(bin = glue::glue(
+      '${x}K - ${y}K',
+      x = X2/1000, y = X1/1000
+    ))
   
   ## stats
   .stats <- .df |> 
@@ -94,22 +99,16 @@ plot_salary_histogram <- function(
       .plot_data |> slice(ind) |>  dplyr::pull(mids)
     })
   
-  annotations = list(
+  make_text <- function(text, x, y, size, color) {
     list(
-      text = "Median", x = .stats$med, y = 0.8, yref = "paper",
-      color = font_color, font = list(size = 20),
-      xanchor = "center", yanchor = "bottom", showarrow = FALSE
-    ),
-    list(
-      text = "10th", x = .stats$q10, y = 0.8, yref = "paper",
-      font = list(size = 20, color = 'grey'),
-      xanchor = "center", yanchor = "bottom", showarrow = FALSE
-    ),
-    list(
-      text = "90th", x = .stats$q90, y = 0.8, yref = "paper",
-      color = 'grey', font = list(size = 20),
-      xanchor = "center", yanchor = "bottom", showarrow = FALSE
+      text = text, x = x, y = y, font = list(size = size), color = color, 
+      yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = FALSE
     )
+  }
+  annotations = list(
+    make_text("Median", .stats$med, 0.8, 20, font_color),
+    make_text("10th", .stats$q10, 0.8, 20, 'grey'),
+    make_text("90th", .stats$q90, 0.8, 20, 'grey')
   )
   
   ## extend y axis to zero and upper limit by 10%
@@ -120,8 +119,10 @@ plot_salary_histogram <- function(
     plotly::add_bars(
       x = .plot_data$mids,
       y = .plot_data$counts,
+      text = glue::glue("{.plot_data$bin}<br>{.plot_data$counts} jobs"),
       color = I(color),
-      hovertemplate ='Salary Range: %{x}<br>%{y} jobs<extra></extra>'
+      textposition = 'none',
+      hoverinfo  = 'text'
     ) |> 
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
