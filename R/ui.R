@@ -48,15 +48,10 @@ rb_ui <- function() {
     title = "r/biotech salaries",
     footer = tags$footer(
       style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
-      p(
-        style = "margin: 0; color: #888;",
-        glue::glue("rbiotechsalary {version}")
-      )
-    ),
-    
-    # css
-    tags$style(
-      "
+      
+      # css
+      tags$style(
+        "
       #noborder {
         border: none;
         border-top: none;
@@ -69,7 +64,13 @@ rb_ui <- function() {
     
       .h1, h1{color: #EEE8D5;}
       "
+      ),
+      p(
+        style = "margin: 0; color: #888;",
+        glue::glue("rbiotechsalary {version}")
+      )
     ),
+    
     sidebar = sidebar(
       title = 'Filter salaries by',
       gap = '1px',

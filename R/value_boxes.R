@@ -5,6 +5,7 @@ value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
   layout_column_wrap(
     #width = '350px',
     fixed_width = FALSE,
+    height = '50px',
     value_box(
       title = "Average Salary", 
       value = uiOutput(NS(id, 'text_average')),
@@ -24,8 +25,7 @@ value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
       showcase =plotly::plotlyOutput(NS(id, 'plot_sparkline_users')),
       showcase_layout = "left center", 
       full_screen = TRUE,
-      fill = TRUE, 
-      height = NULL
+      fill = TRUE
     ),
     value_box(
       title = "Average Years of Experience", 
@@ -81,7 +81,7 @@ value_boxes_stats_server <- function(id, .salaries) {
     output$text_ave_breakdown <- renderUI({
       if (any(is.na(stats()$value))) { return(HTML('')) }
       HTML(
-        stats() |> filter(name != 'Total') |> pull(.label) |>  paste0(collapse = '<br>') 
+        stats() |> filter(name != 'Total') |> pull(.label) |>  paste0(collapse = ', ') 
       )
     })
     

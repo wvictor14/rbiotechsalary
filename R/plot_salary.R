@@ -145,6 +145,7 @@ plot_salary_histogram <- function(
         bgcolor = hover_bg),
       bargap = 0.1,
       dragmode = FALSE,
+      
       shapes = list(
         vline(.stats$med, color = font_color), 
         vline(.stats$q10, color = 'grey'), 
