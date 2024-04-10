@@ -42,8 +42,9 @@ rb_ui <- function() {
       version = 5, 
       fg = '#0c1014', #'#1D262E',
       bg = '#EEE8D5',
-      primary = .colors$primary
-    ),
+      primary = .colors$primary,
+      #"border-width" = "none"
+    ) ,
     title = "r/biotech salaries",
     footer = tags$footer(
       style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
@@ -53,8 +54,24 @@ rb_ui <- function() {
       )
     ),
     
+    # css
+    tags$style(
+      "
+      #noborder {
+        border: none;
+        border-top: none;
+        border-bottom: none
+      }
+      .accordion, .accordion-item {
+        border: none;
+        border-top: none
+      }
+    
+      .h1, h1{color: #EEE8D5;}
+      "
+    ),
     sidebar = sidebar(
-      #title = 'Filter salaries',
+      title = 'Filter salaries by',
       gap = '1px',
       width = 300,
       filters_ui('filters')

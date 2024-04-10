@@ -68,31 +68,103 @@ plot_salary <- function(
 #' plot salary histogram v2
 #' @export
 #' @examples
-#' plot_salary_histogram(salaries, x = salary_total)
-plot_salary_histogram <- function(.df, x, color = '#41AB5DFF', font_color = '#EEE8D5') {
-  x <- .df |>  pull({{x}})
+#' plot_salary_histogram(salaries, x = salary_total, font_color = 'black', hover_bg = 'white')
+#' 
+#' salaries |>  filter(location_country == 'Canada', title_general == 'Associate Scientist') |> 
+#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
+plot_salary_histogram <- function(
+    .df, x, color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21') {
+  
+  # create plot data, start with hist to generate cuts and counts
+  .plot_data <- hist(.df$salary_total, plot = FALSE, breaks = 30) |> 
+    with(data.frame(
+      stats::embed(breaks,2), 
+      counts = counts,
+      mids = mids
+    )) |> 
+    tibble::tibble() |> 
+    mutate(bin = glue::glue(
+      '${x}K - ${y}K',
+      x = X2/1000, y = X1/1000
+    ))
+  
+  ## stats
+  .stats <- .df |> 
+    summarize(med = median({{x}}, na.rm = TRUE),
+              q10 = quantile({{x}}, c(0.1)),
+              q90 = quantile({{x}}, c(0.9))) |> 
+    tidyr::pivot_longer(everything()) |>  tibble::deframe() |>  as.list() 
+  
+  # round to nearest bin
+  .stats <- .stats |>  
+    purrr::map(\(x) {
+      ind <- abs(.plot_data$mids - x) |>  which.min()
+      .plot_data |> slice(ind) |>  dplyr::pull(mids)
+    })
+  
+  make_text <- function(text, x, y, size, color) {
+    list(
+      text = text, x = x, y = y, font = list(size = size), color = color, 
+      yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = FALSE
+    )
+  }
+  annotations = list(
+    make_text("Median", .stats$med, 0.9, 20, font_color),
+    make_text("10th", .stats$q10, 0.9, 20, 'grey'),
+    make_text("90th", .stats$q90, 0.9, 20, 'grey')
+  )
+  
+  ## extend y axis range to zero and upper limit by multiplier
+  .y_range <- c( 0, max(.plot_data$counts)*1.2 ) |> round()
   
   plotly::plot_ly() |> 
-    plotly::add_histogram(
-      x = x,
-      nbinsx  = 30,
+    
+    plotly::add_bars(
+      x = .plot_data$mids,
+      y = .plot_data$counts,
+      text = glue::glue("{.plot_data$bin}<br>{.plot_data$counts} jobs"),
       color = I(color),
-      hovertemplate ='Salary Range: %{x}<br>%{y} jobs<extra></extra>'
+      textposition = 'none',
+      hoverinfo  = 'text'
     ) |> 
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
       margin = list(t = 0, b = 0, l = 0, r = 0),
       plot_bgcolor  = "rgba(0, 0, 0, 0)",
       paper_bgcolor = "rgba(0, 0, 0, 0)",
-      yaxis = list(fixedrange = TRUE,visible = FALSE, showgrid = FALSE),
+      yaxis = list(
+        fixedrange = TRUE,
+        visible = FALSE, 
+        showgrid = FALSE,
+        range = .y_range
+      ),
       xaxis = list(title = ''),
       font = list(color = font_color, size = 20) ,
       hoverlabel = list(
         font = list(size=15, color = font_color), 
-        bgcolor = '#161C21'),
+        bgcolor = hover_bg),
       bargap = 0.1,
-      dragmode = FALSE
+      dragmode = FALSE,
+      shapes = list(
+        vline(.stats$med, color = font_color), 
+        vline(.stats$q10, color = 'grey'), 
+        vline(.stats$q90, color = 'grey')
+      ),
+      annotations = annotations
     )
+}
+
+vline <- function(x = 0, y1 = 0.9, color = "seagreen") {
+  list(
+    type = "line",
+    y0 = 0,
+    y1 = y1,
+    yref = "paper",
+    x0 = x,
+    x1 = x,
+    width = -2,
+    line = list(color = color, dash = "dash")
+  )
 }
 
 #' plot career progression

@@ -13,13 +13,15 @@ filters_ui <- function(id, ...) {
     ),
     accordion(
       open = NULL,
+      id = 'noborder',
       accordion_panel(
-        'Choose role & country',
+        id = 'noborder',
+        'Job Title & Country',
         selectizeInput(
           NS(id, "title"), 
           label = NULL, 
           selected = 'Scientist',
-          choices = make_grouped_options(salaries, title_category, title_general) 
+          choices = make_grouped_options(salaries, title_category, title_general)
         ),
         selectizeInput(
           NS(id, "location_country"),
@@ -29,7 +31,7 @@ filters_ui <- function(id, ...) {
         )
       ),
       accordion_panel(
-        "More precise location",
+        "Precise location",
         p('These responses are not processed.', style = 'color:#f9b928'),
         div(
           style = "margin-bottom:-10px; height:60px; width:100%",
