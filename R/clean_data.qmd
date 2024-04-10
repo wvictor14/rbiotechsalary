@@ -29,7 +29,7 @@ library(tictoc)
 library(usethis)
 ```
 
-# preprocess excel data 
+# preprocess excel data
 
 I extract the sheets into separate csv files so that they can display on github and be more easily used.
 
@@ -126,29 +126,29 @@ Now I begin cleaning the variable values
 
 It would be a massive effort to clean every column. Let's prioritize to most important ones:
 
-- Salary
-- base
-- target bonus (%)
-- equity
-- Title
-- Experience
-- years
-- degree
-- Location
-- country
-- city
+-   Salary
+-   base
+-   target bonus (%)
+-   equity
+-   Title
+-   Experience
+-   years
+-   degree
+-   Location
+-   country
+-   city
 
 If I have time, can look also at:
 
-- 401k match
+-   401k match
 
 ## salary
 
-- base
-- target bonus (%)
-- equity
+-   base
+-   target bonus (%)
+-   equity
 
-There are a handful of responses with annual salary reportedly less than $5000. There is one person that responded with "$1" - we remove them. And then the remaining report a range from 105-210, which likely represent 105**k** - 210**k**, I multiple these ones by 1000.
+There are a handful of responses with annual salary reportedly less than \$5000. There is one person that responded with "\$1" - we remove them. And then the remaining report a range from 105-210, which likely represent 105**k** - 210**k**, I multiple these ones by 1000.
 
 ### base
 
@@ -201,7 +201,7 @@ n_changed <- sal_clean_filt |>
   nrow() 
 ```
 
-We removed `r n_removed` data point, and changed / cleaned `r n_changed` 
+We removed `r n_removed` data point, and changed / cleaned `r n_changed`
 
 ```{r}
 sal_clean_filt |> 
@@ -212,20 +212,20 @@ sal_clean_filt |>
 
 ### target bonus
 
-is a mix of % and $ amount
-
+is a mix of % and \$ amount
 
 I combine this with annual base to create two new variables: bonus_pct, bonus (raw)
 
 My strategy:
 
-1. Remove special characters, except periods which represent decimals
-2. convert to numeric, which has two impacts:
-- "Not Applicable/None" entries will be converted to NAs
-- percentages will be converted from those values that are less than "50"
-- raw currency values will be simply those that are above 1000
-3. If there is a range of values, then I keep the higher value, since bonus is typically interpreted as the maximum bonus amount, depending on company and individual performance
+1.  Remove special characters, except periods which represent decimals
+2.  convert to numeric, which has two impacts:
 
+-   "Not Applicable/None" entries will be converted to NAs
+-   percentages will be converted from those values that are less than "50"
+-   raw currency values will be simply those that are above 1000
+
+3.  If there is a range of values, then I keep the higher value, since bonus is typically interpreted as the maximum bonus amount, depending on company and individual performance
 
 ```{r}
 sal_clean_filt |> 
@@ -267,7 +267,6 @@ sal_clean_filt <- sal_clean_filt |>
 
 Let's look at the cleaned bonus data vs the original:
 
-
 ```{r}
 sal_clean_filt |> 
   
@@ -288,7 +287,7 @@ n_changed_bonus <- sal_clean_filt |>
   nrow() 
 ```
 
-I converted bonus into % and raw $. This involved modifying `r n_changed_bonus` bonus data points.
+I converted bonus into % and raw \$. This involved modifying `r n_changed_bonus` bonus data points.
 
 ### total comp
 
@@ -301,30 +300,25 @@ sal_clean_filt |>  count(is.na(salary_base))
 sal_clean_filt |>  count(is.na(bonus))
 ```
 
-
 ### equity
 
 NOT CURRENTLY ATTEMPTED. Prioritize other data first.
 
 Equity is a little bit complicated:
 
-Some are reported as options, some are reported in 1000s e.g. "15k" vs "15000"
-Some are reported in $ amount
-Some say "it varies per year" 
-There are a few that report %, is that amount percentage from base in $ or in options??
+Some are reported as options, some are reported in 1000s e.g. "15k" vs "15000" Some are reported in \$ amount Some say "it varies per year" There are a few that report %, is that amount percentage from base in \$ or in options??
 
+1.  We set "Not Applicable/None" to 0
+2.  Set responses that report %, to NA (I don't want to deal with this and it is a small number of responses)
+3.  We then create two variables, equity_options, equity_currency_value
 
-1. We set "Not Applicable/None" to 0
-2. Set responses that report %, to NA (I don't want to deal with this and it is a small number of responses)
-2. We then create two variables, equity_options, equity_currency_value
+-   `equity_currency_value` takes those data points that start with a dollar sign \$
+-   `equity_options` is everything else
+-   treat this the same as base salary:
+-   clean and then:
+-   where if it is less than 1000, multiple by 1000
 
-- `equity_currency_value` takes those data points that start with a dollar sign $
-- `equity_options` is everything else
-- treat this the same as base salary:
-- clean and then:
-- where if it is less than 1000, multiple by 1000
-
-3. Convert everything to numeric
+3.  Convert everything to numeric
 
 ```{r}
 sal_clean_filt |> 
@@ -355,8 +349,7 @@ sal_clean_filt <- sal_clean_filt |>
 
 ### Standardize titles
 
-It's a lot of work to standardize titles, so I focus on what I know best, scientist 
-Let me intialize some empty columns
+It's a lot of work to standardize titles, so I focus on what I know best, scientist-relaeta Let me intialize some empty columns
 
 ```{r}
 sal_clean_filt <- sal_clean_filt |> 
@@ -369,22 +362,22 @@ sal_clean_filt <- sal_clean_filt |>
 
 #### Scientist
 
-It's a lot of work to standardize titles, so I focus on what I know best, scientist 
+It's a lot of work to standardize titles, so I focus on what I know best, scientist
 
 Scientist:
 
-- Research Associate
-- Associate Scientist
-- Scientist
-- Senior Scientist
-- Staff Scientist
-- Principal Scientist
+-   Research Associate
+-   Associate Scientist
+-   Scientist
+-   Senior Scientist
+-   Staff Scientist
+-   Principal Scientist
 
 I'm going to create two new variables
 
-- `title_category` - Set this to `Scientist`
-- `title_general` - A variable that includes general scientist + levels, e.g. Sci **III**, and **Associate** Sci
-- `title_detail` - Contains the other detail of job title, e.g. **Research**, **Clinical**
+-   `title_category` - Set this to `Scientist`
+-   `title_general` - A variable that includes general scientist + levels, e.g. Sci **III**, and **Associate** Sci
+-   `title_detail` - Contains the other detail of job title, e.g. **Research**, **Clinical**
 
 ```{r}
 # all roles matching "Scientist"
@@ -394,16 +387,14 @@ sal_clean_filt |>
   count(role_title_of_current_position) |> head(25) |> gt()
 ```
 
-
 Try a different approach:
 
 Hierarchical, see case_when
 
-The order of the statements are impactful
-e.g.
+The order of the statements are impactful e.g.
 
-- If they have associate, they will associate scientists
-- If they have associate and "principal" they will be principal scientist
+-   If they have associate, they will associate scientists
+-   If they have associate and "principal" they will be principal scientist
 
 ```{r}
 sal_clean_filt <- sal_clean_filt |>
@@ -456,7 +447,6 @@ sal_clean_filt |>
 
 sal_clean_filt |>  count(title_general) |> gt()
 ```
-
 
 #### Directors and VP
 
@@ -533,10 +523,10 @@ sal_clean_filt |>
   filter(title_category == 'Director') |>  count(title_general) |> gt()
 ```
 
-- Associate Director
-- Director
-- Senior Director
-- Executive Director
+-   Associate Director
+-   Director
+-   Senior Director
+-   Executive Director
 
 #### VP
 
@@ -608,10 +598,74 @@ sal_clean_filt |>
   filter(title_category == 'VP') |>  count(title_general) |> gt()
 ```
 
+#### Research Associate
+
+```{r}
+sal_clean_filt |> 
+  filter(str_detect(
+    role_title_of_current_position, 
+    regex('(Research Associate|\\bRA\\b)', ignore_case = TRUE)
+  )) |> 
+  count(role_title_of_current_position) |> gt()
+```
+
+```{r}
+sal_clean_filt <- sal_clean_filt |>
+    mutate(
+    # title_category
+    title_category =  
+      ifelse(
+        str_detect(
+          role_title_of_current_position, 
+          regex('(Research Associate|\\bRA\\b)', ignore_case = TRUE)),
+        'Research Associate',
+        title_category
+      ),
+    
+    # scratch
+    a = title_category == 'Research Associate',
+    b = role_title_of_current_position |> 
+      str_replace_all('[Ss]r\\.?', 'Senior'),
+    
+    # title detail
+    title_detail = ifelse(
+      a,
+      role_title_of_current_position |>
+        str_remove_all(
+          regex('(Research|Associate|Scientist|Senior|\\bRA\\b)*', 
+                ignore_case = TRUE)) |> 
+        str_replace_all('[:punct:]+', ' ')  |> 
+        str_replace_all('\\s{2,}', ' ')
+      ,
+      NA
+  )
+  ) |> 
+  
+  # title_gen most specific to most general
+  mutate(title_general = case_when(
+    a & str_detect(
+      b, regex('Senior', ignore_case = TRUE)) ~ 'Senior Research Associate',
+    a ~ 'Research Associate',
+  )) |> 
+  
+  # clean
+  select(-a, -b)
+
+sal_clean_filt |> 
+  filter(str_detect(
+    role_title_of_current_position, regex('(Research Associate|\\bRA\\b)', ignore_case = TRUE))) |> 
+  count(
+    role_title_of_current_position, title_category, 
+    title_general, title_detail) |>  
+  gt()
+
+sal_clean_filt |>  
+  filter(title_category == 'Research Associate') |>  count(title_general) |> gt()
+```
+
 ### Roles that have not been processed
 
 Look at the remaining roles that I have not tried to process.
-
 
 ```{r}
 sal_clean_filt |>  
@@ -621,7 +675,7 @@ sal_clean_filt |>
 
 ### Final filtering
 
-The non-processed data is useful, if messy. 
+The non-processed data is useful, if messy.
 
 For now, I remove rows with title data that I have not cleaned
 
@@ -643,6 +697,7 @@ message(glue("{n_after_filter} / {n_before_filter}  ({p_filt}) remain after filt
 sal_clean_filt |> 
   count(years_of_experience) |> gt()
 ```
+
 only 1 will be converted to NA
 
 ```{r}
@@ -662,12 +717,12 @@ sal_clean_filt |>
 
 contains all degrees, but let's simplify to the highest degree:
 
-e.g. 
+e.g.
 
-- "High School or Equivalent, Bachelors or Equivalent, Masters or Equivalent, PhD or Equivalent"
-- "Bachelors or Equivalent, Masters or Equivalent, PhD or Equivalent" 
-- "Bachelors or Equivalent, PhD or Equivalent"
-- "PhD or Equivalent"
+-   "High School or Equivalent, Bachelors or Equivalent, Masters or Equivalent, PhD or Equivalent"
+-   "Bachelors or Equivalent, Masters or Equivalent, PhD or Equivalent"
+-   "Bachelors or Equivalent, PhD or Equivalent"
+-   "PhD or Equivalent"
 
 should all just be "PhD"
 
@@ -707,32 +762,31 @@ sal_clean_filt |>
   gt()
 ```
 
-Location is quite messy data consisting of free-form responses  spread between 3 variables:
+Location is quite messy data consisting of free-form responses spread between 3 variables:
 
-- `where_are_you_located` contains Countries (USA, Canada, etc.), states (CO, Carolinas, etc.)
+-   `where_are_you_located` contains Countries (USA, Canada, etc.), states (CO, Carolinas, etc.)
 
 This is not a required question so there are 174 responses that did not respond, and this also included an "other" freeform option.
 
-- Pharma Central (NY, NJ, PA)
-- New England (MA, CT, RI, NH, VT, ME)
-- DC Metro Area (DC, VA, MD, DE)
-- Carolinas & Southeast (From NC to AR, South FL and LA)
-- Midwest (From OH to KS, North to ND)
-- South & Mountain West (TX to AZ, North to MT)
-- West Coast (California & Pacific Northwest)
-- Other US Location (HI, AK, PR, etc.)
-- Canada
-- United Kingdom and Ireland
-- Germany
-- Other:
-
+-   Pharma Central (NY, NJ, PA)
+-   New England (MA, CT, RI, NH, VT, ME)
+-   DC Metro Area (DC, VA, MD, DE)
+-   Carolinas & Southeast (From NC to AR, South FL and LA)
+-   Midwest (From OH to KS, North to ND)
+-   South & Mountain West (TX to AZ, North to MT)
+-   West Coast (California & Pacific Northwest)
+-   Other US Location (HI, AK, PR, etc.)
+-   Canada
+-   United Kingdom and Ireland
+-   Germany
+-   Other:
 
 The 174 missing responses have values for these other two variables. I think this is due to the survey changing the question at some point, probably due to feedback.
 
-- `what_country_do_you_work_in` seems to all be countries, but not harmonized e.g.: Usa, usa, United States
-- `where_is_the_closest_major_city_or_hub` mixed bag: Bay area, Boston, san diego, Research Triangle, 
+-   `what_country_do_you_work_in` seems to all be countries, but not harmonized e.g.: Usa, usa, United States
+-   `where_is_the_closest_major_city_or_hub` mixed bag: Bay area, Boston, san diego, Research Triangle,
 
-Here I create one new location variable `location_country`, that, unlike the other variables, cover >90% of the data
+Here I create one new location variable `location_country`, that, unlike the other variables, cover \>90% of the data
 
 ```{r}
 USA <- c(
@@ -818,7 +872,7 @@ sal_clean_filt <- sal_clean_filt |>
       location_raw_data |> 
         str_detect(regex('usa?', ignore_case = TRUE)) ~ 
         'United States of America', 
-
+      
       location_raw_data |>
         str_detect(regex(usa_locations, ignore_case = TRUE), ) ~ 
         'United States of America',
