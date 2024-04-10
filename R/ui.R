@@ -42,7 +42,8 @@ rb_ui <- function() {
       version = 5, 
       fg = '#0c1014', #'#1D262E',
       bg = '#EEE8D5',
-      primary = .colors$primary
+      primary = .colors$primary,
+      #"border-width" = "none"
     ),
     title = "r/biotech salaries",
     footer = tags$footer(
@@ -54,7 +55,7 @@ rb_ui <- function() {
     ),
     
     sidebar = sidebar(
-      #title = 'Filter salaries',
+      title = 'Filter salaries by',
       gap = '1px',
       width = 300,
       filters_ui('filters')
