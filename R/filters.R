@@ -11,18 +11,6 @@ filters_ui <- function(id, ...) {
       }
       "))
     ),
-    tags$style(
-      "
-      #noborder {
-        border: none
-        border-top: none
-        border-bottom: none
-      }
-      .accordion, .accordion-item {
-        border: none
-      }
-      "
-    ),
     accordion(
       open = NULL,
       id = 'noborder',
