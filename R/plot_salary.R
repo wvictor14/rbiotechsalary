@@ -69,6 +69,9 @@ plot_salary <- function(
 #' @export
 #' @examples
 #' plot_salary_histogram(salaries, x = salary_total, font_color = 'black', hover_bg = 'white')
+#' 
+#' salaries |>  filter(location_country == 'Canada', title_general == 'Associate Scientist') |> 
+#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
 plot_salary_histogram <- function(
     .df, x, color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21') {
   
