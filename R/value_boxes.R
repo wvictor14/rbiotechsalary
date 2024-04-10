@@ -5,7 +5,6 @@ value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
   layout_column_wrap(
     #width = '350px',
     fixed_width = FALSE,
-    height = '50px',
     value_box(
       title = "Average Salary", 
       value = uiOutput(NS(id, 'text_average')),
