@@ -13,8 +13,9 @@ value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
       showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_average')), 
       showcase_layout = "left center", 
       full_screen = TRUE,
-      fill = TRUE, 
-      height = NULL,
+      fill = FALSE, 
+      #height = NULL,
+      height = '150px',
       uiOutput(NS(id, 'text_ave_breakdown'))
     ),
     value_box(
@@ -24,7 +25,8 @@ value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
       showcase =plotly::plotlyOutput(NS(id, 'plot_sparkline_users')),
       showcase_layout = "left center", 
       full_screen = TRUE,
-      fill = TRUE
+      height = '150px',
+      fill = FALSE
     ),
     value_box(
       title = "Average Years of Experience", 
@@ -33,8 +35,8 @@ value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
       showcase = bsicons::bs_icon('clock-history'),
       showcase_layout = "left center", 
       full_screen = TRUE,
-      fill = TRUE, 
-      height = NULL
+      fill = FALSE,
+      height = '150px'
     )
   )
 }
