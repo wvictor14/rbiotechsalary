@@ -668,7 +668,7 @@ sal_clean_filt |>
 
 ##### filter 
 
-I filter out an outlier sample, looksl ike they incorrectly inputted bonus:
+I filter out an outlier sample, looks like they incorrectly inputted bonus:
 
 ```{r}
 n_1 <- nrow(sal_clean_filt)
