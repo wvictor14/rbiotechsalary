@@ -39,8 +39,8 @@ devtools::install_github("wvictor14/rbiotechsalary")
 
 ### General
 
--   [ ] add research associate data
--   [ ] add other departments like product dev, clinical, business etc.
+-   [x] add research associate data
+-   [ ] (out of scope for me) add other departments like product dev, clinical, business etc.
 
 ### For cleaning
 
@@ -67,15 +67,22 @@ Targeted minimum set of variables:
 How to lay these out? by tabs?
 
 -   [x] salary x experience
+    - [ ] toggle raw data - cool
 -   [x] histogram
     -   [ ] toggle between base / total
-    -   [ ] show median in text + line
-    -   [ ] show range (10th and 90th percentile?)
+    -   [x] show median in text + line
+    -   [x] show range (10th and 90th percentile?)
 
 **Table**
 
--   [ ] reactable winner over gt and DT -> server side processing, feature-ful and looks good
+-   [x] reactable winner over gt and DT -> server side processing, feature-ful and looks good
 -   [x] show TC and breakdown base and bonus concisely - `merge_cols()`
+-   [ ] finalize column inclusion
+    - [ ] options good to include
+    - [ ] select row size
+
+Generally speaking, is there a way to convey the full data? maybe something like a hover or expand, what about in career progression plot?
+
 
 # docker
 
