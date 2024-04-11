@@ -181,8 +181,8 @@ vline <- function(x = 0, y1 = 0.9, color = "seagreen") {
 #' @param .df salary data
 #' @export
 plot_career_progression <- function(
-    .df, x = years_of_experience, y = salary_total,
-    color = '#41AB5D', font_color = '#EEE8D5', bg_color = 'black') {
+    .df, color = '#41AB5D', font_color = '#EEE8D5', bg_color = 'black',
+    sizeref = 0.1) {
   
   summarized <- .df |> 
     summarize(
@@ -202,20 +202,31 @@ plot_career_progression <- function(
   size <- summarized$n
   text <- summarized$.text
   
-  plotly::plot_ly(
-    x = x, y = y, type = 'scatter', mode = 'markers', 
-    hovertext = text, hoverinfo = 'text',
-    marker = list(
-      size = size,
-      sizeref = 0.05,
-      sizemin = 6,
-      sizemode = 'area',
-      color = color,
-      opacity = 0.90,
-      cliponaxis = FALSE,
-      line = list(width = 0)
-    )
-  ) |> 
+  plotly::plot_ly() |> 
+    plotly::add_trace(
+      x = .df$years_of_experience, y = .df$salary_total,
+      type = 'scatter', mode = 'markers',
+      hoverinfo = 'none',
+      marker = list(
+        color = 'darkgrey',
+        opacity = 0.2
+      ),
+      showlegend = FALSE
+    ) |> 
+    plotly::add_trace(
+      x = x, y = y, type = 'scatter', mode = 'markers', 
+      hovertext = text, hoverinfo = 'text',
+      marker = list(
+        size = size,
+        sizeref = sizeref,
+        sizemin = 6,
+        sizemode = 'area',
+        color = color,
+        opacity = 1,
+        cliponaxis = FALSE,
+        line = list(width = 0)
+      )
+    ) |> 
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
       margin = list(t = 0, b = 0, l = 0, r = 0),
