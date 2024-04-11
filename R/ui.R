@@ -40,31 +40,16 @@ rb_ui <- function() {
   page_navbar(
     theme = bs_theme(
       version = 5, 
-      fg = '#0c1014', #'#1D262E',
-      bg = '#EEE8D5',
+      fg = '#EEE8D5',
+      bg =  '#232627',
       primary = .colors$primary,
-      #"border-width" = "none"
+      "border-color" = 'rgba(255,255,255,0.1)', #495057',
+      "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
+      "accordion-border-width" = "1px"
     ) ,
     title = "r/biotech salaries",
     footer = tags$footer(
       style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
-      
-      # css
-      tags$style(
-        "
-      #noborder {
-        border: none;
-        border-top: none;
-        border-bottom: none
-      }
-      .accordion, .accordion-item {
-        border: none;
-        border-top: none
-      }
-    
-      .h1, h1{color: #EEE8D5;}
-      "
-      ),
       p(
         style = "margin: 0; color: #888;",
         glue::glue("rbiotechsalary {version}")
@@ -114,7 +99,7 @@ rb_ui <- function() {
       
     ),
     nav_item(
-      input_dark_mode(id = "dark_mode", mode = "dark")
+      #input_dark_mode(id = "dark_mode", mode = "dark")
     )
   )
   
