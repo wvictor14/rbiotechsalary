@@ -666,6 +666,21 @@ sal_clean_filt |>
   filter(title_category == 'Research Associate') |>  count(title_general) |> gt()
 ```
 
+##### filter 
+
+I filter out an outlier sample, looksl ike they incorrectly inputted bonus:
+
+```{r}
+n_1 <- nrow(sal_clean_filt)
+sal_clean_filt <- sal_clean_filt |> 
+  dplyr::filter(!(
+    str_detect(timestamp, '10/31/2023') & 
+      role_title_of_current_position == 'Sr Clinical Research Associate')
+    )
+.diff <- nrow(sal_clean_filt) - n_1
+stopifnot(.diff == -1)
+```
+
 ### Roles that have not been processed
 
 Look at the remaining roles that I have not tried to process.
