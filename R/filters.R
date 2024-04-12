@@ -1,13 +1,27 @@
 #' Filters, dropdowns ui
 #' @export
+#' @examples \dontrun {
+#' 
+#'   ui <- page_sidebar(theme = bs_theme(
+#'       version = 5,  fg = '#EEE8D5', bg =  '#232627', primary = 'seagreen'),
+#'     #actionButton('poo', 'poo', class = 'btn-secondary'),
+#'     #selectInput('select', 'select', choices = '1')
+#'     filters_ui('poo')
+#'   )
+#'   
+#'  shinyApp(ui = ui, server = function(input, output) {})
+#'
+#' }
 filters_ui <- function(id, ...) {
   tagList(
     tags$head(
       #restrict height to 1 line and apply scroll if overflow 
       tags$style(HTML("
       .selectize-input {
-        max-height: 200px;
+        max-height: 350px;
         overflow-y: auto;
+        margin-top:-5px;
+        margin-bottom:-10px
       }
       "))
     ),
@@ -17,6 +31,7 @@ filters_ui <- function(id, ...) {
       accordion_panel(
         id = 'noborder',
         'Job Title & Country',
+        
         selectizeInput(
           NS(id, "title"), 
           label = NULL, 
@@ -34,18 +49,19 @@ filters_ui <- function(id, ...) {
         "Precise location",
         p('These responses are not processed.', style = 'color:#f9b928'),
         div(
-          style = "margin-bottom:-10px; height:60px; width:100%",
+          style = "margin-bottom:0px; height:60px; width:100%",
           div(
             style = 'display:block;float:left',
             actionButton(
-              NS(id, "select_all"), label = "Select all", style = 'width: 100%'
+              NS(id, "select_all"), label = "Select all", style = 'width: 100%',
+              class = 'btn btn-outline-info'
             )
           ),
           div(
-            style = 'display:flex;float:right',
+            style = 'display:flex;float:left;padding-left:8px',
             actionButton(
               NS(id, "deselect_all"), label = "Clear",
-              style = 'width:100%'
+              style = 'width:100%', class = 'btn btn-outline-info'
             )
           )
         ),
@@ -100,6 +116,14 @@ filters_server <- function(id) {
         inputId = 'location_granular',
         choices = .location_granular(),
         selected = .location_granular()
+      )
+    })
+    observeEvent(input$deselect_all, {
+      updateSelectizeInput(
+        session = session,
+        inputId = 'location_granular',
+        choices = .location_granular(),
+        selected = NULL
       )
     })
     
