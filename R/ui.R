@@ -43,6 +43,7 @@ rb_ui <- function() {
       fg = '#EEE8D5',
       bg =  '#232627',
       primary = .colors$primary,
+      info = '#EEE8D5',
       "border-color" = 'rgba(255,255,255,0.1)', #495057',
       "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
       "accordion-border-width" = "1px"
