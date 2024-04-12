@@ -18,11 +18,12 @@ filters_ui <- function(id, ...) {
       #restrict height to 1 line and apply scroll if overflow 
       tags$style(HTML("
       .selectize-input {
-        max-height: 350px;
+        max-height: 200px;
         overflow-y: auto;
         margin-top:-5px;
         margin-bottom:-10px
       }
+      .selectize-dropdown-content {max-height: 400px; }
       "))
     ),
     accordion(
