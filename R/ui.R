@@ -68,8 +68,12 @@ rb_ui <- function() {
     nav_panel(
       title = "Salaries",
       htmltools::h1(shiny::textOutput('content_title_1')),
-      layout_columns(value_boxes_stats_ui('value_boxes')),
-      plotly::plotlyOutput("plot_salary_histogram"),
+      layout_column_wrap(
+        
+        style = htmltools::css(grid_template_columns = "2fr 1fr"),
+        plotly::plotlyOutput("plot_salary_histogram"),
+        value_boxes_stats_ui('value_boxes')
+      )
     ),
     
     nav_panel(
