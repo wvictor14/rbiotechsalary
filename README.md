@@ -14,10 +14,11 @@ devtools::install_github("wvictor14/rbiotechsalary")
 ```
 # goals of this project
 
-1. Focus on a core set of features to enable quick development and iteration
-2. Convey salary information concisely through summarized statistics and visualization 
-    -  enable relevant queries with customized search based on normalized (cleaned) data for role titles, and location data  
-3. Promote community involvement and open-source frameworks
+1. Provide user-friendly access to cleaned biotech salary information from r/biotech
+   -  focus on normalizing the most relevant variables
+3. Convey a minimal but relevant set of statistics and visualizations on salary information  
+    - enable relevant queries with customized search based on normalized (cleaned) data for role titles, and location data  
+4. Promote community involvement and open-source frameworks
     - allow user to explore raw data
     - open-access data provenance 
 
@@ -67,7 +68,7 @@ Targeted minimum set of variables:
 How to lay these out? by tabs?
 
 -   [x] salary x experience
-    - [ ] toggle raw data - cool
+    - [x] raw data - cool
 -   [x] histogram
     -   [ ] toggle between base / total
     -   [x] show median in text + line
@@ -78,7 +79,7 @@ How to lay these out? by tabs?
 -   [x] reactable winner over gt and DT -> server side processing, feature-ful and looks good
 -   [x] show TC and breakdown base and bonus concisely - `merge_cols()`
 -   [ ] finalize column inclusion
-    - [ ] options good to include
+    - [x] options good to include
     - [ ] select row size
 
 Generally speaking, is there a way to convey the full data? maybe something like a hover or expand, what about in career progression plot?
