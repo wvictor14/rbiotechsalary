@@ -58,7 +58,7 @@ rb_ui <- function() {
     ),
     
     sidebar = sidebar(
-      title = 'Filter salaries by',
+      title = NULL,
       gap = '1px',
       width = 300,
       filters_ui('filters')
