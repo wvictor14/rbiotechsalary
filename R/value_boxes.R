@@ -75,9 +75,9 @@ value_boxes_stats_server <- function(id, .salaries) {
     
     output$text_ave_breakdown <- renderUI({
       if (any(is.na(stats()$value))) { return(HTML('')) }
-      HTML(
-        stats() |> filter(name != 'Total') |> pull(.label) |>  paste0(collapse = ', ') 
-      )
+      .text <- stats() |> 
+        filter(name != 'Total') |> pull(.label) |>  paste0(collapse = ', ') 
+      HTML(.text)
     })
     
     # value box 2 ----
