@@ -72,6 +72,9 @@ plot_salary <- function(
 #' 
 #' salaries |>  filter(location_country == 'Canada', title_general == 'Associate Scientist') |> 
 #'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
+#'   
+#' salaries |>  slice(1) |> 
+#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
 plot_salary_histogram <- function(
     .df, x, color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21') {
   
@@ -115,7 +118,7 @@ plot_salary_histogram <- function(
   )
   
   ## extend y axis range to zero and upper limit by multiplier
-  .y_range <- c( 0, max(.plot_data$counts)*1.2 ) |> round()
+  .y_range <- c( 0, max(.plot_data$counts)*1.2 + 1) |> round()
   
   plotly::plot_ly() |> 
     
