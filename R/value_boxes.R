@@ -2,41 +2,35 @@
 #' @export
 value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
   
-  layout_column_wrap(
-    #width = '350px',
-    fixed_width = FALSE,
+  vb <- function(...){
     value_box(
+      theme = value_box_theme(bg = bg, fg = fg),
+      showcase_layout = "left center", 
+      full_screen = TRUE,
+      fill = TRUE,
+      fillable = TRUE,
+      ...
+    )
+  }
+  layout_column_wrap(
+    heights_equal = 'row',
+    #width = '350px',
+    #fixed_width = FALSE,
+    vb(
       title = "Average Salary", 
       value = uiOutput(NS(id, 'text_average')),
-      #theme= 'text-success',
-      theme = value_box_theme(bg = bg, fg = fg),
       showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_average')), 
-      showcase_layout = "left center", 
-      full_screen = TRUE,
-      fill = FALSE, 
-      #height = NULL,
-      height = '150px',
       uiOutput(NS(id, 'text_ave_breakdown'))
     ),
-    value_box(
+    vb(
       title = "Number of Survey Respondents", 
       value = textOutput(NS(id, 'n_respondents')),
-      theme = value_box_theme(bg = bg, fg = fg),
-      showcase =plotly::plotlyOutput(NS(id, 'plot_sparkline_users')),
-      showcase_layout = "left center", 
-      full_screen = TRUE,
-      height = '150px',
-      fill = FALSE
+      showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_users')),
     ),
-    value_box(
+    vb(
       title = "Average Years of Experience", 
       value = textOutput(NS(id, 'text_ave_yoe')),
-      theme = value_box_theme(bg = bg, fg = fg),
-      showcase = bsicons::bs_icon('clock-history'),
-      showcase_layout = "left center", 
-      full_screen = TRUE,
-      fill = FALSE,
-      height = '150px'
+      showcase = bsicons::bs_icon('clock-history')
     )
   )
 }
@@ -81,9 +75,9 @@ value_boxes_stats_server <- function(id, .salaries) {
     
     output$text_ave_breakdown <- renderUI({
       if (any(is.na(stats()$value))) { return(HTML('')) }
-      HTML(
-        stats() |> filter(name != 'Total') |> pull(.label) |>  paste0(collapse = ', ') 
-      )
+      .text <- stats() |> 
+        filter(name != 'Total') |> pull(.label) |>  paste0(collapse = ', ') 
+      HTML(.text)
     })
     
     # value box 2 ----
