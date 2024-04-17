@@ -51,17 +51,17 @@ filters_ui <- function(id, ...) {
         p('These responses are not processed.', style = 'color:#f9b928'),
         div(
           style = "margin-bottom:0px; height:60px; width:100%",
-          div(
-            style = 'display:block;float:left',
-            actionButton(
-              NS(id, "select_all"), label = "Select all", style = 'width: 100%',
-              class = 'btn btn-outline-info'
-            )
-          ),
+          #div(
+          #  style = 'display:block;float:left',
+          #  actionButton(
+          #    NS(id, "select_all"), label = "Select all", style = 'width: 100%',
+          #    class = 'btn btn-outline-info'
+          #  )
+          #),
           div(
             style = 'display:flex;float:left;padding-left:8px',
             actionButton(
-              NS(id, "deselect_all"), label = "Clear",
+              NS(id, "deselect_all"), label = "Clear selection",
               style = 'width:100%', class = 'btn btn-outline-info'
             )
           )
