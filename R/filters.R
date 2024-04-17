@@ -18,12 +18,13 @@ filters_ui <- function(id, ...) {
       #restrict height to 1 line and apply scroll if overflow 
       tags$style(HTML("
       .selectize-input {
-        max-height: 200px;
+        #max-height: 400px;
         overflow-y: auto;
         margin-top:-5px;
         margin-bottom:-10px
       }
-      .selectize-dropdown-content {max-height: 400px; }
+      
+      #.selectize-dropdown-content {max-height: 600px; }
       "))
     ),
     accordion(
@@ -47,34 +48,24 @@ filters_ui <- function(id, ...) {
         )
       ),
       accordion_panel(
-        "Precise location",
-        p('These responses are not processed.', style = 'color:#f9b928'),
-        div(
-          style = "margin-bottom:0px; height:60px; width:100%",
-          #div(
-          #  style = 'display:block;float:left',
-          #  actionButton(
-          #    NS(id, "select_all"), label = "Select all", style = 'width: 100%',
-          #    class = 'btn btn-outline-info'
-          #  )
-          #),
-          div(
-            style = 'display:flex;float:left;padding-left:8px',
-            actionButton(
-              NS(id, "deselect_all"), label = "Clear selection",
-              style = 'width:100%', class = 'btn btn-outline-info'
-            )
-          )
-        ),
+        "Filter by precise location",
+        p('Data not normalized/processed.', style = 'color:#f9b928'),
         selectizeInput( 
           inputId = NS(id, "location_granular"),
           label = NULL,
           choices = NULL,
-          options = list(plugins= list(
-            'remove_button'
-            # 'clear_button'
-          )),
+          options = list(
+            placeholder = 'All selected',
+            plugins= list(
+              'remove_button', 'auto_position'
+              # 'clear_button'
+            )),
           multiple = TRUE
+        ),
+        actionButton(
+          NS(id, "deselect_all"), label = "Clear selection",
+          style = 'height:40px; width:100%;padding-top:0px;padding-bottom:0px', 
+          class = 'btn btn-outline-info'
         )
       )
     ),
@@ -108,7 +99,7 @@ filters_server <- function(id) {
         session = session,
         inputId = 'location_granular',
         choices = .location_granular(),
-        selected = .location_granular() 
+        selected = NULL 
       )
     })
     observeEvent(input$select_all, {
@@ -132,11 +123,8 @@ filters_server <- function(id) {
     location_granular_selected <- eventReactive(input$location_granular, {
       if (is.null(input$location_granular)) {
         .loc_gran <- .location_granular()
-        print('its null')
-        print(length(.loc_gran))
       } else {
         .loc_gran <- input$location_granular
-        print('not null')
       }
       
       return(.loc_gran)
@@ -154,7 +142,6 @@ filters_server <- function(id) {
         '2023' = '2023',
         '2022' = '2022'
       )
-      
       
       .out <- list(
         .date = .date,
