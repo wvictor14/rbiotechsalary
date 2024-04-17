@@ -47,7 +47,25 @@ rb_ui <- function() {
       "border-color" = 'rgba(255,255,255,0.1)', #495057',
       "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
       "accordion-border-width" = "1px"
-    ),
+    ) |> 
+      bs_add_rules(
+        list("
+          .selectize-input {
+            border: 0px;
+            overflow-y: auto;
+            margin-top:-5px;
+            margin-bottom:-10px
+          }
+          .selectize-dropdown-content {max-height: 90vh !important}
+          .selectize-input.focus {
+            border-color: #cccccc;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            outline: none;
+          }
+          "
+        )
+      ), 
     title = "r/biotech salaries",
     footer = tags$footer(
       style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",

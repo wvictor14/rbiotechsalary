@@ -17,14 +17,6 @@ filters_ui <- function(id, ...) {
     tags$head(
       #restrict height to 1 line and apply scroll if overflow 
       tags$style(HTML("
-      .selectize-input {
-        #max-height: 400px;
-        overflow-y: auto;
-        margin-top:-5px;
-        margin-bottom:-10px
-      }
-      
-      .selectize-dropdown-content {max-height: 90vh !important}
       "))
     ),
     accordion(
@@ -33,7 +25,6 @@ filters_ui <- function(id, ...) {
       accordion_panel(
         id = 'noborder',
         'Job Title & Country',
-        
         selectizeInput(
           NS(id, "title"), 
           label = NULL, 
