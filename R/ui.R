@@ -47,7 +47,7 @@ rb_ui <- function() {
       "border-color" = 'rgba(255,255,255,0.1)', #495057',
       "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
       "accordion-border-width" = "1px"
-    ) ,
+    ),
     title = "r/biotech salaries",
     footer = tags$footer(
       style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",

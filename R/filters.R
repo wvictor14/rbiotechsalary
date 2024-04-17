@@ -24,7 +24,7 @@ filters_ui <- function(id, ...) {
         margin-bottom:-10px
       }
       
-      #.selectize-dropdown-content {max-height: 600px; }
+      .selectize-dropdown-content {max-height: 90vh !important}
       "))
     ),
     accordion(
@@ -65,7 +65,7 @@ filters_ui <- function(id, ...) {
         actionButton(
           NS(id, "deselect_all"), label = "Clear selection",
           style = 'height:40px; width:100%;padding-top:0px;padding-bottom:0px', 
-          class = 'btn btn-outline-info'
+          class = 'btn btn-dark'#btn-outline-info',
         )
       )
     ),
