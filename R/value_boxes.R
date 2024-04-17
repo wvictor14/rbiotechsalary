@@ -1,36 +1,45 @@
 #' Value boxes ui
 #' @export
-value_boxes_stats_ui <- function(id, bg = '#1E2122', fg = '#41AB5DFF') {
+value_boxes_stats_ui <- function(
+    id, bg = '#1E2122', fg = '#41AB5DFF',
+    showcase_layout = 'left center',
+    full_screen = TRUE, fill = TRUE, fillable = TRUE,
+    max_height = '125px',
+    ...) {
   
   vb <- function(...){
     value_box(
       theme = value_box_theme(bg = bg, fg = fg),
-      showcase_layout = "left center", 
-      full_screen = TRUE,
-      fill = TRUE,
-      fillable = TRUE,
+      showcase_layout = showcase_layout, 
+      full_screen = full_screen,
+      fill = fill,
+      fillable = fillable,
+      max_height = max_height,
       ...
     )
   }
-  layout_column_wrap(
-    heights_equal = 'row',
+  tagList(
+    #heights_equal = 'row',
     #width = '350px',
     #fixed_width = FALSE,
-    vb(
-      title = "Average Salary", 
-      value = uiOutput(NS(id, 'text_average')),
-      showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_average')), 
-      uiOutput(NS(id, 'text_ave_breakdown'))
-    ),
-    vb(
-      title = "Number of Survey Respondents", 
-      value = textOutput(NS(id, 'n_respondents')),
-      showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_users')),
-    ),
-    vb(
-      title = "Average Years of Experience", 
-      value = textOutput(NS(id, 'text_ave_yoe')),
-      showcase = bsicons::bs_icon('clock-history')
+    div(
+      style = "padding-bottom: 35px",
+      vb(
+        title = "Average Salary", 
+        value = uiOutput(NS(id, 'text_average')),
+        showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_average')), 
+        uiOutput(NS(id, 'text_ave_breakdown'))
+      ),
+      vb(
+        title = "Number of Survey Respondents", 
+        value = textOutput(NS(id, 'n_respondents')),
+        showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_users')),
+      ),
+      vb(
+        title = "Average Years of Experience", 
+        value = textOutput(NS(id, 'text_ave_yoe')),
+        showcase = bsicons::bs_icon('clock-history')
+      )
     )
   )
 }
