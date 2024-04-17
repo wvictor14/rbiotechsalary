@@ -57,11 +57,8 @@ rb_ui <- function() {
             margin-bottom:-10px
           }
           .selectize-dropdown-content {max-height: 90vh !important}
-          .selectize-input.focus {
-            border-color: #cccccc;
-            -webkit-box-shadow: none;
-            box-shadow: none;
-            outline: none;
+          *:focus {
+            box-shadow: none !important;
           }
           "
         )
