@@ -130,7 +130,7 @@ filters_server <- function(id) {
     
     # return filtered salary data
     reactive({
-      req(.location_granular())
+      req(input$location_granular)
       req(input$location_country)
       req(input$date)
       .date <- switch(
@@ -141,11 +141,18 @@ filters_server <- function(id) {
         '2022' = '2022'
       )
       
+      # if none is selected, return all
+      if (is.null(input$location_granular)) {
+        .loc_gran <- .location_granular()
+      } else {
+        .loc_gran <- input$location_granular
+      }
+      
       .out <- list(
         .date = .date,
         title = input$title,
         location_country = input$location_country,
-        location_granular = .location_granular()
+        location_granular = .loc_gran
       )
       
       return(.out)
