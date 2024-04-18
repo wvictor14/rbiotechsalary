@@ -6,11 +6,10 @@
 \usage{
 plot_career_progression(
   .df,
-  x = years_of_experience,
-  y = salary_total,
   color = "#41AB5D",
   font_color = "#EEE8D5",
-  bg_color = "black"
+  bg_color = "black",
+  sizeref = 0.1
 )
 }
 \arguments{

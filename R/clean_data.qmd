@@ -666,7 +666,7 @@ sal_clean_filt |>
   filter(title_category == 'Research Associate') |>  count(title_general) |> gt()
 ```
 
-##### filter 
+##### filter
 
 I filter out an outlier sample, looks like they incorrectly inputted bonus:
 

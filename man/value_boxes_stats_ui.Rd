@@ -4,7 +4,17 @@
 \alias{value_boxes_stats_ui}
 \title{Value boxes ui}
 \usage{
-value_boxes_stats_ui(id, bg = "#1E2122", fg = "#41AB5DFF")
+value_boxes_stats_ui(
+  id,
+  bg = "#1E2122",
+  fg = "#41AB5DFF",
+  showcase_layout = "left center",
+  full_screen = TRUE,
+  fill = TRUE,
+  fillable = TRUE,
+  max_height = "125px",
+  ...
+)
 }
 \description{
 Value boxes ui
