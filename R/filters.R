@@ -90,8 +90,6 @@ filters_server <- function(id) {
         pull(location_granular) |> 
         unique() |> 
         sort()
-      print(gran)
-      gran
     })
     observe({
       updateSelectizeInput(
