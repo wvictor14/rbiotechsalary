@@ -118,7 +118,7 @@ plot_salary_histogram <- function(
   )
   
   ## extend y axis range to zero and upper limit by multiplier
-  .y_range <- c( 0, max(.plot_data$counts)*1.2 + 1) |> round()
+  .y_range <- c( 0, max(.plot_data$counts)*1.2) 
   
   plotly::plot_ly() |> 
     
