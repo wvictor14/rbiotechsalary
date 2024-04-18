@@ -22,7 +22,8 @@ Imports:
     htmlwidgets,
     reactable,
     bsicons,
-    forcats
+    forcats,
+    skimr
 Suggests: 
     bench,
     callr,
