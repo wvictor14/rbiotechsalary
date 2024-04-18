@@ -2,13 +2,25 @@
 #' 
 #' taken from https://github.com/glin/reactable/issues/319
 showHideButton = function(id){
+  
   actionButton(
     id,
     "Show/hide additional columns",
     onclick = "Reactable.setHiddenColumns('table-raw', prevColumns => {
         return prevColumns.length === 0 ? ['Job title', 'Job details', 'Field', 'Stock', 'Highest education'] : []
       })",
-    style = 'height:35px; padding-left:0.5rem; padding-top:0.5rem; padding-bottom:0.5rem; border:none'
+    style = '
+      color: grey;
+      display: flex;
+      float: left; 
+      width: fit-content; height:40px; 
+      margin-top: 0px;  margin-bottom: -15px;
+      align: left; 
+      padding-top:0.5rem; padding-bottom:0.5rem; 
+      padding-left: 14px; padding-right: 16px;
+      border:none;
+    ',
+    class = 'btn btn-dark'
   )
 }
 
@@ -115,6 +127,7 @@ rt_table_raw <- function(.df, ...) {
       elementId = "table-raw",
       theme = reactable::reactableTheme(
         style = list(
+          marginTop = '0px',
           color = "#EEE8D5",
           backgroundColor = "#222627",
           fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
@@ -126,10 +139,9 @@ rt_table_raw <- function(.df, ...) {
           color = 'seagreen'
         ),
         searchInputStyle = list(
-          
-          paddingLeft = "0.5rem",
-          paddingTop = "0.5rem",
-          paddingBottom = "0.5rem",
+          paddingLeft = "8px",
+          paddingTop = "6px",
+          paddingBottom = "6px",
           borderRadius = '4px',
           display = 'inline-block',
           align = 'left',
@@ -142,7 +154,7 @@ rt_table_raw <- function(.df, ...) {
           
           backgroundRepeat = "no-repeat",
           "&:focus" = list(backgroundColor = "#393C3D", border = "none"),
-          "&:hover, &:focus" = list( color = '#EEE8D5'),
+          "&:hover, &:focus" = list(backgroundColor = '#393C3D', color = '#EEE8D5'),
           "::placeholder" = list(color = 'grey'),
           "&:hover::placeholder, &:focus::placeholder" = list(color = '#EEE8D5')
         )

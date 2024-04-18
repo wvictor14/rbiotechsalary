@@ -55,7 +55,14 @@ filters_ui <- function(id, ...) {
         ),
         actionButton(
           NS(id, "deselect_all"), label = "Clear selection",
-          style = 'height:40px; width:100%;padding-top:0px;padding-bottom:0px', 
+          style = '
+            color: grey;
+            height:35px; width: fit-content; 
+            padding-top:0px;padding-bottom:0px;
+            padding-left: 10px; padding-right: 16px;
+            float: left; 
+            align: left; 
+          ', 
           class = 'btn btn-dark'#btn-outline-info',
         )
       )
