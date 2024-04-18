@@ -14,7 +14,7 @@ showHideButton = function(id){
       display: flex;
       float: left; 
       width: fit-content; height:40px; 
-      margin-top: 0px;  margin-bottom: -15px;
+      margin-top: 0px;  margin-bottom: 0px;
       align: left; 
       padding-top:0.5rem; padding-bottom:0.5rem; 
       padding-left: 14px; padding-right: 16px;
@@ -29,8 +29,11 @@ showHideButton = function(id){
 table_raw_ui <- function(id, ...) {
   tagList(
     #gt::gt_output(NS(id, "table_raw", ...))
-    showHideButton(NS(id, 'toggle_button')),
-    reactable::reactableOutput(NS(id, "table_raw", ...))
+    div(
+      style = 'display: flex; flex-flow: column wrap;',
+      showHideButton(NS(id, 'toggle_button')),
+      reactable::reactableOutput(NS(id, "table_raw"), ...)
+    )
   )
 }
 
@@ -104,20 +107,20 @@ rt_table_raw <- function(.df, ...) {
         
       )
     ) |> 
-  select(
-    `Job title` = title_general,
-    `Job details` = title_detail,
-    `YOE` = years_of_experience,
-    `Total` = salary_total,
-    base_bonus,
-    Stock = compensation_annual_equity,
-    `Company` = company_or_institution_name,
-    `Location` = location_granular,
-    `Field` = biotech_sub_industry,
-    `Highest education` = highest_achieved_formal_education,
-    `Date` = date
-    
-  )
+    select(
+      `Job title` = title_general,
+      `Job details` = title_detail,
+      `YOE` = years_of_experience,
+      `Total` = salary_total,
+      base_bonus,
+      Stock = compensation_annual_equity,
+      `Company` = company_or_institution_name,
+      `Location` = location_granular,
+      `Field` = biotech_sub_industry,
+      `Highest education` = highest_achieved_formal_education,
+      `Date` = date
+      
+    )
   .df_select |> 
     reactable::reactable(
       ...,
@@ -178,12 +181,12 @@ rt_table_raw <- function(.df, ...) {
           
           style = list(color = 'grey'),
           headerStyle = list(color = 'grey')
-          ),
+        ),
         `Total` = reactable::colDef(
           width = 100,
           format = reactable::colFormat(
             prefix = "$", separators = TRUE, digits = 0
-            )
+          )
         ),
         
         # hidden by default:

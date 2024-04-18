@@ -10,6 +10,8 @@
 #' }
 rb_ui <- function() {
   
+  skim_raw_data <- load_raw_data() |> 
+    skim_data_to_html()
   
   version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   link_add_data <- shiny::tags$a(
@@ -76,7 +78,7 @@ rb_ui <- function() {
     footer = tags$footer(
       style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
       p(
-        style = "margin: 0; color: #888;",
+        style = "margin-top: 20px; color: #888;",
         glue::glue("rbiotechsalary {version}")
       )
     ),
@@ -104,7 +106,24 @@ rb_ui <- function() {
     nav_panel(
       title = 'Raw data',
       htmltools::h1(shiny::textOutput('content_title_2')),
-      table_raw_ui("table_raw")
+      layout_columns(
+        col_widths = c(12, 12),
+        row_heights = list('100%', '100%'),
+        
+        div(
+          h2('Processed Salary Data'),
+          table_raw_ui("table_raw", height = '100%', width = '100%'),
+          br()
+        ),
+        
+        div(
+          h2('Summary statistics of the raw unprocessed data:'),
+          p('Generated with skimr. last updated: '),
+          skim_raw_data
+        )
+      ),
+      br(),
+      br()
     ),
     ### panel career progression ----
     nav_panel(
@@ -123,6 +142,7 @@ rb_ui <- function() {
     nav_panel(
       title = 'Info',
       htmltools::includeMarkdown(here::here('markdown', "info_page.md")),
+      tags$br(),
       tags$br()
     ),
     
