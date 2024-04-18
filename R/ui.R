@@ -46,20 +46,29 @@ rb_ui <- function() {
       info = '#EEE8D5',
       "border-color" = 'rgba(255,255,255,0.1)', #495057',
       "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
+      "focus-ring-color" = "rgba(255,255,255,0.1)",
       "accordion-border-width" = "1px"
     ) |> 
       bs_add_rules(
         list("
           .selectize-input {
-            border: 0px;
+            border-width: 0px !important;
+            background-color: #202020 !important;
+            color: #EEE8D5 !important;
             overflow-y: auto;
             margin-top:-5px;
-            margin-bottom:-10px
+            margin-bottom:-10px;
+            outline: none
+          }
+          ::-webkit-input-placeholder {
+            color: #EEE8D5;
+            padding-left: 5px;
+          }
+          .selectize-input.focus {
+            border-color: white;
+            border-width: 0px;
           }
           .selectize-dropdown-content {max-height: 90vh !important}
-          *:focus {
-            box-shadow: none !important;
-          }
           "
         )
       ), 
