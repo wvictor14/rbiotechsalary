@@ -100,6 +100,7 @@ rb_ui <- function() {
       )
     ),
     
+    ### panel raw data ----
     nav_panel(
       title = 'Raw data',
       htmltools::h1(shiny::textOutput('content_title_2')),
@@ -117,6 +118,15 @@ rb_ui <- function() {
         )
       )
     ),
+    
+    ## panel info ----
+    nav_panel(
+      title = 'Info',
+      htmltools::includeMarkdown(here::here('markdown', "info_page.md")),
+      tags$br()
+    ),
+    
+    ## menu ----
     nav_spacer(),
     nav_menu(
       title = "Links",
