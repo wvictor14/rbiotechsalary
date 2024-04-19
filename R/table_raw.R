@@ -29,17 +29,17 @@ showHideButton = function(id){
 table_raw_ui <- function(id, ...) {
   tagList(
     #gt::gt_output(NS(id, "table_raw", ...))
-    div(
-      style = 'display: flex; flex-flow: column wrap;',
+    #div(
+    #  style = 'display: flex; flex-flow: column wrap;',
       showHideButton(NS(id, 'toggle_button')),
       reactable::reactableOutput(NS(id, "table_raw"), ...)
-    )
+    #)
   )
 }
 
 #' table_raw server 
 #' @export
-table_raw_server <- function(id, .salaries, .slice = 1:20, ...) {
+table_raw_server <- function(id, .salaries,  ...) {
   stopifnot(is.reactive(.salaries))
   moduleServer(id, function(input, output, session) {
     

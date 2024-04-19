@@ -108,18 +108,21 @@ rb_ui <- function() {
       htmltools::h1(shiny::textOutput('content_title_2')),
       layout_columns(
         col_widths = c(12, 12),
-        row_heights = list('100%', '100%'),
+        row_heights = list('675px', '100%'),
+        gap = '20px',
         
-        div(
-          h2('Processed Salary Data'),
-          table_raw_ui("table_raw", height = '100%', width = '100%'),
-          br()
+        bslib::card(
+          card_header(h3('Processed Salary Data')),
+          card_body(
+            table_raw_ui("table_raw")
+          )
         ),
-        
-        div(
-          h2('Summary statistics of the raw unprocessed data:'),
-          p('Generated with skimr. last updated: '),
-          skim_raw_data
+        bslib::card(
+          card_header(
+            h2('Summary statistics of the raw unprocessed data:'),
+            p('Generated with skimr. last updated: ')
+          ),
+          card_body(min_height = '150%',skim_raw_data)
         )
       ),
       br(),

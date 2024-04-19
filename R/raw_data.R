@@ -6,7 +6,7 @@ load_raw_data <- function(years = c('2022', '2023', '2024')) {
     purrr::map(
       \(x) readr::read_csv(
         here::here('data', glue::glue('{x}_survey_results.csv')), 
-        col_types = cols(.default = "c"))
+        col_types = readr::cols(.default = "c"))
     )  |> 
     purrr::list_rbind(names_to = 'sheet_year')
 }
