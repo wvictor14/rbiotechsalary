@@ -124,13 +124,14 @@ rt_table_raw <- function(.df, ...) {
   .df_select |> 
     reactable_rbs(
       elementId = "table-raw",
+      defaultPageSize = 12,
       columns = list(
-        `YOE` = reactable::colDef(
+        `YOE` = colDef(
           #style = list(color = 'grey'),
           #headerStyle = list(color = 'grey'),
           width = 60
         ),
-        base_bonus = reactable::colDef(
+        base_bonus = colDef(
           show = TRUE,
           name = 'Base | Bonus',
           sortable = FALSE,
@@ -139,7 +140,7 @@ rt_table_raw <- function(.df, ...) {
           style = list(color = 'grey'),
           headerStyle = list(color = 'grey')
         ),
-        `Total` = reactable::colDef(
+        `Total` = colDef(
           width = 100,
           format = reactable::colFormat(
             prefix = "$", separators = TRUE, digits = 0
@@ -147,12 +148,12 @@ rt_table_raw <- function(.df, ...) {
         ),
         
         # hidden by default:
-        `Job title` = reactable::colDef(show = FALSE),
-        `Job details` = reactable::colDef(show = FALSE),
-        `Field` = reactable::colDef(show = FALSE),
-        `Stock` = reactable::colDef(show = FALSE),
-        #`Company` = reactable::colDef(show = FALSE),
-        `Highest education` = reactable::colDef(show = FALSE)
+        `Job title` = colDef(show = FALSE),
+        `Job details` = colDef(show = FALSE),
+        `Field` = colDef(show = FALSE),
+        `Stock` = colDef(show = FALSE),
+        #`Company` = colDef(show = FALSE),
+        `Highest education` = colDef(show = FALSE)
       )
     )
 }
@@ -199,7 +200,7 @@ reactable_rbs <- function(.df, ...) {
       ),
       wrap = FALSE,
       language = reactable::reactableLang(
-        searchPlaceholder = "Search Raw Data"
+        searchPlaceholder = "Search"
       ),
       showSortable = TRUE
     )

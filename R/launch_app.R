@@ -2,6 +2,7 @@
 #' 
 #' @export
 #' @import shiny bslib dplyr
+#' @importFrom reactable colDef reactable
 #' @examples \dontrun{
 #' 
 #'  launch_app()
