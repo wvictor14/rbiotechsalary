@@ -27,6 +27,14 @@ launch_app <- function(options = list(), ui = rb_ui, server = rb_server, ...) {
   version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   #shiny::addResourcePath("www", "www")
   message('Running rbiotechsalary version ', version)
+
+  # assign variables to server environment
+  source('R/server.R', local = TRUE)
+  server_env <- environment(rb_server)
   
-  shiny::shinyApp(ui, server,  options = list(launch.browser = TRUE), ...)
+  # variables
+  server_env$salaries <- salaries
+  server_env$skim_raw_data <- skim_raw_data
+  
+  shiny::shinyApp(rb_ui, rb_server, options = list(launch.browser = TRUE), ...)
 }
