@@ -122,51 +122,8 @@ rt_table_raw <- function(.df, ...) {
       
     )
   .df_select |> 
-    reactable::reactable(
-      ...,
-      searchable = TRUE,
-      highlight = TRUE,
-      resizable = TRUE,
+    reactable_rbs(
       elementId = "table-raw",
-      theme = reactable::reactableTheme(
-        style = list(
-          marginTop = '0px',
-          color = "#EEE8D5",
-          backgroundColor = "#222627",
-          fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
-        ),
-        highlightColor = "#393C3D",
-        borderWidth = '0px',
-        #cellPadding = "0px 0px",
-        headerStyle = list(
-          color = 'seagreen'
-        ),
-        searchInputStyle = list(
-          paddingLeft = "8px",
-          paddingTop = "6px",
-          paddingBottom = "6px",
-          borderRadius = '4px',
-          display = 'inline-block',
-          align = 'left',
-          borderColor = 'transparent', #'#EEE8D5',
-          borderWidth = '0px',
-          border  = 'none',
-          backgroundColor = '#222627',
-          highlightColor = "#393C3D",
-          width = "100%",
-          
-          backgroundRepeat = "no-repeat",
-          "&:focus" = list(backgroundColor = "#393C3D", border = "none"),
-          "&:hover, &:focus" = list(backgroundColor = '#393C3D', color = '#EEE8D5'),
-          "::placeholder" = list(color = 'grey'),
-          "&:hover::placeholder, &:focus::placeholder" = list(color = '#EEE8D5')
-        )
-      ),
-      wrap = FALSE,
-      language = reactable::reactableLang(
-        searchPlaceholder = "Search Raw Data"
-      ),
-      showSortable = TRUE,
       columns = list(
         `YOE` = reactable::colDef(
           #style = list(color = 'grey'),
@@ -197,5 +154,53 @@ rt_table_raw <- function(.df, ...) {
         #`Company` = reactable::colDef(show = FALSE),
         `Highest education` = reactable::colDef(show = FALSE)
       )
+    )
+}
+
+reactable_rbs <- function(.df, ...) {
+  .df |> 
+    reactable::reactable(
+      ...,
+      searchable = TRUE,
+      highlight = TRUE,
+      resizable = TRUE,
+      theme = reactable::reactableTheme(
+        style = list(
+          marginTop = '0px',
+          color = "#EEE8D5",
+          backgroundColor = "#222627",
+          fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+        ),
+        highlightColor = "#393C3D",
+        borderWidth = '0px',
+        headerStyle = list(
+          color = 'seagreen'
+        ),
+        searchInputStyle = list(
+          paddingLeft = "8px",
+          paddingTop = "6px",
+          paddingBottom = "6px",
+          borderRadius = '4px',
+          display = 'inline-block',
+          align = 'left',
+          borderColor = 'transparent', #'#EEE8D5',
+          borderWidth = '0px',
+          border  = 'none',
+          backgroundColor = '#222627',
+          highlightColor = "#393C3D",
+          width = "100%",
+          
+          backgroundRepeat = "no-repeat",
+          "&:focus" = list(backgroundColor = "#393C3D", border = "none"),
+          "&:hover, &:focus" = list(backgroundColor = '#393C3D', color = '#EEE8D5'),
+          "::placeholder" = list(color = 'grey'),
+          "&:hover::placeholder, &:focus::placeholder" = list(color = '#EEE8D5')
+        )
+      ),
+      wrap = FALSE,
+      language = reactable::reactableLang(
+        searchPlaceholder = "Search Raw Data"
+      ),
+      showSortable = TRUE
     )
 }
