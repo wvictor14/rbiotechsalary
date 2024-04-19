@@ -50,6 +50,10 @@ rb_ui <- function() {
     ) |> 
       bs_add_rules(
         list("
+          h1 {
+            margin: -5px;
+          }
+             
           .selectize-input {
             border-width: 0px !important;
             background-color: #202020 !important;
