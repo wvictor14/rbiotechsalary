@@ -101,9 +101,9 @@ docker build -t rbiotechsalary .
 docker tag rbiotechsalary victor2wy/rbiotechsalary
 docker push victor2wy/rbiotechsalary # push to dockerhub
 
-docker pull victor2wy/rbiotechsalary:latest
-
 # run
-docker run --user shiny -p 3838:3838  rbiotechsalary # local
 docker run --user shiny -dp 3838:3838 victor2wy/rbiotechsalary #dockerhub
+
+docker pull victor2wy/rbiotechsalary:latest
+docker run --user shiny -p 3838:3838  rbiotechsalary # local
 ```
