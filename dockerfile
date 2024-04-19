@@ -3,6 +3,7 @@ FROM rocker/tidyverse:4.3.3
 
 # Install clusterProfiler and related packages for GSEA
 RUN install2.r --error --skipinstalled \
+    here \
     bslib \
     bsicons \ 
     gt \
@@ -10,7 +11,8 @@ RUN install2.r --error --skipinstalled \
     paletteer \
     plotly \
     DT \
-    htmlwidgets
+    htmlwidgets \
+    skimr
 
 # dev version reactable for server side
 RUN installGithub.r glin/reactable \

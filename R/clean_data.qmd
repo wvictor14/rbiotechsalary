@@ -70,7 +70,6 @@ sal <- c('2022', '2023', '2024') %>%
   )  |> 
   list_rbind(names_to = 'sheet_year')
 
-
 # assess NAs
 percent_na <- function(x, invert = FALSE) {
   p <- sum(is.na(x)) / length(x)
@@ -90,6 +89,17 @@ skimr has a great function that does this, `skim`:
 
 ```{r}
 sal |>  skim()
+```
+
+### save raw data summary
+
+```{r}
+sal |> 
+  skimr::skim() |> 
+  as_tibble() |> 
+  rename_with(~stringr::str_remove_all(.x, 'character\\.')) |> 
+  select(-skim_type, -whitespace)  |> 
+  readr::write_csv(here::here('data', 'salary_raw_data.csv'))
 ```
 
 ## Remove those with 0 answers:
@@ -613,7 +623,7 @@ sal_clean_filt |>
 
 ```{r}
 sal_clean_filt <- sal_clean_filt |>
-    mutate(
+  mutate(
     # title_category
     title_category =  
       ifelse(
@@ -640,7 +650,7 @@ sal_clean_filt <- sal_clean_filt |>
         str_replace_all('\\s{2,}', ' ')
       ,
       title_detail
-  )
+    )
   ) |> 
   
   # title_gen most specific to most general
@@ -676,7 +686,7 @@ sal_clean_filt <- sal_clean_filt |>
   dplyr::filter(!(
     str_detect(timestamp, '10/31/2023') & 
       role_title_of_current_position == 'Sr Clinical Research Associate')
-    )
+  )
 .diff <- nrow(sal_clean_filt) - n_1
 stopifnot(.diff == -1)
 ```

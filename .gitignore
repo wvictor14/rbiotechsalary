@@ -7,3 +7,4 @@ R/clean_data.html
 R/clean_data_files/*
 data/geo_queried_results.csv
 shiny-test*
+data/salary_raw_data.csv
