@@ -29,11 +29,11 @@ showHideButton = function(id){
 table_raw_ui <- function(id, ...) {
   tagList(
     #gt::gt_output(NS(id, "table_raw", ...))
-    #div(
-    #  style = 'display: flex; flex-flow: column wrap;',
+    div(
+      style = 'display: flex; flex-flow: column wrap;',
       showHideButton(NS(id, 'toggle_button')),
       reactable::reactableOutput(NS(id, "table_raw"), ...)
-    #)
+    )
   )
 }
 
@@ -51,7 +51,7 @@ table_raw_server <- function(id, .salaries,  ...) {
         .salaries() |>
           arrange(desc(date)) |>
           #slice(.slice) |>
-          rt_table_raw(server = TRUE)
+          rt_table_raw(server = TRUE, defaultPageSize = 12)
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()

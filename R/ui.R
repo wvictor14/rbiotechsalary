@@ -10,9 +10,6 @@
 #' }
 rb_ui <- function() {
   
-  skim_raw_data <- load_raw_data() |> 
-    skim_data_to_html()
-  
   version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   link_add_data <- shiny::tags$a(
     bsicons::bs_icon("plus-lg"), " Add Your Salary",
@@ -76,7 +73,14 @@ rb_ui <- function() {
       ), 
     title = "r/biotech salaries",
     footer = tags$footer(
-      style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
+      style = "
+        padding: 0px; 
+        margin-bottom: 0px; 
+        text-align: center; 
+        position: fixed;
+        bottom: 0;
+        padding-bottom: 0px; 
+        width: 100%;",
       p(
         style = "margin-top: 20px; color: #888;",
         glue::glue("rbiotechsalary {version}")
@@ -102,31 +106,11 @@ rb_ui <- function() {
       )
     ),
     
-    ### panel raw data ----
+    ### table ----
     nav_panel(
-      title = 'Raw data',
+      title = 'Table',
       htmltools::h1(shiny::textOutput('content_title_2')),
-      layout_columns(
-        col_widths = c(12, 12),
-        row_heights = list('675px', '100%'),
-        gap = '20px',
-        
-        bslib::card(
-          card_header(h3('Processed Salary Data')),
-          card_body(
-            table_raw_ui("table_raw")
-          )
-        ),
-        bslib::card(
-          card_header(
-            h2('Summary statistics of the raw unprocessed data:'),
-            p('Generated with skimr. last updated: ')
-          ),
-          card_body(min_height = '150%',skim_raw_data)
-        )
-      ),
-      br(),
-      br()
+      table_raw_ui("table_raw")
     ),
     ### panel career progression ----
     nav_panel(
@@ -147,6 +131,20 @@ rb_ui <- function() {
       htmltools::includeMarkdown(here::here('markdown', "info_page.md")),
       tags$br(),
       tags$br()
+    ),
+    
+    ## data pipe ----
+    nav_panel(
+      title = 'Data pipeline',
+      bslib::card(
+        card_header(
+          h2('Completeness and summary stats for raw data variables'),
+          p('Generated with skimr.')
+        ),
+        card_body(
+          gt::gt_output('skim_raw_data')
+        )
+      )
     ),
     
     ## menu ----
