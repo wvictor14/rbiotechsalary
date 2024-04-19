@@ -6,7 +6,7 @@
 \usage{
 gt_dark_mode(
   gt_object,
-  .color_dark = "#00000000",
+  .color_dark = "#FFFFFF00",
   .color_light = "#EEE8D5",
   ...
 )
@@ -24,7 +24,7 @@ stylize to dark mode
 }
 \examples{
   
-salaries |> slice(1:20) |>  gt_table_raw() |>  gt_dark_mode()
+salaries |> slice(1:20) |>  gt_table_raw() |>  gt_dark_mode('black','black')
 salaries |> slice(1:20) |>  gt_table_raw() |>  
 gt::tab_style(
 style = gt::cell_fill(alpha = 0), locations = list(gt::cells_body()))  |> 

@@ -39,7 +39,7 @@ table_raw_ui <- function(id, ...) {
 
 #' table_raw server 
 #' @export
-table_raw_server <- function(id, .salaries, .slice = 1:20, ...) {
+table_raw_server <- function(id, .salaries,  ...) {
   stopifnot(is.reactive(.salaries))
   moduleServer(id, function(input, output, session) {
     
@@ -51,7 +51,7 @@ table_raw_server <- function(id, .salaries, .slice = 1:20, ...) {
         .salaries() |>
           arrange(desc(date)) |>
           #slice(.slice) |>
-          rt_table_raw(server = TRUE)
+          rt_table_raw(server = TRUE, defaultPageSize = 12)
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()
@@ -122,12 +122,49 @@ rt_table_raw <- function(.df, ...) {
       
     )
   .df_select |> 
+    reactable_rbs(
+      elementId = "table-raw",
+      defaultPageSize = 12,
+      columns = list(
+        `YOE` = colDef(
+          #style = list(color = 'grey'),
+          #headerStyle = list(color = 'grey'),
+          width = 60
+        ),
+        base_bonus = colDef(
+          show = TRUE,
+          name = 'Base | Bonus',
+          sortable = FALSE,
+          width = 145,
+          
+          style = list(color = 'grey'),
+          headerStyle = list(color = 'grey')
+        ),
+        `Total` = colDef(
+          width = 100,
+          format = reactable::colFormat(
+            prefix = "$", separators = TRUE, digits = 0
+          )
+        ),
+        
+        # hidden by default:
+        `Job title` = colDef(show = FALSE),
+        `Job details` = colDef(show = FALSE),
+        `Field` = colDef(show = FALSE),
+        `Stock` = colDef(show = FALSE),
+        #`Company` = colDef(show = FALSE),
+        `Highest education` = colDef(show = FALSE)
+      )
+    )
+}
+
+reactable_rbs <- function(.df, ...) {
+  .df |> 
     reactable::reactable(
       ...,
       searchable = TRUE,
       highlight = TRUE,
       resizable = TRUE,
-      elementId = "table-raw",
       theme = reactable::reactableTheme(
         style = list(
           marginTop = '0px',
@@ -137,7 +174,6 @@ rt_table_raw <- function(.df, ...) {
         ),
         highlightColor = "#393C3D",
         borderWidth = '0px',
-        #cellPadding = "0px 0px",
         headerStyle = list(
           color = 'seagreen'
         ),
@@ -164,38 +200,8 @@ rt_table_raw <- function(.df, ...) {
       ),
       wrap = FALSE,
       language = reactable::reactableLang(
-        searchPlaceholder = "Search Raw Data"
+        searchPlaceholder = "Search"
       ),
-      showSortable = TRUE,
-      columns = list(
-        `YOE` = reactable::colDef(
-          #style = list(color = 'grey'),
-          #headerStyle = list(color = 'grey'),
-          width = 60
-        ),
-        base_bonus = reactable::colDef(
-          show = TRUE,
-          name = 'Base | Bonus',
-          sortable = FALSE,
-          width = 145,
-          
-          style = list(color = 'grey'),
-          headerStyle = list(color = 'grey')
-        ),
-        `Total` = reactable::colDef(
-          width = 100,
-          format = reactable::colFormat(
-            prefix = "$", separators = TRUE, digits = 0
-          )
-        ),
-        
-        # hidden by default:
-        `Job title` = reactable::colDef(show = FALSE),
-        `Job details` = reactable::colDef(show = FALSE),
-        `Field` = reactable::colDef(show = FALSE),
-        `Stock` = reactable::colDef(show = FALSE),
-        #`Company` = reactable::colDef(show = FALSE),
-        `Highest education` = reactable::colDef(show = FALSE)
-      )
+      showSortable = TRUE
     )
 }

@@ -4,7 +4,7 @@
 \alias{table_raw_server}
 \title{table_raw server}
 \usage{
-table_raw_server(id, .salaries, .slice = 1:20, ...)
+table_raw_server(id, .salaries, ...)
 }
 \description{
 table_raw server

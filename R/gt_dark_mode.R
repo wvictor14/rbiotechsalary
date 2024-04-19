@@ -20,12 +20,12 @@ gt_dark_mode <- function(
   
   gt_object %>%
     gt::opt_row_striping() |> 
-    tab_style(
-      style = cell_borders(
+    gt::tab_style(
+      style = gt::cell_borders(
         sides = c("top", "bottom"),
-        weight = px(0)
+        weight = gt::px(0)
       ),
-      locations = list(cells_body(), cells_column_labels())
+      locations = list(gt::cells_body(), gt::cells_column_labels())
     ) |> 
     gt::tab_options(
       row.striping.background_color = "#1E2122",
