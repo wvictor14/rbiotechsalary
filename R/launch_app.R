@@ -1,5 +1,6 @@
 #' launch rbiotechsalary app
 #' 
+#' @param server when not supplied, will use rb_server
 #' @export
 #' @import shiny bslib dplyr
 #' @importFrom reactable colDef reactable
@@ -11,8 +12,9 @@
 #'  launch_app(server = function(input, output) {})
 #'  
 #' }
-launch_app <- function(options = list(), ui = rb_ui, server = rb_server, ...) {
+launch_app <- function(options = list(), ui = rb_ui, server = NULL, ...) {
   
+  # load data for app
   skim_raw_data <- load_raw_data() |> 
     skimr::skim() |> 
     as_tibble() |> 
@@ -26,15 +28,21 @@ launch_app <- function(options = list(), ui = rb_ui, server = rb_server, ...) {
   
   version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   #shiny::addResourcePath("www", "www")
+  
+  # set up server environment
+  if (is.null(server)) {
+    
+    # assign variables to server environment
+    source('R/server.R', local = TRUE)
+    server_env <- environment(rb_server)
+    
+    server_env$salaries <- salaries
+    server_env$skim_raw_data <- skim_raw_data
+  } else {
+    rb_server <- server
+  }
+  
+  # run app
   message('Running rbiotechsalary version ', version)
-
-  # assign variables to server environment
-  source('R/server.R', local = TRUE)
-  server_env <- environment(rb_server)
-  
-  # variables
-  server_env$salaries <- salaries
-  server_env$skim_raw_data <- skim_raw_data
-  
-  shiny::shinyApp(rb_ui, rb_server, options = list(launch.browser = TRUE), ...)
+  shiny::shinyApp(ui, rb_server, options = list(launch.browser = TRUE), ...)
 }
