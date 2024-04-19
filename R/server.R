@@ -32,8 +32,14 @@ rb_server <- function(input, output, session) {
     plot_salary_histogram(.salaries(), salary_total)
   })
   
-  # raw data panel
+  # table data panel
   table_raw_server('table_raw', .salaries)
+  
+  
+  # raw data pipe
+  output$skim_raw_data <- gt::render_gt(
+    skim_raw_data 
+  )
   
   # career progression
   output$plot_career_progression <- plotly::renderPlotly({
