@@ -29,18 +29,8 @@ launch_app <- function(options = list(), ui = rb_ui, server = NULL, ...) {
   version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   #shiny::addResourcePath("www", "www")
   
-  # set up server environment
-  if (is.null(server)) {
-    
-    # assign variables to server environment
-    source('R/server.R', local = TRUE)
-    server_env <- environment(rb_server)
-    
-    server_env$salaries <- salaries
-    server_env$skim_raw_data <- skim_raw_data
-  } else {
-    rb_server <- server
-  }
+  # source server.R in this environment to gain access to above variables
+  source(here::here('R', 'server.R'), local = TRUE)
   
   # run app
   message('Running rbiotechsalary version ', version)
