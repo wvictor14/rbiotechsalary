@@ -37,9 +37,24 @@ rb_server <- function(input, output, session) {
   
   
   # raw data pipe
-  output$skim_raw_data <- gt::render_gt(
-    skim_raw_data 
-  )
+  output$skim_raw_data <- reactable::renderReactable({
+    skim_raw_data |>  
+      reactable_rbs(
+        fullWidth = FALSE,
+        columns = list(
+          n_missing = colDef(name = 'Missing', width = 120),
+          
+          skim_variable = colDef(
+            name = 'Survey Response Variable',
+            width = 400
+          ),
+          
+          complete_rate = reactable::colDef(
+            name = 'Complete',
+            width = 120,
+            format = reactable::colFormat(percent = TRUE, digits = 1))
+        ))
+  })
   
   # career progression
   output$plot_career_progression <- plotly::renderPlotly({

@@ -142,7 +142,7 @@ rb_ui <- function() {
           p('Generated with skimr.')
         ),
         card_body(
-          gt::gt_output('skim_raw_data')
+          reactable::reactableOutput('skim_raw_data')
         )
       )
     ),
