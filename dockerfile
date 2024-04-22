@@ -18,9 +18,14 @@ RUN install2.r --error --skipinstalled \
 RUN installGithub.r glin/reactable \
     && rm -rf /tmp/downloaded_packages/
 
-# install app
+# copy files
 WORKDIR /home/app/
 COPY . .
+
+# create data
+RUN R -e "quarto::quarto_render('inst/extdata/clean_data.qmd')"
+
+# install app
 RUN R -e "devtools::install()"
 
 # user
