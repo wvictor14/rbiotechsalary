@@ -1,5 +1,3 @@
-#' @describeIn launch_app updated server function
-#' @export
 rb_server <- function(input, output, session) {
   
   .filters <- filters_server('filters')
@@ -15,7 +13,7 @@ rb_server <- function(input, output, session) {
   })
   
   # panel 1 ----
-   content_title <- reactive(
+  content_title <- reactive(
     glue::glue(
       "{role} Salaries in {country}",
       role = .filters()$title,

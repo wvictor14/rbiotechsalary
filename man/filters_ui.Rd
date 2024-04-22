@@ -4,7 +4,7 @@
 \alias{filters_ui}
 \title{Filters, dropdowns ui}
 \usage{
-filters_ui(id, ...)
+filters_ui(id, .salaries, ...)
 }
 \description{
 Filters, dropdowns ui
@@ -16,7 +16,7 @@ Filters, dropdowns ui
       version = 5,  fg = '#EEE8D5', bg =  '#232627', primary = 'seagreen'),
     #actionButton('poo', 'poo', class = 'btn-secondary'),
     #selectInput('select', 'select', choices = '1')
-    filters_ui('poo')
+    filters_ui('poo', salaries)
   )
   
  shinyApp(ui = ui, server = function(input, output) {})

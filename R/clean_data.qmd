@@ -1001,7 +1001,7 @@ sal_clean_filt |>
 ```
 
 ```{r eval = TRUE}
-salaries <- read_csv(here::here('data', 'salary_results_cleaned.csv'))
+salaries <- readr::read_csv(here::here('data', 'salary_results_cleaned.csv'))
 salaries <- salaries |>  
   mutate(
     title_general = title_general |>

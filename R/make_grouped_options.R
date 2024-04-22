@@ -4,7 +4,7 @@
 #' @examples
 #' make_grouped_options(salaries, title_category, title_general)
 make_grouped_options <- function(.df, .groups, .choices) {
-  salaries |>
+  .df |>
     distinct({{.groups}}, {{.choices}}) |>
     arrange({{.groups}}, {{.choices}}) |> 
     summarize(.by = {{.groups}}, choices = list(unique({{.choices}}))) |> 
