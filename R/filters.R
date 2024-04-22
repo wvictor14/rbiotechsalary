@@ -74,7 +74,8 @@ filters_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     
     # location input reactives
-    .location_granular <- eventReactive(input$location_country, {
+    .location_granular_choices <- eventReactive(input$location_country, {
+      print('triggered 1')
       gran <- salaries |>
         filter(
           location_country %in% input$location_country) |>
@@ -86,7 +87,7 @@ filters_server <- function(id) {
       updateSelectizeInput(
         session = session,
         inputId = 'location_granular',
-        choices = .location_granular(),
+        choices = .location_granular_choices(),
         selected = NULL 
       )
     })
@@ -94,27 +95,31 @@ filters_server <- function(id) {
       updateSelectizeInput(
         session = session,
         inputId = 'location_granular',
-        choices = .location_granular(),
+        choices = .location_granular_choices(),
         selected = NULL
       )
     })
     
     # if none is selected, return all
-    location_granular_selected <- eventReactive(.location_granular(), {
+    location_granular_selected <- eventReactive(input$location_granular, {
       if (is.null(input$location_granular)) {
-        .loc_gran <- .location_granular()
+        print('return all')
+        .loc_gran <- .location_granular_choices()
       } else {
+        print('return selected')
         .loc_gran <- input$location_granular
       }
       
       return(.loc_gran)
-    }, ignoreNULL = FALSE)
+    }, ignoreNULL = FALSE, ignoreInit = FALSE)
     
     # return filtered salary data
     reactive({
-      req(location_granular_selected())
+      #req(input$location_granular)
       req(input$location_country)
       req(input$date)
+      
+      print(location_granular_selected())
       .date <- switch(
         input$date,
         'All' = c('2024', '2023', '2022'),
@@ -127,7 +132,7 @@ filters_server <- function(id) {
         .date = .date,
         title = input$title,
         location_country = input$location_country,
-        location_granular = location_granular_selected()
+        location_granular = input$location_granular
       )
       
       return(.out)
