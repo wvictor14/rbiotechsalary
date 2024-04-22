@@ -94,7 +94,9 @@ page_navbar(
   ## panel info ----
   nav_panel(
     title = 'Info',
-    htmltools::includeMarkdown(here::here('markdown', "info_page.md")),
+    htmltools::includeMarkdown(
+      fs::path_package('rbiotechsalary', 'markdown', "info_page.md")
+    ),
     tags$br(),
     tags$br()
   ),
