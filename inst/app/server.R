@@ -3,12 +3,20 @@ rb_server <- function(input, output, session) {
   .filters <- filters_server('filters')
   
   .salaries <- reactive({
+    
+    # handle when no granular is selected
+    if (is.null(.filters()$location_granular)) {
+      loc_gran <- levels(salaries$location_granular)
+    } else {
+      loc_gran <- .filters()$location_granular
+    }
+    
     salaries |>
       filter(
         lubridate::year(date) %in% .filters()$.date,
         title_general %in% .filters()$title,
         location_country %in% .filters()$location_country,
-        location_granular %in% .filters()$location_granular
+        location_granular %in% loc_gran
       )
   })
   
