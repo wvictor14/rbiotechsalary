@@ -16,13 +16,13 @@
 #'  
 #' }
 launch_app <- function(launch.browser = TRUE, ...) {
-  if (interactive()) {
+  #if (interactive()) {
     shiny::runApp(
       appDir = system.file("app", package = "rbiotechsalary"),
       launch.browser = launch.browser, ...
     )
-  } else {
-    shiny::shinyAppDir(
-      appDir = system.file("app", package = "rbiotechsalary"), ...)
-  }
+  #} else {
+  #  shiny::shinyAppDir(
+  #    appDir = system.file("app", package = "rbiotechsalary"), ...)
+  #}
 }
