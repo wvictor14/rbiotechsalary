@@ -51,7 +51,7 @@ table_raw_server <- function(id, .salaries,  ...) {
         .salaries() |>
           arrange(desc(date)) |>
           #slice(.slice) |>
-          rt_table_raw(server = TRUE, defaultPageSize = 12)
+          rt_table_raw(server = TRUE, defaultPageSize = 10)
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()

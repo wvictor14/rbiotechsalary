@@ -139,16 +139,9 @@ rb_ui <- function() {
     
     ## data pipe ----
     nav_panel(
-      title = 'Data pipeline',
-      bslib::card(
-        card_header(
-          h2('Completeness and summary stats for raw data variables'),
-          p('Generated with skimr.')
-        ),
-        card_body(
-          reactable::reactableOutput('skim_raw_data')
-        )
-      )
+      title = 'Raw Data',
+      h2('Completeness and summary stats for original raw data'),
+      reactable::reactableOutput('skim_raw_data')
     ),
     
     ## menu ----

@@ -46,12 +46,12 @@ rb_server <- function(input, output, session) {
           
           skim_variable = colDef(
             name = 'Survey Response Variable',
-            width = 400
+            width = 375
           ),
           
           complete_rate = reactable::colDef(
             name = 'Complete',
-            width = 120,
+            width = 100,
             format = reactable::colFormat(percent = TRUE, digits = 1))
         ))
   })
