@@ -75,7 +75,6 @@ filters_server <- function(id) {
     
     # location input reactives
     .location_granular_choices <- eventReactive(input$location_country, {
-      print('triggered 1')
       gran <- salaries |>
         filter(
           location_country %in% input$location_country) |>
