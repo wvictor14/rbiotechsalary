@@ -124,7 +124,7 @@ rt_table_raw <- function(.df, ...) {
   .df_select |> 
     reactable_rbs(
       elementId = "table-raw",
-      defaultPageSize = 12,
+      defaultPageSize = 11,
       columns = list(
         `YOE` = colDef(
           #style = list(color = 'grey'),
@@ -137,7 +137,7 @@ rt_table_raw <- function(.df, ...) {
           sortable = FALSE,
           width = 145,
           
-          style = list(color = 'grey'),
+          style = list(color = 'lightgrey'),
           headerStyle = list(color = 'grey')
         ),
         `Total` = colDef(
