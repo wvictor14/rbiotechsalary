@@ -7,6 +7,6 @@
 #' @examples \dontrun{
 #'  
 #' }
-launch_app <- function(...) {
-  shiny::runApp(here::here('app'), ...)
+launch_app <- function(launch.browser = TRUE, ...) {
+  shiny::runApp(here::here('app'), launch.browser = launch.browser, ...)
 }
