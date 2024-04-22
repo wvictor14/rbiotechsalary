@@ -8,7 +8,7 @@
 #'   # launch with server
 #'   launch_app(ui = rb_ui, server = rb_server)
 #' }
-rb_ui <- function() {
+rb_ui <- function(.salaries) {
   
   version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
   link_add_data <- shiny::tags$a(
@@ -95,7 +95,7 @@ rb_ui <- function() {
       title = NULL,
       gap = '1px',
       width = 300,
-      filters_ui('filters')
+      filters_ui('filters', .salaries = .salaries)
     ),
     
     ### panel 1 ----
