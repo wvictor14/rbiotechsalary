@@ -6,13 +6,13 @@
 #'       version = 5,  fg = '#EEE8D5', bg =  '#232627', primary = 'seagreen'),
 #'     #actionButton('poo', 'poo', class = 'btn-secondary'),
 #'     #selectInput('select', 'select', choices = '1')
-#'     filters_ui('poo')
+#'     filters_ui('poo', salaries)
 #'   )
 #'   
 #'  shinyApp(ui = ui, server = function(input, output) {})
 #'
 #' }
-filters_ui <- function(id, ...) {
+filters_ui <- function(id, .salaries, ...) {
   tagList(
     tags$head(
       #restrict height to 1 line and apply scroll if overflow 
@@ -29,13 +29,13 @@ filters_ui <- function(id, ...) {
           NS(id, "title"), 
           label = NULL, 
           selected = 'Scientist',
-          choices = make_grouped_options(salaries, title_category, title_general)
+          choices = make_grouped_options(.df = .salaries, title_category, title_general)
         ),
         selectizeInput(
           NS(id, "location_country"),
           label = NULL,
           selected = 'United States Of America',
-          choices = salaries |> pull(location_country) |>  unique() |>  sort()
+          choices = .salaries |> pull(location_country) |>  unique() |>  sort()
         )
       ),
       accordion_panel(
