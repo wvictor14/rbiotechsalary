@@ -1,5 +1,5 @@
 library(shiny)
-devtools::load_all()
+library(rbiotechsalary)
 
 # load data for app
 skim_raw_data <- load_raw_data() |> 
