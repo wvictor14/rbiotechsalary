@@ -42,9 +42,10 @@ library(usethis)
 
 I extract the sheets into separate csv files so that they can display on github and be more easily used.
 
-```{r process-sheets, eval = FALSE}
+```{r process-sheets, eval = TRUE}
 # run this once, manually
 library(googlesheets4)
+gs4_deauth()
 google_sheets_url <- 'https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit#gid=491268892'
 sheet_names <- c('2024', '2023', '2022')
 
@@ -55,7 +56,7 @@ sheet_names |>
   # read it as character values to avoid list-column headaches
   walk(
     \(x) read_sheet(google_sheets_url, sheet = x, col_types = 'c') |> 
-      write_csv(here(outdir', glue::glue('{x}_survey_results.csv')))
+      write_csv(here(outdir, glue::glue('{x}_survey_results.csv')))
   )
 toc()
 ```
