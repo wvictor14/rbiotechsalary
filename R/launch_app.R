@@ -23,6 +23,6 @@ launch_app <- function(launch.browser = TRUE, ...) {
     )
   } else {
     shiny::shinyAppDir(
-      appDir = system.file("app", package = "rbiotechsalary"))
+      appDir = system.file("app", package = "rbiotechsalary"), ...)
   }
 }
