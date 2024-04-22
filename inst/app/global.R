@@ -1,4 +1,6 @@
 library(shiny)
+library(bslib)
+library(dplyr)
 library(rbiotechsalary)
 
 # load data for app
@@ -10,10 +12,11 @@ skim_raw_data <- load_raw_data() |>
 
 message('data summarized with skimr')
 
-salaries <- readr::read_csv(
-  here::here('data', 'salary_results_cleaned.csv'),
-  show_col_types = FALSE
-) |> 
+
+salaries_file <- fs::path_package(
+  'rbiotechsalary', 'extdata', 'salary_results_cleaned.csv'
+)
+salaries <- readr::read_csv(salaries_file, show_col_types = FALSE) |> 
   rb_relevel()
 message('processed data loaded')
 

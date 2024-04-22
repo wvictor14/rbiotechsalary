@@ -1,13 +1,21 @@
 
 #' @export
 load_raw_data <- function(years = c('2022', '2023', '2024')) {
+  
+  files <- function(x) {
+    fs::path_package(
+      'rbiotechsalary', 'extdata', glue::glue('{x}_survey_results.csv')
+    )
+  }
+  
   years %>% 
     setNames(., nm = .) |>   
     purrr::map(
       \(x) readr::read_csv(
-        here::here('data', glue::glue('{x}_survey_results.csv')), 
-        col_types = readr::cols(.default = "c"))
-    )  |> 
+        files(x),
+        col_types = readr::cols(.default = "c")
+      )
+    ) |> 
     purrr::list_rbind(names_to = 'sheet_year')
 }
 
