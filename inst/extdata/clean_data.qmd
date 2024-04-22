@@ -1,5 +1,7 @@
 ---
 title: "Cleaning r/biotech Salary Data"
+#date: last-modified
+date-modified: last-modified
 format:
   html:
     toc: true
@@ -40,9 +42,10 @@ library(usethis)
 
 I extract the sheets into separate csv files so that they can display on github and be more easily used.
 
-```{r process-sheets, eval = FALSE}
+```{r process-sheets, eval = TRUE}
 # run this once, manually
 library(googlesheets4)
+gs4_deauth()
 google_sheets_url <- 'https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit#gid=491268892'
 sheet_names <- c('2024', '2023', '2022')
 
@@ -53,7 +56,7 @@ sheet_names |>
   # read it as character values to avoid list-column headaches
   walk(
     \(x) read_sheet(google_sheets_url, sheet = x, col_types = 'c') |> 
-      write_csv(here(outdir', glue::glue('{x}_survey_results.csv')))
+      write_csv(here(outdir, glue::glue('{x}_survey_results.csv')))
   )
 toc()
 ```
@@ -70,7 +73,7 @@ sal <- c('2022', '2023', '2024') %>%
   setNames(., nm = .) |>   
   map(
     \(x) read_csv(
-      here('data', glue::glue('{x}_survey_results.csv')), 
+      here(outdir, glue::glue('{x}_survey_results.csv')), 
       col_types = cols(.default = "c"))
   )  |> 
   list_rbind(names_to = 'sheet_year')
@@ -104,7 +107,7 @@ sal |>
   as_tibble() |> 
   rename_with(~stringr::str_remove_all(.x, 'character\\.')) |> 
   select(-skim_type, -whitespace)  |> 
-  readr::write_csv(here::here('data', 'salary_raw_data.csv'))
+  readr::write_csv(here::here(outdir, 'salary_raw_data.csv'))
 ```
 
 ## Remove those with 0 answers:
@@ -1002,7 +1005,7 @@ sal_clean_filt |>
     everything(),
     -timestamp, -bonus_cleaned, -year, -month, -day
   ) |> 
-  write_csv(here::here(outdir, 'salary_results_cleaned.csv'))
+  write_csv(here::here(outdir , 'salary_results_cleaned.csv'))
 ```
 
 kept for historical, will remove:
