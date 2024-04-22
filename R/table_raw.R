@@ -158,6 +158,7 @@ rt_table_raw <- function(.df, ...) {
     )
 }
 
+#' @export
 reactable_rbs <- function(.df, ...) {
   .df |> 
     reactable::reactable(
