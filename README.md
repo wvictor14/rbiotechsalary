@@ -91,6 +91,7 @@ for remembering how to docker:
 
 ```bash
 docker container ls
+docker exec -it <container_name> bash
 
 # stop and remove
 docker stop $(docker ps -a -q)

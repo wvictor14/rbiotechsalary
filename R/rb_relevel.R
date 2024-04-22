@@ -1,4 +1,4 @@
-
+#' @export
 rb_relevel <- function(.salaries) {
   USA <- c(
     "Pharma Central (NY, NJ, PA)",

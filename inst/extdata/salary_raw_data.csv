@@ -1,0 +1,34 @@
+skim_variable,n_missing,complete_rate,min,max,empty,n_unique
+sheet_year,0,1,4,4,0,3
+Timestamp,0,1,16,19,0,1955
+Where is the closest major city or hub?,539,0.7244376278118609,2,42,0,272
+Biotech sub industry?,0,1,3,103,0,110
+Company or Institution Name,428,0.7811860940695297,1,63,0,300
+Company Details - public/private/start-up/ subsidiary of,0,1,6,29,0,6
+Company Detail - Approximate Company Size,8,0.9959100204498977,4,9,0,5
+Role / Title of current position,0,1,1,69,0,801
+Highest achieved Formal Education,710,0.6370143149284253,17,32,0,6
+Years of Experience,0,1,1,10,0,29
+Compensation - Annual Base Salary/Pay,0,1,1,9,0,455
+Compensation - Annual Target Bonus ($),0,1,1,81,0,490
+Compensation - Annual Equity,710,0.6370143149284253,1,84,0,163
+Compensation - Sign on Bonus Value,1030,0.47341513292433535,1,6,0,54
+[OPTIONAL] Sign on - Relocation Assistance Total Value,1554,0.20552147239263807,1,185,0,85
+What country do you work in?,1115,0.429959100204499,2,24,0,33
+Compensation - Overtime Pay,576,0.705521472392638,2,63,0,41
+[Optional] Company Review,1635,0.1641104294478528,1,881,0,300
+[Optional] Briefly describe your position,1270,0.3507157464212679,1,573,0,661
+List other relevant and recognized certifications,576,0.705521472392638,2,67,0,40
+Compensation - Retirement Benefits (free text),873,0.553680981595092,1,191,0,602
+Compensation - Healthcare Benefits (free text),1376,0.2965235173824131,1,296,0,527
+Compensation - Stock Options,1685,0.13854805725971375,1,204,0,178
+Compensation - Most recent annual yearly raise (%),576,0.705521472392638,1,115,0,154
+Compensation - Options,1956,0,NA,NA,0,0
+Have you one a post-doc?,1956,0,NA,NA,0,0
+Where are you located?,1418,0.2750511247443763,2,54,0,28
+What degrees do you have?,1246,0.3629856850715747,16,107,0,27
+Compensation - Annual Equity/Stock Option,1246,0.3629856850715747,1,91,0,157
+Compensation - Sign on Stock/Equity Options,1674,0.14417177914110424,1,123,0,139
+Compensation - Retirement Percent Match (free text),1956,0,NA,NA,0,0
+"[Optional] Work Life Balance - On average, how many hours do you work per week",1287,0.34202453987730064,3,12,0,12
+Survey Feedback,1918,0.01942740286298572,2,352,0,37
