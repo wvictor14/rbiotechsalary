@@ -103,10 +103,8 @@ filters_server <- function(id) {
     # if none is selected, return all
     location_granular_selected <- eventReactive(input$location_granular, {
       if (is.null(input$location_granular)) {
-        print('return all')
         .loc_gran <- .location_granular_choices()
       } else {
-        print('return selected')
         .loc_gran <- input$location_granular
       }
       
@@ -115,11 +113,9 @@ filters_server <- function(id) {
     
     # return filtered salary data
     reactive({
-      #req(input$location_granular)
       req(input$location_country)
       req(input$date)
       
-      print(location_granular_selected())
       .date <- switch(
         input$date,
         'All' = c('2024', '2023', '2022'),
