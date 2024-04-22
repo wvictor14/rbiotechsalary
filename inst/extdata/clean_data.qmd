@@ -9,6 +9,11 @@ editor_options:
   chunk_output_type: console
 ---
 
+
+```{r}
+outdir <- here::here('inst', 'extdata')
+```
+
 # libraries
 
 ```{r, message = FALSE, warning = FALSE}
@@ -48,7 +53,7 @@ sheet_names |>
   # read it as character values to avoid list-column headaches
   walk(
     \(x) read_sheet(google_sheets_url, sheet = x, col_types = 'c') |> 
-      write_csv(here('data', glue::glue('{x}_survey_results.csv')))
+      write_csv(here(outdir', glue::glue('{x}_survey_results.csv')))
   )
 toc()
 ```
@@ -997,10 +1002,12 @@ sal_clean_filt |>
     everything(),
     -timestamp, -bonus_cleaned, -year, -month, -day
   ) |> 
-  write_csv(here::here('data', 'salary_results_cleaned.csv'))
+  write_csv(here::here(outdir, 'salary_results_cleaned.csv'))
 ```
 
-```{r eval = TRUE}
+kept for historical, will remove:
+
+```{r eval = FALSE}
 salaries <- readr::read_csv(here::here('data', 'salary_results_cleaned.csv'))
 salaries <- salaries |>  
   mutate(
@@ -1028,5 +1035,4 @@ salaries <- salaries |>
     location_granular = forcats::fct(location_granular) |> 
       forcats::fct_relevel(USA)
   )
-use_data(salaries, overwrite = TRUE)
 ```
