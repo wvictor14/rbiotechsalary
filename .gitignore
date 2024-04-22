@@ -3,8 +3,7 @@
 .RData
 .Ruserdata
 *.Rproj
-R/clean_data.html
-R/clean_data_files/*
-data/geo_queried_results.csv
 shiny-test*
-data/salary_raw_data.csv
+inst/extdata/clean_data.html
+inst/extdata/clean_data_files*
+inst/extdata/clean_data.html
