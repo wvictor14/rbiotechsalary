@@ -8,5 +8,7 @@
 #'  
 #' }
 launch_app <- function(launch.browser = TRUE, ...) {
-  shiny::runApp(here::here('app'), launch.browser = launch.browser, ...)
+  withr::with_dir(
+    shiny::runApp(here::here('R'), launch.browser = launch.browser, ...)
+  )
 }

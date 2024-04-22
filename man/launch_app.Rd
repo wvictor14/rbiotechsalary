@@ -4,7 +4,7 @@
 \alias{launch_app}
 \title{launch rbiotechsalary app}
 \usage{
-launch_app(...)
+launch_app(launch.browser = TRUE, ...)
 }
 \arguments{
 \item{server}{when not supplied, will use rb_server}
