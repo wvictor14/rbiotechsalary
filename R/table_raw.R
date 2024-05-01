@@ -126,12 +126,12 @@ rt_table_raw <- function(.df, ...) {
       elementId = "table-raw",
       defaultPageSize = 11,
       columns = list(
-        `YOE` = colDef(
+        `YOE` = reactable::colDef(
           #style = list(color = 'grey'),
           #headerStyle = list(color = 'grey'),
           width = 60
         ),
-        base_bonus = colDef(
+        base_bonus = reactable::colDef(
           show = TRUE,
           name = 'Base | Bonus',
           sortable = FALSE,
@@ -140,7 +140,7 @@ rt_table_raw <- function(.df, ...) {
           style = list(color = 'lightgrey'),
           headerStyle = list(color = 'grey')
         ),
-        `Total` = colDef(
+        `Total` = reactable::colDef(
           width = 100,
           format = reactable::colFormat(
             prefix = "$", separators = TRUE, digits = 0
@@ -148,12 +148,12 @@ rt_table_raw <- function(.df, ...) {
         ),
         
         # hidden by default:
-        `Job title` = colDef(show = FALSE),
-        `Job details` = colDef(show = FALSE),
-        `Field` = colDef(show = FALSE),
-        `Stock` = colDef(show = FALSE),
+        `Job title` = reactable::colDef(show = FALSE),
+        `Job details` = reactable::colDef(show = FALSE),
+        `Field` = reactable::colDef(show = FALSE),
+        `Stock` = reactable::colDef(show = FALSE),
         #`Company` = colDef(show = FALSE),
-        `Highest education` = colDef(show = FALSE)
+        `Highest education` = reactable::colDef(show = FALSE)
       )
     )
 }

@@ -48,9 +48,9 @@ rb_server <- function(input, output, session) {
       reactable_rbs(
         fullWidth = FALSE,
         columns = list(
-          n_missing = colDef(name = 'Missing', width = 120),
+          n_missing = reactable::colDef(name = 'Missing', width = 120),
           
-          skim_variable = colDef(
+          skim_variable = reactable::colDef(
             name = 'Survey Response Variable',
             width = 375
           ),
