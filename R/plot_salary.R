@@ -132,7 +132,7 @@ plot_salary_histogram <- function(
     ) |> 
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
-      margin = list(t = 0, b = 0, l = 0, r = 0),
+      margin = list(t = 30, b = 0, l = 0, r = 0),
       plot_bgcolor  = "rgba(0, 0, 0, 0)",
       paper_bgcolor = "rgba(0, 0, 0, 0)",
       yaxis = list(
