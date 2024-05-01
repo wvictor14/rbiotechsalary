@@ -62,13 +62,21 @@ page_navbar(
   
   ### panel 1 ----
   nav_panel(
-    title = "Salaries",
-    htmltools::h1(shiny::textOutput('content_title_1')),
-    layout_column_wrap(
-      
-      style = htmltools::css(grid_template_columns = "2fr 1fr"),
-      plotly::plotlyOutput("plot_salary_histogram"),
-      value_boxes_stats_ui('value_boxes')
+    title = "Salaries", 
+    page_fillable(
+      htmltools::h1(shiny::textOutput('content_title_1')),
+      card(
+        class = 'bg-secondary',
+        full_screen = TRUE,
+        card_body(
+          layout_column_wrap(
+            width = 1/3, 
+            !!!value_boxes_stats_ui('value_boxes', height = '90px', max_height = '125px')
+          ),
+          plotly::plotlyOutput("plot_salary_histogram", height = '200px')
+        )
+      ),
+      card(height = '200px', class = 'bg-secondary')
     )
   ),
   
