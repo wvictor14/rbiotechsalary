@@ -31,8 +31,8 @@ table_raw_ui <- function(id, ...) {
     #gt::gt_output(NS(id, "table_raw", ...))
     div(
       style = 'display: flex; flex-flow: column wrap;',
-      showHideButton(NS(id, 'toggle_button')),
-      reactable::reactableOutput(NS(id, "table_raw"), ...)
+      reactable::reactableOutput(NS(id, "table_raw"), ...),
+      showHideButton(NS(id, 'toggle_button'))
     )
   )
 }
@@ -51,7 +51,7 @@ table_raw_server <- function(id, .salaries,  ...) {
         .salaries() |>
           arrange(desc(date)) |>
           #slice(.slice) |>
-          rt_table_raw(server = TRUE, defaultPageSize = 10)
+          rt_table_raw(server = TRUE, searchable = FALSE, defaultPageSize = 10)
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()
@@ -123,8 +123,8 @@ rt_table_raw <- function(.df, ...) {
     )
   .df_select |> 
     reactable_rbs(
+      ...,
       elementId = "table-raw",
-      defaultPageSize = 11,
       columns = list(
         `YOE` = reactable::colDef(
           #style = list(color = 'grey'),
@@ -163,7 +163,6 @@ reactable_rbs <- function(.df, ...) {
   .df |> 
     reactable::reactable(
       ...,
-      searchable = TRUE,
       highlight = TRUE,
       resizable = TRUE,
       theme = reactable::reactableTheme(
