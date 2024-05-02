@@ -132,7 +132,7 @@ plot_salary_histogram <- function(
     ) |> 
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
-      margin = list(t = 30, b = 0, l = 0, r = 0),
+      margin = list(t = 25, b = 0, l = 0, r = 0),
       plot_bgcolor  = "rgba(0, 0, 0, 0)",
       paper_bgcolor = "rgba(0, 0, 0, 0)",
       yaxis = list(
@@ -141,7 +141,7 @@ plot_salary_histogram <- function(
         showgrid = FALSE,
         range = .y_range
       ),
-      xaxis = list(title = ''),
+      xaxis = list(title = NULL),
       font = list(color = font_color, size = 20) ,
       hoverlabel = list(
         font = list(size=15, color = font_color), 
