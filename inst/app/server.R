@@ -40,6 +40,7 @@ rb_server <- function(input, output, session) {
   
   # table data panel
   table_raw_server('table_raw', .salaries)
+  table_raw_server('table_raw_2', .salaries)
   
   
   # raw data pipe
