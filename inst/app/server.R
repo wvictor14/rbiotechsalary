@@ -56,7 +56,6 @@ rb_server <- function(input, output, session) {
         filter(mids_lab == d$x)
       .min <- d$X2
       .max <- d$X1
-      print(.min)
     }
     
     
