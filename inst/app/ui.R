@@ -62,21 +62,40 @@ page_navbar(
   
   ### panel 1 ----
   nav_panel(
-    title = "Salaries",
-    htmltools::h1(shiny::textOutput('content_title_1')),
-    layout_column_wrap(
-      
-      style = htmltools::css(grid_template_columns = "2fr 1fr"),
-      plotly::plotlyOutput("plot_salary_histogram"),
-      value_boxes_stats_ui('value_boxes')
+    title = "Salaries", 
+    page_fillable(
+      class = 'row-gap-0',
+      #gap = '0px',
+      htmltools::h1(shiny::textOutput('content_title_1')),
+      card(
+        class = 'p-0 mb-0 row-gap-0',
+        full_screen = FALSE,
+        gap = 0,
+        #height = '400px',
+        card_body(
+          class = 'p-0',
+          fill = FALSE,
+          layout_column_wrap(
+            width = 1/3, 
+            !!!value_boxes_stats_ui('value_boxes', height = '100px')
+          )
+        ),
+        card_body(
+          class = 'p-0',
+          #fill = FALSE,
+          plotly::plotlyOutput("plot_salary_histogram", height = 'auto')
+        )
+      ),
+      card(
+        full_screen = TRUE,
+        height = '250px', 
+        class = 'p-0 mt-0',
+        card_body(
+          class = 'p-0',
+          table_raw_ui("table_raw")
+        )
+      )
     )
-  ),
-  
-  ### table ----
-  nav_panel(
-    title = 'Table',
-    htmltools::h1(shiny::textOutput('content_title_2')),
-    table_raw_ui("table_raw")
   ),
   ### panel career progression ----
   nav_panel(

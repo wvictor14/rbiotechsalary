@@ -1,14 +1,17 @@
 #' show hide button on reactable
 #' 
 #' taken from https://github.com/glin/reactable/issues/319
-showHideButton = function(id){
+showHideButton = function(id, .table_id = 'table-raw' ){
   
   actionButton(
     id,
     "Show/hide additional columns",
-    onclick = "Reactable.setHiddenColumns('table-raw', prevColumns => {
+    onclick = glue::glue(
+      .open = '{{', .close = '}}',
+      "Reactable.setHiddenColumns('{{.table_id}}', prevColumns => {
         return prevColumns.length === 0 ? ['Job title', 'Job details', 'Field', 'Stock', 'Highest education'] : []
-      })",
+      })"
+    ),
     style = '
       color: grey;
       display: flex;
@@ -31,8 +34,8 @@ table_raw_ui <- function(id, ...) {
     #gt::gt_output(NS(id, "table_raw", ...))
     div(
       style = 'display: flex; flex-flow: column wrap;',
-      showHideButton(NS(id, 'toggle_button')),
-      reactable::reactableOutput(NS(id, "table_raw"), ...)
+      reactable::reactableOutput(NS(id, "table_raw"), ...),
+      showHideButton(NS(id, 'toggle_button'))
     )
   )
 }
@@ -51,7 +54,7 @@ table_raw_server <- function(id, .salaries,  ...) {
         .salaries() |>
           arrange(desc(date)) |>
           #slice(.slice) |>
-          rt_table_raw(server = TRUE, defaultPageSize = 10)
+          rt_table_raw(server = TRUE, searchable = FALSE, defaultPageSize = 10)
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()
@@ -94,10 +97,11 @@ gt_table_raw <- function(.df) {
 
 #' reactable table showing raw data
 #' 
+#' @param id used for show/hide columns JS 
 #' @export
 #' @examples
 #' salaries |> slice(1:20) |>  rt_table_raw()
-rt_table_raw <- function(.df, ...) {
+rt_table_raw <- function(.df, id = 'table-raw', ...) {
   .df_select <- .df |> 
     mutate(
       base_bonus = glue::glue(
@@ -123,8 +127,8 @@ rt_table_raw <- function(.df, ...) {
     )
   .df_select |> 
     reactable_rbs(
-      elementId = "table-raw",
-      defaultPageSize = 11,
+      ...,
+      elementId = id,
       columns = list(
         `YOE` = reactable::colDef(
           #style = list(color = 'grey'),
@@ -163,7 +167,6 @@ reactable_rbs <- function(.df, ...) {
   .df |> 
     reactable::reactable(
       ...,
-      searchable = TRUE,
       highlight = TRUE,
       resizable = TRUE,
       theme = reactable::reactableTheme(

@@ -9,7 +9,8 @@ plot_salary_histogram(
   x,
   color = "#41AB5DFF",
   font_color = "#EEE8D5",
-  hover_bg = "#161C21"
+  hover_bg = "#161C21",
+  ...
 )
 }
 \description{

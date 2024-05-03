@@ -12,6 +12,7 @@ value_boxes_stats_ui(
   full_screen = TRUE,
   fill = TRUE,
   fillable = TRUE,
+  height = NULL,
   max_height = "125px",
   ...
 )

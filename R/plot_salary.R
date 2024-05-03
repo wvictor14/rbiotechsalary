@@ -65,31 +65,28 @@ plot_salary <- function(
   p
 }
 
-#' plot salary histogram v2
+#' generates binned data and stats for histogram plot
 #' @export
 #' @examples
-#' plot_salary_histogram(salaries, x = salary_total, font_color = 'black', hover_bg = 'white')
+#' salaries |> make_hist_data(salary_total)
+#' salaries |> filter(title_general == 'Scientist') |> make_hist_data(salary_total)
 #' 
-#' salaries |>  filter(location_country == 'Canada', title_general == 'Associate Scientist') |> 
-#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
-#'   
-#' salaries |>  slice(1) |> 
-#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
-plot_salary_histogram <- function(
-    .df, x, color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21') {
-  
+make_hist_data <- function(.df, x) {
   # create plot data, start with hist to generate cuts and counts
-  .plot_data <- hist(.df$salary_total, plot = FALSE, breaks = 30) |> 
+  .plot_data <- .df |> pull({{x}}) |> 
+    hist(plot = FALSE, breaks = seq(-0.5, 100, by = 1)*10000) |> 
     with(data.frame(
       stats::embed(breaks,2), 
       counts = counts,
       mids = mids
     )) |> 
+    filter(counts > 0 ) |> 
     tibble::tibble() |> 
     mutate(bin = glue::glue(
       '${x}K - ${y}K',
       x = X2/1000, y = X1/1000
-    ))
+    )) |> 
+    mutate(mids_lab = glue::glue("${mids/1000}K"))
   
   ## stats
   .stats <- .df |> 
@@ -105,34 +102,104 @@ plot_salary_histogram <- function(
       .plot_data |> slice(ind) |>  dplyr::pull(mids)
     })
   
+  return(
+    list(
+      data = .plot_data,
+      stats = .stats,
+      stats_labs = .stats |> purrr::map(\(x) glue::glue("${x/1000}K"))
+    )
+  )
+}
+#' plot salary histogram v2
+#' @export
+#' @examples
+#' 
+#' # all
+#' salaries |>  make_hist_data(salary_total) |>  plot_salary_histogram(font_color = 'black', hover_bg = 'white')
+#' 
+#' # scientist
+#' salaries |>  filter(title_general == 'Scientist') |> make_hist_data(salary_total) |> plot_salary_histogram(font_color = 'black', hover_bg = 'white')
+#'   
+#' # 1
+#' salaries |>  slice(1) |> make_hist_data(salary_total) |> 
+#'   plot_salary_histogram(font_color = 'black', hover_bg = 'white')
+plot_salary_histogram <- function(
+    .plot_data, 
+    color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21',
+    ...) {
+  
+  # set up x axis, categorical, labels, coordinates ----
+  
+  # for categorical axis, need to get appropriate factor level
+  # get the level of x from converted factor vector y
+  .fct_levels <- .plot_data$data$mids_lab |>  
+    as.character() |> forcats::fct_inorder() |> levels() 
+  get_x_coord <- function(x, get_level_index = FALSE) {
+    if (get_level_index) { 
+      # minus 1 because plotly starts at 0
+      out <- which(.fct_levels == as.character(x)) - 1 
+      return(out)
+    } else { return(as.character(x)) }
+  }
+  # make text annotations
   make_text <- function(text, x, y, size, color) {
     list(
       text = text, x = x, y = y, font = list(size = size), color = color, 
       yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = FALSE
     )
   }
+  
   annotations = list(
-    make_text("Median", .stats$med, 0.9, 20, font_color),
-    make_text("10th", .stats$q10, 0.9, 20, 'grey'),
-    make_text("90th", .stats$q90, 0.9, 20, 'grey')
+    make_text("Median", get_x_coord(.plot_data$stats_lab$med), 0.9, 20, font_color),
+    make_text("10th", get_x_coord(.plot_data$stats_lab$q10), 0.9, 20, 'grey'),
+    make_text("90th", get_x_coord(.plot_data$stats_lab$q90), 0.9, 20, 'grey')
   )
+  # make vline annotations
+  vline <- function(x = 0, y1 = 0.9, color = "seagreen") {
+    list(
+      type = "line",
+      y0 = 0,
+      y1 = y1,
+      yref = "paper",
+      x0 = x,
+      x1 = x,
+      width = -2,
+      line = list(color = color, dash = "dash")
+    )
+  }
   
   ## extend y axis range to zero and upper limit by multiplier
-  .y_range <- c( 0, max(.plot_data$counts)*1.2) 
+  .y_range <- c( 0, max(.plot_data$data$counts)*1.2) 
   
-  plotly::plot_ly() |> 
-    
-    plotly::add_bars(
-      x = .plot_data$mids,
-      y = .plot_data$counts,
-      text = glue::glue("{.plot_data$bin}<br>{.plot_data$counts} jobs"),
+  ## get axis ticks and labels
+  tick_values <- scales::extended_breaks(n=6)(1:length(.fct_levels))
+  tick_labels <- .fct_levels[tick_values]
+  
+  ### remove NAs
+  tick_values <- tick_values[!is.na(tick_labels)]
+  tick_labels <- tick_labels[!is.na(tick_labels)]
+  
+  .plot_data$data |>
+    mutate(mids_lab = factor(mids_lab)) |> 
+    plotly::highlight_key(~mids_lab) |>  
+    plotly::plot_ly(
+      ...,
+      x = ~mids_lab,
+      y = ~counts,
+      text = glue::glue("{.plot_data$data$bin}<br>{.plot_data$data$counts} jobs"),
       color = I(color),
       textposition = 'none',
-      hoverinfo  = 'text'
-    ) |> 
+      hoverinfo  = 'text',
+      type = 'bar'
+    )  |>
+    plotly::highlight(
+      on = "plotly_click", off = "plotly_doubleclick", opacityDim = 0.3,
+      persistent = TRUE
+      )  |> 
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
-      margin = list(t = 0, b = 0, l = 0, r = 0),
+      barmode = 'overlay',
+      margin = list(t = 25, b = 0, l = 0, r = 0),
       plot_bgcolor  = "rgba(0, 0, 0, 0)",
       paper_bgcolor = "rgba(0, 0, 0, 0)",
       yaxis = list(
@@ -141,35 +208,30 @@ plot_salary_histogram <- function(
         showgrid = FALSE,
         range = .y_range
       ),
-      xaxis = list(title = ''),
+      xaxis = list(
+        fixedrange = TRUE,
+        ticktext = as.list(tick_labels),
+        tickvals = as.list(tick_labels),
+        title = list(
+          text = NULL
+        )
+      ),
+      #dragmode = FALSE,
       font = list(color = font_color, size = 20) ,
       hoverlabel = list(
         font = list(size=15, color = font_color), 
         bgcolor = hover_bg),
       bargap = 0.1,
-      dragmode = FALSE,
-      
       shapes = list(
-        vline(.stats$med, color = font_color), 
-        vline(.stats$q10, color = 'grey'), 
-        vline(.stats$q90, color = 'grey')
+        #vline(x = '130000', color = font_color), 
+        vline(x = get_x_coord(.plot_data$stats_lab$med), color = font_color), 
+        vline(x = get_x_coord(.plot_data$stats_lab$q10), color = 'grey'), 
+        vline(x = get_x_coord(.plot_data$stats_lab$q90), color = 'grey')
       ),
       annotations = annotations
     )
 }
 
-vline <- function(x = 0, y1 = 0.9, color = "seagreen") {
-  list(
-    type = "line",
-    y0 = 0,
-    y1 = y1,
-    yref = "paper",
-    x0 = x,
-    x1 = x,
-    width = -2,
-    line = list(color = color, dash = "dash")
-  )
-}
 
 #' plot career progression
 #'
