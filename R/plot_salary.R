@@ -65,21 +65,15 @@ plot_salary <- function(
   p
 }
 
-#' plot salary histogram v2
+#' generates binned data and stats for histogram plot
 #' @export
 #' @examples
-#' plot_salary_histogram(salaries, x = salary_total, font_color = 'black', hover_bg = 'white')
+#' salaries |> make_hist_data(salary_total)
 #' 
-#' salaries |>  filter(location_country == 'Canada', title_general == 'Associate Scientist') |> 
-#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
-#'   
-#' salaries |>  slice(1) |> 
-#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
-plot_salary_histogram <- function(
-    .df, x, color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21') {
-  
+make_hist_data <- function(.df, x) {
   # create plot data, start with hist to generate cuts and counts
-  .plot_data <- hist(.df$salary_total, plot = FALSE, breaks = 30) |> 
+  .plot_data <- .df |> pull({{x}}) |> 
+    hist(plot = FALSE, breaks = 30) |> 
     with(data.frame(
       stats::embed(breaks,2), 
       counts = counts,
@@ -105,6 +99,30 @@ plot_salary_histogram <- function(
       .plot_data |> slice(ind) |>  dplyr::pull(mids)
     })
   
+  return(
+    list(
+      data = .plot_data,
+      stats = .stats
+    )
+  )
+}
+#' plot salary histogram v2
+#' @export
+#' @examples
+#' salaries |>  make_hist_data(salary_total) |> 
+#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
+#' 
+#' salaries |>  filter(location_country == 'Canada', title_general == 'Associate Scientist') |> 
+#'   make_hist_data(salary_total) |> 
+#'   plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
+#'   
+#' salaries |>  slice(1) |> make_hist_data(salary_total) |> 
+#'   plot_salary_histogram(font_color = 'black', hover_bg = 'white')
+plot_salary_histogram <- function(
+    .plot_data, x, 
+    color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21',
+    ...) {
+  
   make_text <- function(text, x, y, size, color) {
     list(
       text = text, x = x, y = y, font = list(size = size), color = color, 
@@ -112,20 +130,19 @@ plot_salary_histogram <- function(
     )
   }
   annotations = list(
-    make_text("Median", .stats$med, 0.9, 20, font_color),
-    make_text("10th", .stats$q10, 0.9, 20, 'grey'),
-    make_text("90th", .stats$q90, 0.9, 20, 'grey')
+    make_text("Median", .plot_data$stats$med, 0.9, 20, font_color),
+    make_text("10th", .plot_data$stats$q10, 0.9, 20, 'grey'),
+    make_text("90th", .plot_data$stats$q90, 0.9, 20, 'grey')
   )
-  
   ## extend y axis range to zero and upper limit by multiplier
-  .y_range <- c( 0, max(.plot_data$counts)*1.2) 
+  .y_range <- c( 0, max(.plot_data$data$counts)*1.2) 
   
-  plotly::plot_ly() |> 
+  plotly::plot_ly(...) |> 
     
     plotly::add_bars(
-      x = .plot_data$mids,
-      y = .plot_data$counts,
-      text = glue::glue("{.plot_data$bin}<br>{.plot_data$counts} jobs"),
+      x = .plot_data$data$mids,
+      y = .plot_data$data$counts,
+      text = glue::glue("{.plot_data$data$bin}<br>{.plot_data$data$counts} jobs"),
       color = I(color),
       textposition = 'none',
       hoverinfo  = 'text'
@@ -150,9 +167,9 @@ plot_salary_histogram <- function(
       dragmode = FALSE,
       
       shapes = list(
-        vline(.stats$med, color = font_color), 
-        vline(.stats$q10, color = 'grey'), 
-        vline(.stats$q90, color = 'grey')
+        vline(.plot_data$stats$med, color = font_color), 
+        vline(.plot_data$stats$q10, color = 'grey'), 
+        vline(.plot_data$stats$q90, color = 'grey')
       ),
       annotations = annotations
     )
