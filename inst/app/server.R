@@ -47,16 +47,18 @@ rb_server <- function(input, output, session) {
   
   # on click return selected data, otherwise return unfiltered
   .salaries_hist_clicked <- reactive({
-    d <- event_data("plotly_click", source = 'hist')
+    d <- plotly::event_data("plotly_click", source = 'hist')
     if (is.null(d)) {
       .min <- -Inf
       .max <- Inf
     } else {
       d <- salary_hist_data()$data |> 
-        filter(mids == d$x)
+        filter(mids_lab == d$x)
       .min <- d$X2
       .max <- d$X1
+      print(.min)
     }
+    
     
     .salaries() |>  
       filter(
