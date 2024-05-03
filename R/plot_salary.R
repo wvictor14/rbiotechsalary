@@ -207,18 +207,19 @@ plot_salary_histogram <- function(
         range = .y_range
       ),
       xaxis = list(
+        fixedrange = TRUE,
         ticktext = as.list(tick_labels),
         tickvals = as.list(tick_labels),
         title = list(
           text = NULL
         )
       ),
+      #dragmode = FALSE,
       font = list(color = font_color, size = 20) ,
       hoverlabel = list(
         font = list(size=15, color = font_color), 
         bgcolor = hover_bg),
       bargap = 0.1,
-      dragmode = FALSE,
       shapes = list(
         #vline(x = '130000', color = font_color), 
         vline(x = get_x_coord(.plot_data$stats_lab$med), color = font_color), 
