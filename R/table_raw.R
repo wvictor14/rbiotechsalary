@@ -1,14 +1,17 @@
 #' show hide button on reactable
 #' 
 #' taken from https://github.com/glin/reactable/issues/319
-showHideButton = function(id){
+showHideButton = function(id, .table_id = 'table-raw' ){
   
   actionButton(
     id,
     "Show/hide additional columns",
-    onclick = "Reactable.setHiddenColumns('table-raw', prevColumns => {
+    onclick = glue::glue(
+      .open = '{{', .close = '}}',
+      "Reactable.setHiddenColumns('{{.table_id}}', prevColumns => {
         return prevColumns.length === 0 ? ['Job title', 'Job details', 'Field', 'Stock', 'Highest education'] : []
-      })",
+      })"
+    ),
     style = '
       color: grey;
       display: flex;
@@ -94,10 +97,11 @@ gt_table_raw <- function(.df) {
 
 #' reactable table showing raw data
 #' 
+#' @param id used for show/hide columns JS 
 #' @export
 #' @examples
 #' salaries |> slice(1:20) |>  rt_table_raw()
-rt_table_raw <- function(.df, ...) {
+rt_table_raw <- function(.df, id = 'table-raw', ...) {
   .df_select <- .df |> 
     mutate(
       base_bonus = glue::glue(
@@ -124,7 +128,7 @@ rt_table_raw <- function(.df, ...) {
   .df_select |> 
     reactable_rbs(
       ...,
-      elementId = "table-raw",
+      elementId = id,
       columns = list(
         `YOE` = reactable::colDef(
           #style = list(color = 'grey'),
