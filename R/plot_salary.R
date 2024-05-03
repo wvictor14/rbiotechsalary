@@ -193,7 +193,9 @@ plot_salary_histogram <- function(
       type = 'bar'
     )  |>
     plotly::highlight(
-      on = "plotly_click", off = "plotly_doubleclick", opacityDim = 0.5)  |> 
+      on = "plotly_click", off = "plotly_doubleclick", opacityDim = 0.3,
+      persistent = TRUE
+      )  |> 
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
       barmode = 'overlay',
