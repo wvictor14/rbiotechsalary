@@ -71,8 +71,7 @@ rb_server <- function(input, output, session) {
   })
   
   # table data panel ----
-  table_raw_server('table_raw', .salaries)
-  table_raw_server('table_raw_2', .salaries_hist_clicked) # connected to histogram
+  table_raw_server('table_raw', .salaries_hist_clicked) # connected to histogram
   
   
   # raw data pipe

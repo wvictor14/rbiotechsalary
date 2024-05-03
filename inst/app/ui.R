@@ -88,21 +88,14 @@ page_navbar(
       ),
       card(
         full_screen = TRUE,
-        height = '200px', 
+        height = '250px', 
         class = 'p-0 mt-0',
         card_body(
           class = 'p-0',
-          table_raw_ui("table_raw_2")
+          table_raw_ui("table_raw")
         )
       )
     )
-  ),
-  
-  ### table ----
-  nav_panel(
-    title = 'Table',
-    htmltools::h1(shiny::textOutput('content_title_2')),
-    table_raw_ui("table_raw")
   ),
   ### panel career progression ----
   nav_panel(
