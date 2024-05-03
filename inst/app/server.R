@@ -33,14 +33,45 @@ rb_server <- function(input, output, session) {
   output$content_title_2 <- renderText(content_title())
   
   value_boxes_stats_server('value_boxes', .salaries)
-  output$plot_salary_histogram <- plotly::renderPlotly({
-    if (nrow(.salaries()) == 0 ) return(NULL)
-    plot_salary_histogram(.salaries(), salary_total)
+  
+  # plot salary histogram ----
+  salary_hist_data <- reactive({
+    .salaries() |>  make_hist_data(salary_total)
   })
   
-  # table data panel
+  output$plot_salary_histogram <- plotly::renderPlotly({
+    if (nrow(.salaries()) == 0 ) return(NULL)
+    plot_salary_histogram(salary_hist_data(), source = 'hist')
+  })
+  
+  
+  # on click return selected data, otherwise return unfiltered
+  .salaries_hist_clicked <- reactive({
+    d <- event_data("plotly_click", source = 'hist')
+    if (is.null(d)) {
+      .min <- -Inf
+      .max <- Inf
+    } else {
+      d <- salary_hist_data()$data |> 
+        filter(mids == d$x)
+      .min <- d$X2
+      .max <- d$X1
+    }
+    
+    .salaries() |>  
+      filter(
+        salary_total >= .min,
+        salary_total <= .max
+      )
+  })
+  
+  output$click <- renderPrint({
+    .salaries_hist_clicked()[1:3,1:3]
+  })
+  
+  # table data panel ----
   table_raw_server('table_raw', .salaries)
-  table_raw_server('table_raw_2', .salaries)
+  table_raw_server('table_raw_2', .salaries_hist_clicked) # connected to histogram
   
   
   # raw data pipe
