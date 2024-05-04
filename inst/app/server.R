@@ -32,7 +32,7 @@ rb_server <- function(input, output, session) {
   output$content_title_1 <- renderText(content_title())
   output$content_title_2 <- renderText(content_title())
   
-  value_boxes_stats_server('value_boxes', .salaries)
+  value_boxes_stats_server('value_boxes',  reactive(.salaries_hist_clicked()))
   
   # plot salary histogram ----
   salary_hist_data <- reactive({
@@ -46,23 +46,37 @@ rb_server <- function(input, output, session) {
   
   
   # on click return selected data, otherwise return unfiltered
+  
+  # reset range when inputs change (e.g. change title, location, etc.)
+  .salaries_hist_range <- reactiveValues(min = -Inf, max = -Inf)
+  
+  observeEvent(.salaries(), {
+    .salaries_hist_range$min <- -Inf
+    .salaries_hist_range$max <- Inf
+  })
+  
+  observeEvent(
+    plotly::event_data("plotly_click", source = 'hist'), 
+    ignoreNULL = FALSE, 
+    {
+      # filter plot data based on click event
+      click_event <- plotly::event_data("plotly_click", source = 'hist')
+      if (!is.null(click_event)) { 
+        click_data <- salary_hist_data()$data |> 
+          filter(mids_lab == plotly::event_data("plotly_click", source = 'hist')$x)
+      } else {
+        click_data <- list(X2 = -Inf, X1 = Inf)
+      }
+      
+      .salaries_hist_range$min <- click_data$X2
+      .salaries_hist_range$max <- click_data$X1
+    })
+  
   .salaries_hist_clicked <- reactive({
-    d <- plotly::event_data("plotly_click", source = 'hist')
-    if (is.null(d)) {
-      .min <- -Inf
-      .max <- Inf
-    } else {
-      d <- salary_hist_data()$data |> 
-        filter(mids_lab == d$x)
-      .min <- d$X2
-      .max <- d$X1
-    }
-    
-    
     .salaries() |>  
       filter(
-        salary_total >= .min,
-        salary_total <= .max
+        salary_total >= .salaries_hist_range$min,
+        salary_total <= .salaries_hist_range$max
       )
   })
   
