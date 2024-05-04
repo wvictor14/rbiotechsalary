@@ -73,9 +73,6 @@ rb_server <- function(input, output, session) {
     })
   
   .salaries_hist_clicked <- reactive({
-    
-    print(.salaries_hist_range$min)
-    print(.salaries_hist_range$max)
     .salaries() |>  
       filter(
         salary_total >= .salaries_hist_range$min,
