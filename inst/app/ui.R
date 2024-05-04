@@ -9,7 +9,7 @@ page_navbar(
     "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
     "focus-ring-color" = "rgba(255,255,255,0.1)",
     "accordion-border-width" = "1px"
-  ) |> 
+  ) |>
     bs_add_rules(
       list("
           h1 {
@@ -28,6 +28,20 @@ page_navbar(
           ::-webkit-input-placeholder {
             color: #EEE8D5;
             padding-left: 5px;
+          }
+          ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+            border: 1px solid darkgrey;
+          }
+          ::-webkit-scrollbar-track {
+            border-radius: 0;
+            background: #202020;
+          }
+          
+          ::-webkit-scrollbar-thumb {
+            border-radius: 0;
+            background: darkgrey;
           }
           .selectize-input.focus {
             border-color: white;
@@ -129,6 +143,7 @@ page_navbar(
   
   ## menu ----
   nav_spacer(),
+  
   nav_menu(
     title = "Links",
     align = "right",
@@ -138,7 +153,9 @@ page_navbar(
     nav_item(link_github)
     
   ),
+  
   nav_item(
-    #input_dark_mode(id = "dark_mode", mode = "dark")
+        style = "color: #888; padding: 0px; font-size:1rem",
+        glue::glue("rbiotechsalary {version}")
   )
 )
