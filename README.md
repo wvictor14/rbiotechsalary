@@ -33,10 +33,10 @@ devtools::install_github("wvictor14/rbiotechsalary")
 - [x] dockerize
 - [x] decide on hosting service - digital ocean
 - [x] deploy
-- [ ] automate software updates
-- [ ] automate data updates
+- [x] automate software updates
+- [x] automate data updates
     - [ ] target pipeline
-    - [ ] automate new data cleaning and uploading
+    - [x] automate new data cleaning and uploading
 
 ### General
 
@@ -78,9 +78,8 @@ How to lay these out? by tabs?
 
 -   [x] reactable winner over gt and DT -> server side processing, feature-ful and looks good
 -   [x] show TC and breakdown base and bonus concisely - `merge_cols()`
--   [ ] finalize column inclusion
+-   [x] finalize column inclusion
     - [x] options good to include
-    - [ ] select row size
 
 Generally speaking, is there a way to convey the full data? maybe something like a hover or expand, what about in career progression plot?
 
