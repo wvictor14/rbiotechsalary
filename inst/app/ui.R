@@ -52,21 +52,6 @@ page_navbar(
       )
     ), 
   title = "r/biotech salaries",
-  footer = tags$footer(
-    style = "
-        padding: 0px; 
-        margin-bottom: 0px; 
-        text-align: center; 
-        position: fixed;
-        bottom: 0;
-        padding-bottom: 0px; 
-        width: 100%;",
-    p(
-      style = "margin-top: 20px; color: #888;",
-      glue::glue("rbiotechsalary {version}")
-    )
-  ),
-  
   sidebar = sidebar(
     title = NULL,
     gap = '1px',
