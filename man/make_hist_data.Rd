@@ -10,6 +10,7 @@ make_hist_data(.df, x)
 generates binned data and stats for histogram plot
 }
 \examples{
-make_hist_data(salaries, salary_total)
+salaries |> make_hist_data(salary_total)
+salaries |> filter(title_general == 'Scientist') |> make_hist_data(salary_total)
 
 }

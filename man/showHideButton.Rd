@@ -4,7 +4,7 @@
 \alias{showHideButton}
 \title{show hide button on reactable}
 \usage{
-showHideButton(id)
+showHideButton(id, .table_id = "table-raw")
 }
 \description{
 taken from https://github.com/glin/reactable/issues/319

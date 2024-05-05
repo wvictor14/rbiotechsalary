@@ -5,8 +5,7 @@
 \title{plot salary histogram v2}
 \usage{
 plot_salary_histogram(
-  .df,
-  x,
+  .plot_data,
   color = "#41AB5DFF",
   font_color = "#EEE8D5",
   hover_bg = "#161C21",
@@ -17,11 +16,14 @@ plot_salary_histogram(
 plot salary histogram v2
 }
 \examples{
-plot_salary_histogram(salaries, x = salary_total, font_color = 'black', hover_bg = 'white')
 
-salaries |>  filter(location_country == 'Canada', title_general == 'Associate Scientist') |> 
-  plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
+# all
+salaries |>  make_hist_data(salary_total) |>  plot_salary_histogram(font_color = 'black', hover_bg = 'white')
+
+# scientist
+salaries |>  filter(title_general == 'Scientist') |> make_hist_data(salary_total) |> plot_salary_histogram(font_color = 'black', hover_bg = 'white')
   
-salaries |>  slice(1) |> 
-  plot_salary_histogram(x = salary_total, font_color = 'black', hover_bg = 'white')
+# 1
+salaries |>  slice(1) |> make_hist_data(salary_total) |> 
+  plot_salary_histogram(font_color = 'black', hover_bg = 'white')
 }

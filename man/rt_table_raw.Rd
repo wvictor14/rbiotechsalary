@@ -4,7 +4,10 @@
 \alias{rt_table_raw}
 \title{reactable table showing raw data}
 \usage{
-rt_table_raw(.df, ...)
+rt_table_raw(.df, id = "table-raw", ...)
+}
+\arguments{
+\item{id}{used for show/hide columns JS}
 }
 \description{
 reactable table showing raw data
