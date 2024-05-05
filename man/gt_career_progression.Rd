@@ -10,7 +10,7 @@ gt_career_progression(.df)
 plot
 }
 \description{
-table of summarized salary info
+not currently used
 }
 \examples{
 gt_career_progression(salaries)

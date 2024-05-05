@@ -85,13 +85,14 @@ rb_server <- function(input, output, session) {
   })
   
   # table data panel ----
-  table_raw_server('table_raw', .salaries_hist_clicked) # connected to histogram
+  table_raw_server('table_raw', .salaries_hist_clicked, defaultPageSize = 20) # connected to histogram
   
   
   # raw data pipe
   output$skim_raw_data <- reactable::renderReactable({
     skim_raw_data |>  
       reactable_rbs(
+        defaultPageSize = 12,
         fullWidth = FALSE,
         columns = list(
           n_missing = reactable::colDef(name = 'Missing', width = 120),

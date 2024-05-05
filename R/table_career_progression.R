@@ -1,5 +1,7 @@
 #' table of summarized salary info
 #'
+#' not currently used
+#' 
 #' @return plot
 #' @export
 #'

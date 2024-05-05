@@ -42,7 +42,7 @@ table_raw_ui <- function(id, ...) {
 
 #' table_raw server 
 #' @export
-table_raw_server <- function(id, .salaries,  ...) {
+table_raw_server <- function(id, .salaries,  defaultPageSize = 10, ...) {
   stopifnot(is.reactive(.salaries))
   moduleServer(id, function(input, output, session) {
     
@@ -54,7 +54,9 @@ table_raw_server <- function(id, .salaries,  ...) {
         .salaries() |>
           arrange(desc(date)) |>
           #slice(.slice) |>
-          rt_table_raw(server = TRUE, searchable = FALSE, defaultPageSize = 10)
+          rt_table_raw(
+            server = TRUE, searchable = FALSE, 
+            defaultPageSize = defaultPageSize)
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
         #  gt::opt_interactive()
