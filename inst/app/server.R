@@ -11,12 +11,19 @@ rb_server <- function(input, output, session) {
       loc_gran <- .filters()$location_granular
     }
     
+    if (is.null(.filters()$education)) {
+      education <- unique(salaries$experience_highest_degree)
+    } else {
+      education <- .filters()$education
+    }
+    
     salaries |>
       filter(
         lubridate::year(date) %in% .filters()$.date,
         title_general %in% .filters()$title,
         location_country %in% .filters()$location_country,
-        location_granular %in% loc_gran
+        location_granular %in% loc_gran,
+        experience_highest_degree %in% education
       )
   })
   
