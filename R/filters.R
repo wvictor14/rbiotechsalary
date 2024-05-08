@@ -111,17 +111,6 @@ filters_server <- function(id) {
       )
     })
     
-    # if none is selected, return all
-    location_granular_selected <- eventReactive(input$location_granular, {
-      if (is.null(input$location_granular)) {
-        .loc_gran <- .location_granular_choices()
-      } else {
-        .loc_gran <- input$location_granular
-      }
-      
-      return(.loc_gran)
-    }, ignoreNULL = FALSE, ignoreInit = FALSE)
-    
     # return filtered salary data
     reactive({
       req(input$location_country)
