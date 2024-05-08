@@ -35,6 +35,9 @@ rb_relevel <- function(.salaries) {
         ),
       
       location_granular = forcats::fct(location_granular) |> 
-        forcats::fct_relevel(USA)
+        forcats::fct_relevel(USA),
+      
+      experience_highest_degree = forcats::fct(experience_highest_degree) |> 
+        forcats::fct_explicit_na()
     )
 }
