@@ -1,5 +1,5 @@
 #' @export
-rb_relevel <- function(.salaries) {
+rb_clean_data <- function(.salaries) {
   USA <- c(
     "Pharma Central (NY, NJ, PA)",
     "New England (MA, CT, RI, NH, VT, ME)",
