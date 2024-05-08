@@ -17,7 +17,7 @@ salaries_file <- fs::path_package(
   'rbiotechsalary', 'extdata', 'salary_results_cleaned.csv'
 )
 salaries <- readr::read_csv(salaries_file, show_col_types = FALSE) |> 
-  rb_relevel()
+  rb_clean_data()
 message('processed data loaded')
 
 # links
