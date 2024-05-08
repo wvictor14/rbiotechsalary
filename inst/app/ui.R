@@ -21,9 +21,15 @@ page_navbar(
             background-color: #202020 !important;
             color: #EEE8D5 !important;
             overflow-y: auto;
-            margin-top:-5px;
-            margin-bottom:-10px;
+            padding-top: 0;
+            padding-bottom: 0;
             outline: none
+          }
+          .form-group {
+            margin-bottom: 0;
+          }
+          .accordion-body {
+            padding-top: 0; padding-bottom: 0;
           }
           ::-webkit-input-placeholder {
             color: #EEE8D5;
