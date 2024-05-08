@@ -58,6 +58,18 @@ filters_ui <- function(id, .salaries, ...) {
         )
       )
     ),
+    selectizeInput(
+      NS(id, 'education'),
+      label = 'Education',
+      choices = .salaries$experience_highest_degree |>  unique() |>  sort(na.last = TRUE),
+      multiple = TRUE,
+      options = list(
+        placeholder = 'All selected',
+        plugins= list(
+          'remove_button', 'auto_position', 'clear_button'
+        )
+      )
+    ),
     
     radioButtons(
       NS(id, 'date'),
@@ -127,7 +139,8 @@ filters_server <- function(id) {
         .date = .date,
         title = input$title,
         location_country = input$location_country,
-        location_granular = input$location_granular
+        location_granular = input$location_granular,
+        education = input$education
       )
       
       return(.out)
