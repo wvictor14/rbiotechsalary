@@ -38,6 +38,6 @@ rb_clean_data <- function(.salaries) {
         forcats::fct_relevel(USA),
       
       experience_highest_degree = forcats::fct(experience_highest_degree) |> 
-        forcats::fct_explicit_na()
+        forcats::fct_na_value_to_level()
     )
 }
