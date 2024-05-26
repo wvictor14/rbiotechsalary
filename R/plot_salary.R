@@ -13,6 +13,9 @@ calculate_salary_stats <- function(.df, x) {
 }
 
 #' plot salary histogram
+#' 
+#' A ggplot2 version of the histogram. Not currently used in the app, 
+#' see plot_salary_histogram for current implementation
 #'
 #' @examples
 #' library(rbiotechsalary)
@@ -126,6 +129,7 @@ make_hist_data <- function(.df, x) {
 plot_salary_histogram <- function(
     .plot_data, 
     color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21',
+    font_size = 16,
     ...) {
   
   # set up x axis, categorical, labels, coordinates ----
@@ -142,17 +146,17 @@ plot_salary_histogram <- function(
     } else { return(as.character(x)) }
   }
   # make text annotations
-  make_text <- function(text, x, y, size, color) {
+  make_text <- function(text, x, y, color) {
     list(
-      text = text, x = x, y = y, font = list(size = size), color = color, 
+      text = text, x = x, y = y, font = list(size = font_size), color = color, 
       yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = FALSE
     )
   }
   
   annotations = list(
-    make_text("Median", get_x_coord(.plot_data$stats_lab$med), 0.9, 20, font_color),
-    make_text("10th", get_x_coord(.plot_data$stats_lab$q10), 0.9, 20, 'grey'),
-    make_text("90th", get_x_coord(.plot_data$stats_lab$q90), 0.9, 20, 'grey')
+    make_text("Median", get_x_coord(.plot_data$stats_lab$med), 0.9, font_color),
+    make_text("10th", get_x_coord(.plot_data$stats_lab$q10), 0.9, 'grey'),
+    make_text("90th", get_x_coord(.plot_data$stats_lab$q90), 0.9, 'grey')
   )
   # make vline annotations
   vline <- function(x = 0, y1 = 0.9, color = "seagreen") {
@@ -217,7 +221,7 @@ plot_salary_histogram <- function(
         )
       ),
       #dragmode = FALSE,
-      font = list(color = font_color, size = 20) ,
+      font = list(color = font_color, size = font_size) ,
       hoverlabel = list(
         font = list(size=15, color = font_color), 
         bgcolor = hover_bg),
