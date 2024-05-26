@@ -1,6 +1,7 @@
 page_navbar(
   theme = bs_theme(
     version = 5, 
+    font_scale = 0.8, # reduce by 20%
     fg = '#EEE8D5',
     bg =  '#232627',
     primary = .colors$primary,
@@ -12,7 +13,7 @@ page_navbar(
   ) |>
     bs_add_rules(
       list("
-          h1 {
+          h1, h2, h3 {
             margin: -5px;
           }
              
@@ -71,7 +72,7 @@ page_navbar(
     page_fillable(
       class = 'row-gap-0',
       #gap = '0px',
-      htmltools::h1(shiny::textOutput('content_title_1')),
+      htmltools::h2(shiny::textOutput('content_title_1')),
       card(
         class = 'p-0 mb-0 row-gap-0',
         full_screen = FALSE,
@@ -105,7 +106,7 @@ page_navbar(
   ### panel career progression ----
   nav_panel(
     title = "Career progression", 
-    htmltools::h1('Average Total Compensation by Years of Experience'),
+    htmltools::h3('Average Total Compensation by Years of Experience'),
     card(
       full_screen = TRUE,
       card_body(
@@ -128,7 +129,7 @@ page_navbar(
   ## data pipe ----
   nav_panel(
     title = 'Raw Data',
-    h2('Completeness and summary stats for original raw data'),
+    h3('Completeness and summary stats for original raw data'),
     reactable::reactableOutput('skim_raw_data')
   ),
   
