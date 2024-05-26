@@ -35,13 +35,14 @@ devtools::install_github("wvictor14/rbiotechsalary")
 - [x] deploy
 - [x] automate software updates
 - [x] automate data updates
+    - [ ] regular pulling updates from google sheets 
     - [ ] target pipeline
     - [x] automate new data cleaning and uploading
 
 ### General
 
 -   [x] add research associate data
--   [ ] (out of scope for me) add other departments like product dev, clinical, business etc.
+-   [ ] add other departments like product dev, clinical, business etc.
 
 ### For cleaning
 
@@ -80,8 +81,6 @@ How to lay these out? by tabs?
 -   [x] show TC and breakdown base and bonus concisely - `merge_cols()`
 -   [x] finalize column inclusion
     - [x] options good to include
-
-Generally speaking, is there a way to convey the full data? maybe something like a hover or expand, what about in career progression plot?
 
 
 # docker
