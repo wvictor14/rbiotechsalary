@@ -55,6 +55,9 @@ page_navbar(
             border-width: 0px;
           }
           .selectize-dropdown-content {max-height: 90vh !important}
+          .bslib-value-box .value-box-value {
+            font-size: 1.5rem
+          }
           "
       )
     ), 
@@ -94,7 +97,7 @@ page_navbar(
       ),
       card(
         full_screen = TRUE,
-        height = '250px', 
+        height = '200px', 
         class = 'p-0 mt-0',
         card_body(
           class = 'p-0',

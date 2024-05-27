@@ -30,7 +30,7 @@ value_boxes_stats_ui <- function(
       title = "Average Salary", 
       value = uiOutput(NS(id, 'text_average')),
       showcase = plotly::plotlyOutput(NS(id, 'plot_sparkline_average')), 
-      uiOutput(NS(id, 'text_ave_breakdown'))
+      span(textOutput(NS(id, 'text_ave_breakdown')), style = "font-size: 0.8rem")
     ),
     vb(
       title = "Number of Survey Respondents", 
@@ -84,7 +84,7 @@ value_boxes_stats_server <- function(id, .salaries) {
       HTML(paste0(.text, "<br>"))
     })
     
-    output$text_ave_breakdown <- renderUI({
+    output$text_ave_breakdown <- renderText({
       if (any(is.na(stats()$value))) { return(HTML('')) }
       .text <- stats() |> 
         filter(name != 'Total') |> pull(.label) |>  paste0(collapse = ', ') 
