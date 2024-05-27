@@ -72,7 +72,7 @@ page_navbar(
     page_fillable(
       class = 'row-gap-0',
       #gap = '0px',
-      htmltools::h2(shiny::textOutput('content_title_1')),
+      htmltools::h3(shiny::textOutput('content_title_1')),
       card(
         class = 'p-0 mb-0 row-gap-0',
         full_screen = FALSE,
