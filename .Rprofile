@@ -4,7 +4,6 @@ if (interactive()) {
   require(usethis)
   require(devtools)
   devtools::load_all()
-  l <- launch_app()
 }
 library(ggplot2)
 theme_set(
