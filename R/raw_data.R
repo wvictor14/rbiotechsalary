@@ -9,7 +9,7 @@ load_raw_data <- function(years = c('2022', '2023', '2024')) {
   }
   
   years %>% 
-    setNames(., nm = .) |>   
+    stats::setNames(., nm = .) |>   
     purrr::map(
       \(x) readr::read_csv(
         files(x),

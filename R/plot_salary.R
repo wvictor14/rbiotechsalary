@@ -6,7 +6,7 @@ calculate_salary_stats <- function(.df, x) {
   percentiles <- .df |>  pull({{x}}) |>  quantile(c(0.05, 0.95))
   stats <- c(
     'Average' = x_mean,
-    setNames(percentiles, nm = c('5th percentile', '95th percentile'))) |>
+    stats::setNames(percentiles, nm = c('5th percentile', '95th percentile'))) |>
     tibble::enframe(name = 'stat', 'x') |>
     mutate(stat = forcats::fct(
       stat, levels = c('5th percentile', 'Average', '95th percentile')))
