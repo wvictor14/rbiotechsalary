@@ -3,10 +3,11 @@ name: Build and Push Docker Image to Docker Hub
 on: 
   push:
     branches: ['main', 'dev']
+    tags:
+      - 'v*'
   pull_request:
     branches: ['main', 'dev']
-  tags:
-      - 'v*'
+  
 
 jobs:
   push_to_registry:
@@ -30,7 +31,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: victor2wy/rbiotechsalary
+          images: victor2wy/rbiotechsalarys
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}} # set latest tag for default branch
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
 
       - name: Build and push Docker image
         id: push
