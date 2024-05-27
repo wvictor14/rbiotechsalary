@@ -2,7 +2,11 @@ name: Build and Push Docker Image to Docker Hub
 # from https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
 on: 
   push:
-    branches: ['main']
+    branches: ['main', 'dev']
+  pull_request:
+    branches: ['main', 'dev']
+  tags:
+      - 'v*'
 
 jobs:
   push_to_registry:
