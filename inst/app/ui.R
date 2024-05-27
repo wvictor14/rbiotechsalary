@@ -11,6 +11,10 @@ page_navbar(
     "focus-ring-color" = "rgba(255,255,255,0.1)",
     "accordion-border-width" = "1px"
   ) |>
+    
+    bs_add_variables(
+      "bslib-value-box-horizontal-break-point" = "1px" #freezes value boxes layout
+    ) |> 
     bs_add_rules(
       list("
           .bslib-gap-spacing {
