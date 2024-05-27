@@ -13,6 +13,9 @@ page_navbar(
   ) |>
     bs_add_rules(
       list("
+          .bslib-gap-spacing {
+            gap: 10px
+          }
           h1, h2, h3 {
             margin: -5px;
           }
