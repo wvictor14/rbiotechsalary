@@ -11,7 +11,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-
 ```{r}
 outdir <- here::here('inst', 'extdata')
 ```
@@ -309,6 +308,17 @@ n_changed_bonus <- sal_clean_filt |>
 
 I converted bonus into % and raw \$. This involved modifying `r n_changed_bonus` bonus data points.
 
+#### filter
+
+```{r}
+# bonus > 100% of base
+sal_clean_filt |> 
+  filter(bonus_pct >= 1) 
+sal_clean_filt <- sal_clean_filt |> 
+  filter(bonus_pct < 1) 
+```
+
+
 ### total comp
 
 ```{r}
@@ -466,6 +476,26 @@ sal_clean_filt |>
   slice_sample(n = 20) |>  gt()
 
 sal_clean_filt |>  count(title_general) |> gt()
+```
+
+##### filter
+
+remove some outliers upon inspection post deployment
+
+```{r}
+# salary > 800k as scientist
+remove <- sal_clean_filt |> 
+  filter(
+    year(mdy_hms(timestamp)) == 2024,
+    month(mdy_hms(timestamp)) == 5,
+    day(mdy_hms(timestamp)) == 22,
+    role_title_of_current_position == 'Scientist'
+    ) |> 
+  pull(timestamp)
+
+# removed
+sal_clean_filt |>  filter(timestamp == remove)
+sal_clean_filt <- sal_clean_filt |>  filter(timestamp != remove)
 ```
 
 #### Directors and VP
@@ -688,8 +718,14 @@ sal_clean_filt |>
 
 I filter out an outlier sample, looks like they incorrectly inputted bonus:
 
-```{r}
+```{r, eval = FALSE}
 n_1 <- nrow(sal_clean_filt)
+sal_clean_filt |> 
+  dplyr::filter((
+    str_detect(timestamp, '10/31/2023') & 
+      role_title_of_current_position == 'Sr Clinical Research Associate')
+  ) |> 
+  gt::gt()
 sal_clean_filt <- sal_clean_filt |> 
   dplyr::filter(!(
     str_detect(timestamp, '10/31/2023') & 
@@ -707,24 +743,6 @@ Look at the remaining roles that I have not tried to process.
 sal_clean_filt |>  
   filter(is.na(title_category)) |> 
   pull(role_title_of_current_position) |>  unique()
-```
-
-### Final filtering
-
-The non-processed data is useful, if messy.
-
-For now, I remove rows with title data that I have not cleaned
-
-So basically we only have scientist, directors, and VPs right now.
-
-```{r}
-n_before_filter <- nrow(sal_clean_filt)
-sal_clean_filt <- sal_clean_filt |> 
-  filter(!is.na(title_category))
-n_after_filter <- nrow(sal_clean_filt)
-
-p_filt <- scales::percent(n_after_filter / n_before_filter, accuracy = 1)
-message(glue("{n_after_filter} / {n_before_filter}  ({p_filt}) remain after filtering for uncleaned title data"))
 ```
 
 ## Experience
