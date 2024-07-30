@@ -6,3 +6,4 @@
 shiny-test*
 inst/extdata/clean_data.html
 inst/extdata/clean_data_files*
+inst/extdata/*.csv
