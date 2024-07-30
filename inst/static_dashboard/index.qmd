@@ -10,9 +10,11 @@ format:
         href: https://wvictor14.github.io/
         aria-label: Homepage
     scrolling: false
+    orientation: columns
     embed-resources: false
     theme: 
       - cosmo
+      - custom.scss
 editor: source
 editor_options: 
   chunk_output_type: console
@@ -90,18 +92,17 @@ version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
 ojs_define(salaries_ojs = salaries)
 ```
 
+# Salaries
 
-# Salaries 
+## sidbear {.sidebar}
 
-## {.sidebar}
-
-```{ojs}
+```{ojs input_options}
 //| output: false
 job_titles_general = [...new Set(transpose(salaries_ojs).map(d => d.title_general))].sort()
 location_country = [...new Set(transpose(salaries_ojs).map(d => d.location_country))].sort()
 ```
 
-```{ojs}
+```{ojs inputs}
 viewof salary_min = Inputs.range(
   [0, 950000], 
   {value: 0, step: 5000, label: "Salary (min):"}
@@ -118,21 +119,100 @@ viewof select_location_country = Inputs.select(
 )
 ```
 
-## column
-
-```{ojs}
+```{ojs filter_data}
+//| output: false
 filtered = transpose(salaries_ojs).filter(function(x) {
   return salary_min < x.salary_total &&
          select_job_title_general.includes(x.title_general) &&
          select_location_country.includes(x.location_country)
          ;
 })
+```
 
+## Row
+
+### value boxes
+
+```{ojs}
+//| component: valuebox
+//| title: "Avg Salary"
+//| icon: currency-dollar
+//| color: light
+parseFloat(d3.mean(filtered, d => d.salary_total).toFixed(0))
+```
+
+```{ojs}
+//| component: valuebox
+//| title: "Number of respondents"
+//| icon: person-lines-fill
+//| color: light
+filtered.length
+```
+
+```{ojs}
+//| component: valuebox
+//| title: "Avg years experience"
+//| icon: stars
+//| color: light
+parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
+```
+
+### plot
+
+```{ojs}
 Plot.plot({
   y: {grid: true},
   marks: [
     Plot.rectY(filtered, Plot.binX({y: "count"}, {x: "salary_total"})),
     Plot.ruleY([0])
   ]
+})
+```
+
+### table
+
+```{ojs}
+//| output: false
+function sparkbar(max) {
+  return x => htl.html`<div style="
+    background: lightblue;
+    width: ${100 * x / max}%;
+    float: right;
+    padding-right: 3px;
+    box-sizing: border-box;
+    overflow: visible;
+    display: flex;
+    justify-content: end;">${x.toLocaleString("en")}`
+}
+```
+
+```{ojs table}
+Inputs.table(filtered, {
+  sort: "date", 
+  reverse: true,
+  
+  //format table column names
+  columns: [
+    "years_of_experience",
+    "salary_total",
+    "company_or_institution_name",
+    "date"
+  ],
+  
+  header: {
+    years_of_experience: "YOE",
+    salary_total: "Salary",
+    company_or_institution_name: "Company",
+    date: 'date'
+  },
+  //adjust column width 
+  width: {
+    years_of_experience: "10%",
+    date: "10%"
+  },
+  format: {
+    years_of_experience: sparkbar(d3.max(filtered, d => d.years_of_experience)),
+    salary_total: sparkbar(d3.max(filtered, d => d.salary_total))
+  }
 })
 ```
