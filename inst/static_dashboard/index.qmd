@@ -41,15 +41,21 @@ source(here::here('R', 'rb_clean_data.R'))
 ```{r data_prep}
 #| echo: false
 #| include: false
-quarto::quarto_render(here::here('inst', 'extdata', 'clean_data.qmd'))
+
 
 # load data for app
 salaries_file <- here::here(
   'inst', 'extdata', 'salary_results_cleaned.csv'
 )
+
+if (!file.exists(salaries_file)) {
+  message('Processed data not detected. Running processing script...')
+  quarto::quarto_render(here::here('inst', 'extdata', 'clean_data.qmd'))
+}
+
 salaries <- readr::read_csv(salaries_file, show_col_types = FALSE) |> 
   rb_clean_data()
-message('processed data loaded')
+message('Processed data loaded')
 
 # links
 link_add_data <- shiny::tags$a(
@@ -79,6 +85,9 @@ link_google <- shiny::tags$a(
 )
 
 version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
+
+# pass to ojs
+ojs_define(salaries_ojs = salaries)
 ```
 
 
@@ -86,13 +95,44 @@ version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
 
 ## {.sidebar}
 
+```{ojs}
+//| output: false
+job_titles_general = [...new Set(transpose(salaries_ojs).map(d => d.title_general))].sort()
+location_country = [...new Set(transpose(salaries_ojs).map(d => d.location_country))].sort()
+```
+
+```{ojs}
+viewof salary_min = Inputs.range(
+  [0, 950000], 
+  {value: 0, step: 5000, label: "Salary (min):"}
+)
+
+viewof select_job_title_general = Inputs.select(
+  job_titles_general, 
+  {label:"Job Title", value: 'Scientist'}
+)
+
+viewof select_location_country = Inputs.select(
+  location_country, 
+  {label:"Country", value: 'United States Of America'}
+)
+```
+
 ## column
 
-```{r}
+```{ojs}
+filtered = transpose(salaries_ojs).filter(function(x) {
+  return salary_min < x.salary_total &&
+         select_job_title_general.includes(x.title_general) &&
+         select_location_country.includes(x.location_country)
+         ;
+})
 
+Plot.plot({
+  y: {grid: true},
+  marks: [
+    Plot.rectY(filtered, Plot.binX({y: "count"}, {x: "salary_total"})),
+    Plot.ruleY([0])
+  ]
+})
 ```
-
-```{r}
-
-```
-
