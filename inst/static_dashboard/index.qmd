@@ -86,8 +86,6 @@ link_google <- shiny::tags$a(
   'primary' = '#41AB5DFF'
 )
 
-version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
-
 # pass to ojs
 ojs_define(salaries_ojs = salaries)
 ```
