@@ -36,7 +36,6 @@ library(scales)
 library(reactable)
 library(gt)
 library(gtExtras)
-library(devtools)
 source(here::here('R', 'rb_clean_data.R'))
 ```
 
@@ -98,7 +97,7 @@ job_titles_general = [...new Set(transpose(salaries_ojs).map(d => d.title_genera
 location_country = [...new Set(transpose(salaries_ojs).map(d => d.location_country))].sort()
 ```
 
-## inputs {height=150}
+## inputs {height=120px}
 
 ```{ojs inputs}
 //viewof salary_min = Inputs.range(
@@ -127,9 +126,8 @@ filtered = transpose(salaries_ojs).filter(function(x) {
 })
 ```
 
-## Row
 
-### value boxes
+## value boxes
 
 ```{ojs}
 //| component: valuebox
@@ -155,9 +153,10 @@ filtered.length
 parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
 ```
 
-## plot {height=300}
+## plot 
 
 ```{ojs}
+//| height: 200px
 Plot.plot({
   style: {
     fontSize: 14
