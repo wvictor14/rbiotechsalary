@@ -1,4 +1,8 @@
 /*-- scss:defaults --*/
-.bslib-value-box .value-box-area { 
-  padding:0px!important;
+$card-border-width: 0px !important;
+
+/*-- scss:rules --*/
+.bslib-value-box .value-box-area * {
+    margin-bottom: 1px;
+    margin-top: 0;
 }
