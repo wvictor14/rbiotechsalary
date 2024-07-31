@@ -18,6 +18,9 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        
+      - name: Install system dependencies
+        run: sudo apt install libcurl4-openssl-dev
 
       - name: Install R
         uses: r-lib/actions/setup-r@v2
