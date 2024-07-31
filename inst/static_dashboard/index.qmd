@@ -161,10 +161,27 @@ parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
 
 ```{ojs}
 Plot.plot({
-  y: {grid: true},
+  style: {
+    fontSize: 14
+  },
+  
   marks: [
-    Plot.rectY(filtered, Plot.binX({y: "count"}, {x: "salary_total"})),
-    Plot.ruleY([0])
+    Plot.rectY(
+      filtered, 
+      Plot.binX(
+        {y: "count"}, 
+        {x: "salary_total", tip: true}
+      )
+    ),
+    Plot.ruleY([0]),
+    
+    Plot.dot(
+      filtered, 
+      Plot.stackY(
+        Plot.binX(
+          {y: "count"}, 
+          {x: "salary_total", stroke: "red", r: 0}
+    )))
   ]
 })
 ```
@@ -196,6 +213,8 @@ Inputs.table(filtered, {
     "years_of_experience",
     "salary_total",
     "company_or_institution_name",
+    "where_are_you_located",
+    "title_detail",
     "date"
   ],
   
@@ -203,6 +222,8 @@ Inputs.table(filtered, {
     years_of_experience: "YOE",
     salary_total: "Salary",
     company_or_institution_name: "Company",
+    where_are_you_located: "Location",
+    title_detail: "Job details",
     date: 'date'
   },
   //adjust column width 
