@@ -43,6 +43,6 @@ filters + plot + table
 # Progress
 
 - [x] poc qmd done
-- [ ] set up github actions to deploy
+- [x] set up github actions to deploy
+- [x] configure domains / hosting
 - [ ] update reddit post
-- [ ] configure domains / hosting
