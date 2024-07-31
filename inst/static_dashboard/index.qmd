@@ -9,8 +9,8 @@ format:
       - icon: house-fill
         href: https://wvictor14.github.io/
         aria-label: Homepage
-    scrolling: false
-    orientation: columns
+    scrolling: true
+    orientation: rows
     embed-resources: false
     theme: 
       - cosmo
@@ -92,19 +92,19 @@ ojs_define(salaries_ojs = salaries)
 
 # Salaries
 
-## sidbear {.sidebar}
-
 ```{ojs input_options}
 //| output: false
 job_titles_general = [...new Set(transpose(salaries_ojs).map(d => d.title_general))].sort()
 location_country = [...new Set(transpose(salaries_ojs).map(d => d.location_country))].sort()
 ```
 
+## inputs {height=150}
+
 ```{ojs inputs}
-viewof salary_min = Inputs.range(
-  [0, 950000], 
-  {value: 0, step: 5000, label: "Salary (min):"}
-)
+//viewof salary_min = Inputs.range(
+//  [0, 950000], 
+//  {value: 0, step: 5000, label: "Salary (min):"}
+//)
 
 viewof select_job_title_general = Inputs.select(
   job_titles_general, 
@@ -119,9 +119,9 @@ viewof select_location_country = Inputs.select(
 
 ```{ojs filter_data}
 //| output: false
+// //salary_min < x.salary_total &&
 filtered = transpose(salaries_ojs).filter(function(x) {
-  return salary_min < x.salary_total &&
-         select_job_title_general.includes(x.title_general) &&
+  return select_job_title_general.includes(x.title_general) &&
          select_location_country.includes(x.location_country)
          ;
 })
@@ -155,7 +155,7 @@ filtered.length
 parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
 ```
 
-### plot
+## plot {height=300}
 
 ```{ojs}
 Plot.plot({
@@ -184,7 +184,7 @@ Plot.plot({
 })
 ```
 
-### table
+## table {height=300px}
 
 ```{ojs}
 //| output: false
