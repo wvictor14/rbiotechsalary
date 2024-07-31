@@ -22,10 +22,11 @@ what are the most important interactive features and how to translate into more 
 
 ojs + plot
 
-- [ ] [ojs hover histogram / bar plot](https://observablehq.com/plot/interactions/pointer)
-- [ ] can ojs be used to convey summary info?
+- [x] [ojs hover histogram / bar plot](https://observablehq.com/plot/interactions/pointer)
+- [x] can ojs be used to convey summary info?
     - idea: precompute across all jd / location?  and display summarized data as table?
-- [OJS Filtering can be done](https://quarto.org/docs/interactive/ojs/#example)
+    - answer: yes ojs can compute on the fly
+- [x] [OJS Filtering can be done](https://quarto.org/docs/interactive/ojs/#example)
 
 filters + plot + table 
 
@@ -39,4 +40,9 @@ filters + plot + table
 
 ## ojs
 
+# Progress
 
+- [x] poc qmd done
+- [ ] set up github actions to deploy
+- [ ] update reddit post
+- [ ] configure domains / hosting
