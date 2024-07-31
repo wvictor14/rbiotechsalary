@@ -1,0 +1,239 @@
+---
+title: "r/biotechsalary"
+format:
+  dashboard:
+    nav-buttons:
+      - icon: github
+        href: https://github.com/wvictor14/rbiotechsalary
+        aria-label: GitHub
+      - icon: house-fill
+        href: https://wvictor14.github.io/
+        aria-label: Homepage
+    scrolling: false
+    orientation: columns
+    embed-resources: false
+    theme: 
+      - cosmo
+      - custom.scss
+editor: source
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup_r}
+#| echo: false
+#| include: false
+library(quarto)
+library(here)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(forcats)
+library(stringr)
+library(ggplot2)
+library(scales)
+library(reactable)
+library(gt)
+library(gtExtras)
+library(devtools)
+source(here::here('R', 'rb_clean_data.R'))
+```
+
+```{r data_prep}
+#| echo: false
+#| include: false
+
+
+# load data for app
+salaries_file <- here::here(
+  'inst', 'extdata', 'salary_results_cleaned.csv'
+)
+
+if (!file.exists(salaries_file)) {
+  message('Processed data not detected. Running processing script...')
+  quarto::quarto_render(here::here('inst', 'extdata', 'clean_data.qmd'))
+}
+
+salaries <- readr::read_csv(salaries_file, show_col_types = FALSE) |> 
+  rb_clean_data()
+message('Processed data loaded')
+
+# links
+link_add_data <- shiny::tags$a(
+  bsicons::bs_icon("plus-lg"), " Add Your Salary",
+  href = "https://docs.google.com/forms/d/e/1FAIpQLSeXpPvkjdf8EPRU_cAdyMAUFVjgx67nyVgDxV7TNHeFkR2k9A/viewform",
+  target = "_blank"
+)
+link_github <- shiny::tags$a(
+  shiny::icon("github"), " Source",
+  href = "https://github.com/wvictor14/rbiotechsalary",
+  target = "_blank"
+)
+link_reddit <- shiny::tags$a(
+  bsicons::bs_icon("reddit"), " Reddit",
+  href = "https://www.reddit.com/r/biotech/comments/125cy06/rbiotech_salary_and_company_survey/",
+  target = "_blank"
+)
+link_google <- shiny::tags$a(
+  bsicons::bs_icon("file-earmark-spreadsheet"), " Raw Data",
+  href = "https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit#gid=491268892",
+  target = "_blank"
+)
+
+# colors
+.colors <- list(
+  'primary' = '#41AB5DFF'
+)
+
+version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
+
+# pass to ojs
+ojs_define(salaries_ojs = salaries)
+```
+
+# Salaries
+
+## sidbear {.sidebar}
+
+```{ojs input_options}
+//| output: false
+job_titles_general = [...new Set(transpose(salaries_ojs).map(d => d.title_general))].sort()
+location_country = [...new Set(transpose(salaries_ojs).map(d => d.location_country))].sort()
+```
+
+```{ojs inputs}
+viewof salary_min = Inputs.range(
+  [0, 950000], 
+  {value: 0, step: 5000, label: "Salary (min):"}
+)
+
+viewof select_job_title_general = Inputs.select(
+  job_titles_general, 
+  {label:"Job Title", value: 'Scientist'}
+)
+
+viewof select_location_country = Inputs.select(
+  location_country, 
+  {label:"Country", value: 'United States Of America'}
+)
+```
+
+```{ojs filter_data}
+//| output: false
+filtered = transpose(salaries_ojs).filter(function(x) {
+  return salary_min < x.salary_total &&
+         select_job_title_general.includes(x.title_general) &&
+         select_location_country.includes(x.location_country)
+         ;
+})
+```
+
+## Row
+
+### value boxes
+
+```{ojs}
+//| component: valuebox
+//| title: "Avg Salary"
+//| icon: currency-dollar
+//| color: light
+parseFloat(d3.mean(filtered, d => d.salary_total).toFixed(0))
+```
+
+```{ojs}
+//| component: valuebox
+//| title: "Number of respondents"
+//| icon: person-lines-fill
+//| color: light
+filtered.length
+```
+
+```{ojs}
+//| component: valuebox
+//| title: "Avg years experience"
+//| icon: stars
+//| color: light
+parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
+```
+
+### plot
+
+```{ojs}
+Plot.plot({
+  style: {
+    fontSize: 14
+  },
+  
+  marks: [
+    Plot.rectY(
+      filtered, 
+      Plot.binX(
+        {y: "count"}, 
+        {x: "salary_total", tip: true}
+      )
+    ),
+    Plot.ruleY([0]),
+    
+    Plot.dot(
+      filtered, 
+      Plot.stackY(
+        Plot.binX(
+          {y: "count"}, 
+          {x: "salary_total", stroke: "red", r: 0}
+    )))
+  ]
+})
+```
+
+### table
+
+```{ojs}
+//| output: false
+function sparkbar(max) {
+  return x => htl.html`<div style="
+    background: lightblue;
+    width: ${100 * x / max}%;
+    float: right;
+    padding-right: 3px;
+    box-sizing: border-box;
+    overflow: visible;
+    display: flex;
+    justify-content: end;">${x.toLocaleString("en")}`
+}
+```
+
+```{ojs table}
+Inputs.table(filtered, {
+  sort: "date", 
+  reverse: true,
+  
+  //format table column names
+  columns: [
+    "years_of_experience",
+    "salary_total",
+    "company_or_institution_name",
+    "where_are_you_located",
+    "title_detail",
+    "date"
+  ],
+  
+  header: {
+    years_of_experience: "YOE",
+    salary_total: "Salary",
+    company_or_institution_name: "Company",
+    where_are_you_located: "Location",
+    title_detail: "Job details",
+    date: 'date'
+  },
+  //adjust column width 
+  width: {
+    years_of_experience: "10%",
+    date: "10%"
+  },
+  format: {
+    years_of_experience: sparkbar(d3.max(filtered, d => d.years_of_experience)),
+    salary_total: sparkbar(d3.max(filtered, d => d.salary_total))
+  }
+})
+```
