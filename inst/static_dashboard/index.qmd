@@ -149,16 +149,41 @@ parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
 Plot.plot({
   style: {
     fontSize: 14
-  },
-  
+  }, 
+  marginTop: 40, // so axisY title doesn't cover axis
+  marginLeft: 0, // don’t need left-margin since labels are inset
+  x: {label: null, insetLeft: 36}, // reserve space for inset labels
   marks: [
+  
+    // grid marks
+    Plot.gridY({
+      tickSpacing: 40,
+      strokeDasharray: "0.75,2", // dashed
+      strokeOpacity: 1 // opaque
+    }),
+    
+    // axis
+    Plot.axisY({
+      tickSpacing: 40,
+      tickSize: 0, // don’t draw ticks
+      dx: 38, // offset right
+      dy: -6, // offset up
+      lineAnchor: "bottom" // draw labels above grid lines
+    }),
+    Plot.axisX({
+      ticks: 5,
+      tickFormat: (d) => (`$${d/1000}K`) // dollar
+    }),
+    
     Plot.rectY(
       filtered, 
       Plot.binX(
         {y: "count"}, 
-        {x: "salary_total", tip: true}
+        {x: "salary_total", tip: true, thresholds: 20}
       )
     ),
+    
+    // zero line
     Plot.ruleY([0]),
     
     Plot.dot(
