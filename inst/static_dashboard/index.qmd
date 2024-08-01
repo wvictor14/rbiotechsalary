@@ -152,7 +152,8 @@ Plot.plot({
   }, 
   marginTop: 40, // so axisY title doesn't cover axis
   marginLeft: 0, // don’t need left-margin since labels are inset
-  x: {label: null, insetLeft: 36}, // reserve space for inset labels
+  x: {label: 'Salary', insetLeft: 36}, // reserve space for inset labels
+  y: {label: 'Number of Respondents'},
   marks: [
   
     // grid marks
