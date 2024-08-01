@@ -193,6 +193,7 @@ function sparkbar(max) {
 Inputs.table(filtered, {
   sort: "date", 
   reverse: true,
+  layout: "auto",
   
   //format table column names
   columns: [
