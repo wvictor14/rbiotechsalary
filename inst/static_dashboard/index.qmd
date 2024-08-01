@@ -123,7 +123,7 @@ filtered = transpose(salaries_ojs).filter(function(x) {
 //| title: "Avg Salary"
 //| icon: currency-dollar
 //| color: light
-parseFloat(d3.mean(filtered, d => d.salary_total).toFixed(0))
+parseFloat(d3.mean(filtered, d => d.salary_total/100).toFixed(0)*100)
 ```
 
 ```{ojs}
