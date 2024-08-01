@@ -6,3 +6,10 @@ $card-border-width: 0px !important;
     margin-bottom: 1px;
     margin-top: 0;
 }
+
+div.value-box-area span.observablehq--number {
+    font-size: calc(clamp(.1em, 8cqw, 5em)* 1.25);
+    line-height: 1.2;
+    color: inherit;
+    font-family: var(--bs-body-font-family);
+}
