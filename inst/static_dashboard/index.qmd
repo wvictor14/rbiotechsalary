@@ -178,7 +178,7 @@ Plot.plot({
 //| output: false
 function sparkbar(max) {
   return x => htl.html`<div style="
-    background: lightblue;
+    background: #32de84;
     width: ${100 * x / max}%;
     float: right;
     padding-right: 3px;
@@ -198,19 +198,21 @@ Inputs.table(filtered, {
   //format table column names
   columns: [
     "years_of_experience",
-    "salary_total",
-    "company_or_institution_name",
-    "where_are_you_located",
+    "salary_base",
+    "bonus",
     "title_detail",
+    "where_are_you_located",
+    "company_or_institution_name",
     "date"
   ],
   
   header: {
     years_of_experience: "YOE",
-    salary_total: "Salary",
-    company_or_institution_name: "Company",
+    salary_base: "Salary",
+    bonus: "Bonus",
     where_are_you_located: "Location",
     title_detail: "Job details",
+    company_or_institution_name: "Company",
     date: 'date'
   },
   //adjust column width 
@@ -219,8 +221,7 @@ Inputs.table(filtered, {
     date: "10%"
   },
   format: {
-    years_of_experience: sparkbar(d3.max(filtered, d => d.years_of_experience)),
-    salary_total: sparkbar(d3.max(filtered, d => d.salary_total))
+    salary_base: sparkbar(d3.max(filtered, d => d.salary_total))
   }
 })
 ```
