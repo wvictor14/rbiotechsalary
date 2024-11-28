@@ -78,15 +78,13 @@ message('Processed data loaded')
 ojs_define(salaries_ojs = salaries)
 ```
 
-# Salaries
+# inputs {.toolbar}
 
 ```{ojs input_options}
 //| output: false
 job_titles_general = [...new Set(transpose(salaries_ojs).map(d => d.title_general))].sort()
 location_country = [...new Set(transpose(salaries_ojs).map(d => d.location_country))].sort()
 ```
-
-## inputs {height=120px}
 
 ```{ojs inputs}
 //viewof salary_min = Inputs.range(
@@ -115,6 +113,7 @@ filtered = transpose(salaries_ojs).filter(function(x) {
 })
 ```
 
+# Salaries
 
 ## value boxes
 
