@@ -20,7 +20,7 @@ format:
       - icon: house-fill
         href: https://victoryuan.com/
         aria-label: Homepage
-    scrolling: true
+    scrolling: false
     orientation: rows
     embed-resources: false
     theme: 
@@ -113,9 +113,11 @@ filtered = transpose(salaries_ojs).filter(function(x) {
 })
 ```
 
-# Salaries
+# Salaries by title
 
-## value boxes
+## Row 1
+
+### Column - Value boxes {width="25%"}
 
 ```{ojs}
 //| component: valuebox
@@ -141,10 +143,9 @@ filtered.length
 parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
 ```
 
-## plot 
+### Column - histogram 
 
 ```{ojs}
-//| height: 200px
 Plot.plot({
   style: {
     fontSize: 14
@@ -197,7 +198,7 @@ Plot.plot({
 })
 ```
 
-## table {height=300px}
+## Row 2 - table
 
 ```{ojs}
 //| output: false
