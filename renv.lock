@@ -1602,12 +1602,10 @@
     "renv": {
       "Package": "renv",
       "Version": "1.0.11",
-      "Source": "Repository",
+      "OS_type": null,
+      "NeedsCompilation": "no",
       "Repository": "CRAN",
-      "Requirements": [
-        "utils"
-      ],
-      "Hash": "47623f66b4e80b3b0587bc5d7b309888"
+      "Source": "Repository"
     },
     "repr": {
       "Package": "repr",
