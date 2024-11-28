@@ -8,7 +8,7 @@ $card-border-width: 1px !important;
 }
 
 div.value-box-area span.observablehq--number {
-    font-size: calc(clamp(.1em, 5cqw, 5em)* 1.25);
+    font-size: calc(clamp(.1em, 5cqw, 10em)* 1.25);
     line-height: 1.2;
     color: inherit;
     font-family: var(--bs-body-font-family);
