@@ -251,3 +251,49 @@ Inputs.table(filtered, {
   }
 })
 ```
+
+# Demographics
+
+## Row 1
+
+
+```{ojs}
+wrangled = aq.from(filtered)
+  .groupby("location_granular")
+  .count()
+  .slice(0, 20)
+  .objects()
+
+Plot.plot({
+  marginLeft: 200,
+  //height: 300,
+  marks: [
+    Plot.barX(wrangled, {
+      y: "location_granular",
+      x: "count"
+    }),
+    Plot.text(wrangled, {
+      y: "location_granular",
+      x: "count",
+      text: "count",
+      dx: 8,
+      sort: {y: "-x"}
+    }),
+
+  ]
+})
+
+```
+
+
+```{r}
+salaries |> 
+  count(location_country) |> 
+  arrange(n) |> 
+  mutate(location_country = forcats::fct_inorder(location_country)) |> 
+  ggplot(aes(y = location_country, x = n)) +
+  geom_bar(stat = 'identity')
+```
+
+
+# Experience
