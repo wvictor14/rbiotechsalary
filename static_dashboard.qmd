@@ -115,7 +115,7 @@ filtered = transpose(salaries_ojs).filter(function(x) {
 
 # Salaries
 
-## Row 1
+## Row 1 {height="60%"}
 
 ### Column - Value boxes {width="20%"}
 
@@ -191,15 +191,17 @@ Plot.plot({
 
 ```{ojs}
 //| title: "Salary Distribution"
-//| padding: 1px
+//| padding: 4px
 Plot.plot({
   style: {
     fontSize: 14
   }, 
-  marginTop: 40, // so axisY title doesn't cover axis
-  marginLeft: 0, // don’t need left-margin since labels are inset
+  marginBottom: 100,
+  marginTop: 20, // so axisY title doesn't cover axis
+  marginLeft: 10, // don’t need left-margin since labels are inset
   x: {label: 'Salary', insetLeft: 36}, // reserve space for inset labels
   y: {label: 'Number of Respondents'},
+  color: {legend: true},
   marks: [
   
     // grid marks
@@ -226,7 +228,7 @@ Plot.plot({
       filtered, 
       Plot.binX(
         {y: "count"}, 
-        {x: "salary_total", tip: true, thresholds: 20}
+        {x: "salary_total", fill: 'highest_achieved_formal_education', tip: true, thresholds: 20}
       )
     ),
     
@@ -239,7 +241,9 @@ Plot.plot({
         Plot.binX(
           {y: "count"}, 
           {x: "salary_total", stroke: "red", r: 0}
-    )))
+        )
+      )
+    )
   ]
 })
 ```
@@ -266,6 +270,7 @@ Inputs.table(filtered, {
   sort: "date", 
   reverse: true,
   layout: "auto",
+  height: 200,
   
   //format table column names
   columns: [
