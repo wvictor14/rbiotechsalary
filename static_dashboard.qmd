@@ -252,6 +252,28 @@ Inputs.table(filtered, {
 })
 ```
 
+```{ojs}
+//| padding: 5px
+Plot.plot({
+  marginLeft: 200,
+  //height: 300,
+  marks: [
+    Plot.barX(wrangled, {
+      y: "location_granular",
+      x: "count"
+    }),
+    Plot.text(wrangled, {
+      y: "location_granular",
+      x: "count",
+      text: "count",
+      dx: 8,
+      sort: {y: "-x"}
+    }),
+
+  ]
+})
+```
+
 # Demographics
 
 ## Row 1
