@@ -158,9 +158,19 @@ wrangled = aq.from(filtered)
 //| title: "Location"
 //| padding: 1px
 Plot.plot({
-  marginLeft: 200,
+  //marginLeft: 150,
   //height: 300,
+  style: {
+    fontSize: 12
+  }, 
+  x: {label: 'Number of Respondents', insetLeft: 150}, // reserve space for inset labels
+  y: {label: ''},
   marks: [
+    Plot.axisY({
+      tickSize: 0, // don’t draw ticks
+      dx: 150, // offset right
+      //dy: -6 // offset up
+    }),
     Plot.barX(wrangled, {
       y: "location_granular",
       x: "count"
