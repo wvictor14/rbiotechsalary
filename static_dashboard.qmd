@@ -115,7 +115,7 @@ filtered = transpose(salaries_ojs).filter(function(x) {
 
 # Salaries
 
-## Row 1 {height="60%"}
+## Row 1 {height="50%"}
 
 ### Column - Value boxes {width="20%"}
 
@@ -143,7 +143,7 @@ filtered.length
 parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
 ```
 
-### Column - sublocation {width=20%}
+### Column - sublocation {width=25%}
 
 ```{ojs}
 //| output: false
@@ -158,18 +158,27 @@ wrangled = aq.from(filtered)
 //| title: "Location"
 //| padding: 1px
 Plot.plot({
-  //marginLeft: 150,
+  marginLeft: 160,
   //height: 300,
   style: {
     fontSize: 12
   }, 
-  x: {label: 'Number of Respondents', insetLeft: 150}, // reserve space for inset labels
-  y: {label: ''},
+  height: 250,
+  y: {label: ""},
+  x: {label: 'Number of Respondents'},
   marks: [
     Plot.axisY({
       tickSize: 0, // don’t draw ticks
-      dx: 150, // offset right
+      //dx: 150, // offset right
       //dy: -6 // offset up
+    }),
+    Plot.axisX({
+      tickSize: 0
+    }),
+    Plot.gridX({
+      tickSpacing: 25,
+      strokeDasharray: "0.75,2", // dashed
+      strokeOpacity: 1 // opaque
     }),
     Plot.barX(wrangled, {
       y: "location_granular",
@@ -196,11 +205,9 @@ Plot.plot({
   style: {
     fontSize: 14
   }, 
-  marginBottom: 100,
-  marginTop: 20, // so axisY title doesn't cover axis
-  marginLeft: 10, // don’t need left-margin since labels are inset
   x: {label: 'Salary', insetLeft: 36}, // reserve space for inset labels
   y: {label: 'Number of Respondents'},
+  height: 190,
   color: {legend: true},
   marks: [
   
@@ -270,7 +277,7 @@ Inputs.table(filtered, {
   sort: "date", 
   reverse: true,
   layout: "auto",
-  height: 200,
+  height: 250,
   
   //format table column names
   columns: [
