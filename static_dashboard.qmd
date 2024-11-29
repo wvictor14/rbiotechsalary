@@ -113,11 +113,11 @@ filtered = transpose(salaries_ojs).filter(function(x) {
 })
 ```
 
-# Salaries by title
+# Salaries
 
 ## Row 1
 
-### Column - Value boxes {width="25%"}
+### Column - Value boxes {width="20%"}
 
 ```{ojs}
 //| component: valuebox
@@ -143,9 +143,45 @@ filtered.length
 parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
 ```
 
+### Column - sublocation {width=20%}
+
+```{ojs}
+//| output: false
+wrangled = aq.from(filtered)
+  .groupby("location_granular")
+  .count()
+  .slice(0, 20)
+  .objects()
+```
+
+```{ojs}
+//| title: "Location"
+//| padding: 1px
+Plot.plot({
+  marginLeft: 200,
+  //height: 300,
+  marks: [
+    Plot.barX(wrangled, {
+      y: "location_granular",
+      x: "count"
+    }),
+    Plot.text(wrangled, {
+      y: "location_granular",
+      x: "count",
+      text: "count",
+      dx: 8,
+      sort: {y: "-x"}
+    }),
+
+  ]
+})
+```
+
 ### Column - histogram 
 
 ```{ojs}
+//| title: "Salary Distribution"
+//| padding: 1px
 Plot.plot({
   style: {
     fontSize: 14
@@ -251,71 +287,3 @@ Inputs.table(filtered, {
   }
 })
 ```
-
-```{ojs}
-//| padding: 5px
-Plot.plot({
-  marginLeft: 200,
-  //height: 300,
-  marks: [
-    Plot.barX(wrangled, {
-      y: "location_granular",
-      x: "count"
-    }),
-    Plot.text(wrangled, {
-      y: "location_granular",
-      x: "count",
-      text: "count",
-      dx: 8,
-      sort: {y: "-x"}
-    }),
-
-  ]
-})
-```
-
-# Demographics
-
-## Row 1
-
-
-```{ojs}
-wrangled = aq.from(filtered)
-  .groupby("location_granular")
-  .count()
-  .slice(0, 20)
-  .objects()
-
-Plot.plot({
-  marginLeft: 200,
-  //height: 300,
-  marks: [
-    Plot.barX(wrangled, {
-      y: "location_granular",
-      x: "count"
-    }),
-    Plot.text(wrangled, {
-      y: "location_granular",
-      x: "count",
-      text: "count",
-      dx: 8,
-      sort: {y: "-x"}
-    }),
-
-  ]
-})
-
-```
-
-
-```{r}
-salaries |> 
-  count(location_country) |> 
-  arrange(n) |> 
-  mutate(location_country = forcats::fct_inorder(location_country)) |> 
-  ggplot(aes(y = location_country, x = n)) +
-  geom_bar(stat = 'identity')
-```
-
-
-# Experience
