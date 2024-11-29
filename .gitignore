@@ -4,8 +4,6 @@
 .Ruserdata
 *.Rproj
 shiny-test*
-inst/extdata/clean_data.html
-inst/extdata/clean_data_files*
 inst/extdata/*.csv
-inst/static_dashboard/index_files*
-inst/static_dashboard/index.html
+*_files*
+*.html

@@ -22,6 +22,23 @@ devtools::install_github("wvictor14/rbiotechsalary")
     - allow user to explore raw data
     - open-access data provenance 
 
+# Architecture
+
+*Pipeline:*
+
+Google survey -> google sheets -> GHA-powered daily render and publish
+
+*Render and publish:*
+
+- R / Observable JS / quarto backend
+- renders static html
+- github actions to publish static html to github pages 
+
+*interactivity* is all client-side via Observable JS (ojs)
+
+*data processing* is all using R
+
+
 # Task list
 
 ## Ideas

@@ -20,7 +20,7 @@ format:
       - icon: house-fill
         href: https://victoryuan.com/
         aria-label: Homepage
-    scrolling: true
+    scrolling: false
     orientation: rows
     embed-resources: false
     theme: 
@@ -78,15 +78,13 @@ message('Processed data loaded')
 ojs_define(salaries_ojs = salaries)
 ```
 
-# Salaries
+# inputs {.toolbar}
 
 ```{ojs input_options}
 //| output: false
 job_titles_general = [...new Set(transpose(salaries_ojs).map(d => d.title_general))].sort()
 location_country = [...new Set(transpose(salaries_ojs).map(d => d.location_country))].sort()
 ```
-
-## inputs {height=120px}
 
 ```{ojs inputs}
 //viewof salary_min = Inputs.range(
@@ -115,8 +113,11 @@ filtered = transpose(salaries_ojs).filter(function(x) {
 })
 ```
 
+# Salaries
 
-## value boxes
+## Row 1 {height="60%"}
+
+### Column - Value boxes {width="20%"}
 
 ```{ojs}
 //| component: valuebox
@@ -142,18 +143,65 @@ filtered.length
 parseFloat(d3.mean(filtered, d => d.years_of_experience).toFixed(1))
 ```
 
-## plot 
+### Column - sublocation {width=20%}
 
 ```{ojs}
-//| height: 200px
+//| output: false
+wrangled = aq.from(filtered)
+  .groupby("location_granular")
+  .count()
+  .slice(0, 20)
+  .objects()
+```
+
+```{ojs}
+//| title: "Location"
+//| padding: 1px
+Plot.plot({
+  //marginLeft: 150,
+  //height: 300,
+  style: {
+    fontSize: 12
+  }, 
+  x: {label: 'Number of Respondents', insetLeft: 150}, // reserve space for inset labels
+  y: {label: ''},
+  marks: [
+    Plot.axisY({
+      tickSize: 0, // don’t draw ticks
+      dx: 150, // offset right
+      //dy: -6 // offset up
+    }),
+    Plot.barX(wrangled, {
+      y: "location_granular",
+      x: "count"
+    }),
+    Plot.text(wrangled, {
+      y: "location_granular",
+      x: "count",
+      text: "count",
+      dx: 8,
+      sort: {y: "-x"}
+    }),
+
+  ]
+})
+```
+
+### Column - histogram 
+
+```{ojs}
+//| title: "Salary Distribution"
+//| padding: 4px
 Plot.plot({
   style: {
     fontSize: 14
   }, 
-  marginTop: 40, // so axisY title doesn't cover axis
-  marginLeft: 0, // don’t need left-margin since labels are inset
+  marginBottom: 100,
+  marginTop: 20, // so axisY title doesn't cover axis
+  marginLeft: 10, // don’t need left-margin since labels are inset
   x: {label: 'Salary', insetLeft: 36}, // reserve space for inset labels
   y: {label: 'Number of Respondents'},
+  color: {legend: true},
   marks: [
   
     // grid marks
@@ -180,7 +228,7 @@ Plot.plot({
       filtered, 
       Plot.binX(
         {y: "count"}, 
-        {x: "salary_total", tip: true, thresholds: 20}
+        {x: "salary_total", fill: 'highest_achieved_formal_education', tip: true, thresholds: 20}
       )
     ),
     
@@ -193,12 +241,14 @@ Plot.plot({
         Plot.binX(
           {y: "count"}, 
           {x: "salary_total", stroke: "red", r: 0}
-    )))
+        )
+      )
+    )
   ]
 })
 ```
 
-## table {height=300px}
+## Row 2 - table
 
 ```{ojs}
 //| output: false
@@ -220,6 +270,7 @@ Inputs.table(filtered, {
   sort: "date", 
   reverse: true,
   layout: "auto",
+  height: 200,
   
   //format table column names
   columns: [
