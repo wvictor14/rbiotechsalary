@@ -1,0 +1,26 @@
+---
+title: "Untitled"
+format: dashboard
+---
+
+```{ojs}
+penguins = d3.csv("https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv")
+penguins
+```
+
+```{ojs}
+df_penguins = aq.from(penguins)
+df_penguins
+```
+
+```{ojs}
+Plot.plot({
+  color: {legend: false}, // turn off and on to see scroll
+  x: {type: 'linear'},
+  y: {type: 'linear'},
+  marks: [
+    Plot.dot(df_penguins, {x: "body_mass_g", y: "bill_length_mm", stroke: "species"})
+  ]
+})
+```
+
