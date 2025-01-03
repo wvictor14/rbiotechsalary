@@ -4,6 +4,53 @@
 
 <!-- badges: end -->
 
+This repository holds the source code to produce rbiotechsalary web-app. There's two versions
+
+1. web app hosted at app.victoryuan.com/rbiotechsalary 
+
+- a digital ocean hosted docker rshiny web app
+
+2. static html hosted at victoryuan.com/rbiotechsalary
+
+- gha to pull new data and render a new html page everyday. OJS for interactivity
+
+I initially started with 1., but it wasn't free (cheap though $5/month), and I had issues with deployment (css and routing headaches). 
+
+I heard of OJS + quarto and was curious if I could make a functional web-app -like product without actually needing a server. But what I found was ultimately that OJS and quarto is not mature and stable enough to provide a featureful web-app like experience. Layout issues, interactivity bugs etc.
+
+I think 2 is good for small projects, like simple data display. Not enough features and robustness for more in-depth data exploration.
+
+Now I am back to working on improving 1.
+
+# Next updates
+
+- [ ] Remove data pulling and  cleaning into separate repo: wvictor14/rbiotechsalary.data, apps should just pull from there instead of running data cleaning everytime image or app is launched
+
+- [ ] Related, web app receives data updates by manually redeploying / rebuilding docker image. Data is baked into the image itself. 
+
+- [ ] Make web app more mobile friendly
+
+    - I'd like to experiment with a more mobile friendly layout. Perhaps with a scrolling layout, and more data presented on one page using some other apps as inspiration
+    - e.g. level.fyi for web-based layout
+    - I like Monarch Money for the clarity in their UI
+
+- [ ] additional features
+
+- [ ] provide alternative survey
+    - many issues with existing survey, particularly relating to location
+    - a survey redesign would be best but wonder if there is something less atomic
+
+# Docs
+
+The repo is a bit messy and hard to understand because it comprises 3 components: data clean scripts, web-app (1.) and static html (2.).
+
+1. and 2. depend on the data cleaning scripts
+
+web app source lives in `inst/ext/app`
+
+both utilize code in `R/`
+
+
 ## Installation
 
 You can install the development version of rbiotechsalary from [GitHub](https://github.com/) with:
