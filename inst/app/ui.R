@@ -21,7 +21,7 @@ page_navbar(
             gap: 10px
           }
           h1, h2, h3 {
-            margin: -5px;
+            
           }
              
           .selectize-input {
@@ -68,6 +68,7 @@ page_navbar(
           "
       )
     ), 
+  fillable = FALSE,
   title = "r/biotech salaries",
   sidebar = sidebar(
     title = NULL,
@@ -79,37 +80,34 @@ page_navbar(
   ### panel 1 ----
   nav_panel(
     title = "Salaries", 
-    page_fillable(
-      class = 'row-gap-0',
-      #gap = '0px',
-      htmltools::h3(shiny::textOutput('content_title_1')),
-      card(
-        class = 'p-0 mb-0 row-gap-0',
-        full_screen = FALSE,
-        gap = 0,
-        #height = '400px',
-        card_body(
-          class = 'p-0',
-          fill = FALSE,
-          layout_column_wrap(
-            width = 1/3, 
-            !!!value_boxes_stats_ui('value_boxes', height = '100px')
-          )
-        ),
-        card_body(
-          class = 'p-0',
-          #fill = FALSE,
-          plotly::plotlyOutput("plot_salary_histogram", height = 'auto')
+    fillable = FALSE,
+    class = 'row-gap-2',
+    #gap = '0px',
+    htmltools::h3(shiny::textOutput('content_title_1')),
+    card(
+      class = 'p-0 mb-0 row-gap-0',
+      full_screen = FALSE,
+      gap = 0,
+      #height = '400px',
+      card_body(
+        class = 'p-0',
+        fill = FALSE,
+        layout_column_wrap(
+          width = 1/3, 
+          !!!value_boxes_stats_ui('value_boxes', height = '100px')
         )
       ),
-      card(
-        full_screen = TRUE,
-        height = '200px', 
-        class = 'p-0 mt-0',
-        card_body(
-          class = 'p-0',
-          table_raw_ui("table_raw")
-        )
+      card_body(
+        class = 'p-0',
+        #fill = FALSE,
+        plotly::plotlyOutput("plot_salary_histogram", height = '200px')
+      )
+    ),
+    card(
+      class = 'p-0 mt-0',
+      card_body(
+        class = 'p-0',
+        table_raw_ui("table_raw")
       )
     )
   ),
@@ -157,7 +155,7 @@ page_navbar(
   ),
   
   nav_item(
-        style = "color: #888; padding: 0px; font-size:1rem",
-        glue::glue("rbiotechsalary {version}")
+    style = "color: #888; padding: 0px; font-size:1rem",
+    glue::glue("rbiotechsalary {version}")
   )
 )
