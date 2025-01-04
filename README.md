@@ -40,6 +40,31 @@ Now I am back to working on improving 1.
     - many issues with existing survey, particularly relating to location
     - a survey redesign would be best but wonder if there is something less atomic
 
+### Overview
+
+levels.fyi concise delivery of important info per title:
+
+![alt text](image-2.png)
+
+has a filter by location button
+
+
+### Individual salary explorer:
+
+levels.fyi has a good way of displaying data in table that is also mobile friendly:
+
+- 4 columns, each column actually shows more data, organized in rows
+- rows are expandable for more details
+- table is filterable and searchable
+![alt text](image.png)
+
+### Top salaries by XX
+
+levels.fyi section to explorer top salaries by location, company, title
+
+![alt text](image-1.png)
+
+
 # Docs
 
 The repo is a bit messy and hard to understand because it comprises 3 components: data clean scripts, web-app (1.) and static html (2.).
