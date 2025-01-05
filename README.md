@@ -35,10 +35,15 @@ Now I am back to working on improving 1.
     - I like Monarch Money for the clarity in their UI
 
 - [ ] additional features
-
-- [ ] provide alternative survey
-    - many issues with existing survey, particularly relating to location
-    - a survey redesign would be best but wonder if there is something less atomic
+    - [ ] top companies 
+        - two columns, 1 is company, other is salary
+        - expandable 
+            - show individual salaries?
+    -
+    - [ ] provide alternative survey
+        - many issues with existing survey, particularly relating to location
+        - a survey redesign would be best but wonder if there is something less atomic
+    
 
 ### Overview
 
