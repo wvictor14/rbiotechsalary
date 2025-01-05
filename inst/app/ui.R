@@ -112,15 +112,16 @@ page_navbar(
         class = 'p-0',
         table_raw_ui("table_raw")
       )
-    )
-  ),
-  ### panel career progression ----
-  nav_panel(
-    title = "Career progression", 
+    ),
+    
+    ### career progression ----
+    br(),
+    br(),
     htmltools::h3('Average Total Compensation by Years of Experience'),
     card(
       full_screen = TRUE,
       card_body(
+        class = 'm-0 p-0',
         min_height = '300px',
         plotly::plotlyOutput('plot_career_progression')
       )
