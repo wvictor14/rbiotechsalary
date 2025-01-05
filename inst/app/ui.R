@@ -73,7 +73,7 @@ page_navbar(
   fillable = FALSE,
   title = "r/biotech salaries",
   sidebar = sidebar(
-    title = NULL,
+    title = 'Filter Salaries Dataset',
     gap = '1px',
     width = 300,
     filters_ui('filters', .salaries = salaries)

@@ -19,7 +19,6 @@ rb_server <- function(input, output, session) {
     
     salaries |>
       filter(
-        lubridate::year(date) %in% .filters()$.date,
         title_general %in% .filters()$title,
         location_country %in% .filters()$location_country,
         location_granular %in% loc_gran,
@@ -50,7 +49,6 @@ rb_server <- function(input, output, session) {
     if (nrow(.salaries()) == 0 ) return(NULL)
     plot_salary_histogram(salary_hist_data(), source = 'hist')
   })
-  
   
   # on click return selected data, otherwise return unfiltered
   
