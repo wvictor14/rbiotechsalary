@@ -6,7 +6,6 @@ format:
   html:
     toc: true
     toc-depth: 4
-editor: visual
 editor_options: 
   chunk_output_type: console
 ---
@@ -46,7 +45,7 @@ I extract the sheets into separate csv files so that they can display on github 
 library(googlesheets4)
 gs4_deauth()
 google_sheets_url <- 'https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit#gid=491268892'
-sheet_names <- c('2024', '2023', '2022')
+sheet_names <- gs4_get(google_sheets_url )$sheets$name
 
 #read_sheet(google_sheets_url, sheet = '2024', col_types = 'c')
 
@@ -317,7 +316,6 @@ sal_clean_filt |>
 sal_clean_filt <- sal_clean_filt |> 
   filter(bonus_pct < 1) 
 ```
-
 
 ### total comp
 

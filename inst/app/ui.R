@@ -9,7 +9,8 @@ page_navbar(
     "border-color" = 'rgba(255,255,255,0.1)', #495057',
     "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
     "focus-ring-color" = "rgba(255,255,255,0.1)",
-    "accordion-border-width" = "1px"
+    "accordion-border-width" = "1px",
+    "bslib_spacer" = "0.75rem"
   ) |>
     
     bs_add_variables(
@@ -21,7 +22,7 @@ page_navbar(
             gap: 10px
           }
           h1, h2, h3 {
-            margin: -5px;
+            
           }
              
           .selectize-input {
@@ -68,9 +69,11 @@ page_navbar(
           "
       )
     ), 
+  padding = c(0, 0),
+  fillable = FALSE,
   title = "r/biotech salaries",
   sidebar = sidebar(
-    title = NULL,
+    title = 'Filter Salaries Dataset',
     gap = '1px',
     width = 300,
     filters_ui('filters', .salaries = salaries)
@@ -79,47 +82,46 @@ page_navbar(
   ### panel 1 ----
   nav_panel(
     title = "Salaries", 
-    page_fillable(
-      class = 'row-gap-0',
-      #gap = '0px',
-      htmltools::h3(shiny::textOutput('content_title_1')),
-      card(
-        class = 'p-0 mb-0 row-gap-0',
-        full_screen = FALSE,
-        gap = 0,
-        #height = '400px',
-        card_body(
-          class = 'p-0',
-          fill = FALSE,
-          layout_column_wrap(
-            width = 1/3, 
-            !!!value_boxes_stats_ui('value_boxes', height = '100px')
-          )
-        ),
-        card_body(
-          class = 'p-0',
-          #fill = FALSE,
-          plotly::plotlyOutput("plot_salary_histogram", height = 'auto')
+    fillable = FALSE,
+    padding = 0,
+    class = 'p-0 m-0 row-gap-2',
+    #gap = '0px',
+    htmltools::h3(shiny::textOutput('content_title_1')),
+    card(
+      class = 'p-0',
+      full_screen = FALSE,
+      gap = 0,
+      #height = '400px',
+      card_body(
+        class = 'p-0',
+        fill = FALSE,
+        layout_column_wrap(
+          width = 1/3, 
+          !!!value_boxes_stats_ui('value_boxes', height = '100px')
         )
       ),
-      card(
-        full_screen = TRUE,
-        height = '200px', 
-        class = 'p-0 mt-0',
-        card_body(
-          class = 'p-0',
-          table_raw_ui("table_raw")
-        )
+      card_body(
+        class = 'p-0',
+        #fill = FALSE,
+        plotly::plotlyOutput("plot_salary_histogram", height = '200px')
       )
-    )
-  ),
-  ### panel career progression ----
-  nav_panel(
-    title = "Career progression", 
+    ),
+    card(
+      class = 'p-0 mt-0',
+      card_body(
+        class = 'p-0',
+        table_raw_ui("table_raw")
+      )
+    ),
+    
+    ### career progression ----
+    br(),
+    br(),
     htmltools::h3('Average Total Compensation by Years of Experience'),
     card(
       full_screen = TRUE,
       card_body(
+        class = 'm-0 p-0',
         min_height = '300px',
         plotly::plotlyOutput('plot_career_progression')
       )
@@ -127,21 +129,21 @@ page_navbar(
   ),
   
   ## panel info ----
-  nav_panel(
-    title = 'Info',
-    htmltools::includeMarkdown(
-      fs::path_package('rbiotechsalary', 'markdown', "info_page.md")
-    ),
-    tags$br(),
-    tags$br()
-  ),
-  
-  ## data pipe ----
-  nav_panel(
-    title = 'Raw Data',
-    h3('Completeness and summary stats for original raw data'),
-    reactable::reactableOutput('skim_raw_data')
-  ),
+  #nav_panel(
+  #  title = 'Info',
+  #  htmltools::includeMarkdown(
+  #    fs::path_package('rbiotechsalary', 'markdown', "info_page.md")
+  #  ),
+  #   tags$br(),
+  #   tags$br()
+  # ),
+  # 
+  # ## data pipe ----
+  # nav_panel(
+  #   title = 'Raw Data',
+  #   h3('Completeness and summary stats for original raw data'),
+  #   reactable::reactableOutput('skim_raw_data')
+  # ),
   
   ## menu ----
   nav_spacer(),
@@ -157,7 +159,7 @@ page_navbar(
   ),
   
   nav_item(
-        style = "color: #888; padding: 0px; font-size:1rem",
-        glue::glue("rbiotechsalary {version}")
+    style = "color: #888; padding: 0px; font-size:1rem",
+    glue::glue("rbiotechsalary {version}")
   )
 )

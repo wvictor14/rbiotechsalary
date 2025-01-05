@@ -69,13 +69,6 @@ filters_ui <- function(id, .salaries, ...) {
           'remove_button', 'auto_position', 'clear_button'
         )
       )
-    ),
-    
-    radioButtons(
-      NS(id, 'date'),
-      label = 'Date',
-      choices = c('All' , '2024', '2023', '2022'),
-      selected = 'All'
     )
   )
 }
@@ -114,18 +107,8 @@ filters_server <- function(id) {
     # return filtered salary data
     reactive({
       req(input$location_country)
-      req(input$date)
-      
-      .date <- switch(
-        input$date,
-        'All' = c('2024', '2023', '2022'),
-        '2024' = '2024',
-        '2023' = '2023',
-        '2022' = '2022'
-      )
       
       .out <- list(
-        .date = .date,
         title = input$title,
         location_country = input$location_country,
         location_granular = input$location_granular,

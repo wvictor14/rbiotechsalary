@@ -129,7 +129,7 @@ make_hist_data <- function(.df, x) {
 plot_salary_histogram <- function(
     .plot_data, 
     color = '#41AB5DFF', font_color = '#EEE8D5', hover_bg = '#161C21',
-    font_size = 16,
+    font_size = 14,
     ...) {
   
   # set up x axis, categorical, labels, coordinates ----
@@ -251,6 +251,7 @@ plot_salary_histogram <- function(
 #' @export
 plot_career_progression <- function(
     .df, color = '#41AB5D', font_color = '#EEE8D5', bg_color = 'black',
+    font_size = 14,
     sizeref = 0.1) {
   
   summarized <- .df |> 
@@ -323,7 +324,7 @@ plot_career_progression <- function(
         spikedistance = 1,
         spikethickness = -2
       ),
-      font = list(color = font_color, size = 20),
+      font = list(color = font_color, size = font_size),
       hovermode = 'x',
       hoverlabel = list(
         font = list(size=15, color = font_color), 
