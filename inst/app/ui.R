@@ -9,7 +9,8 @@ page_navbar(
     "border-color" = 'rgba(255,255,255,0.1)', #495057',
     "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
     "focus-ring-color" = "rgba(255,255,255,0.1)",
-    "accordion-border-width" = "1px"
+    "accordion-border-width" = "1px",
+    "bslib_spacer" = "0.75rem"
   ) |>
     
     bs_add_variables(
@@ -68,6 +69,7 @@ page_navbar(
           "
       )
     ), 
+  padding = c(0, 0),
   fillable = FALSE,
   title = "r/biotech salaries",
   sidebar = sidebar(
@@ -81,11 +83,12 @@ page_navbar(
   nav_panel(
     title = "Salaries", 
     fillable = FALSE,
-    class = 'row-gap-2',
+    padding = 0,
+    class = 'p-0 m-0 row-gap-2',
     #gap = '0px',
     htmltools::h3(shiny::textOutput('content_title_1')),
     card(
-      class = 'p-0 mb-0 row-gap-0',
+      class = 'p-0',
       full_screen = FALSE,
       gap = 0,
       #height = '400px',
