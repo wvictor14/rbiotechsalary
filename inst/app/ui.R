@@ -129,21 +129,21 @@ page_navbar(
   ),
   
   ## panel info ----
-  nav_panel(
-    title = 'Info',
-    htmltools::includeMarkdown(
-      fs::path_package('rbiotechsalary', 'markdown', "info_page.md")
-    ),
-    tags$br(),
-    tags$br()
-  ),
-  
-  ## data pipe ----
-  nav_panel(
-    title = 'Raw Data',
-    h3('Completeness and summary stats for original raw data'),
-    reactable::reactableOutput('skim_raw_data')
-  ),
+  #nav_panel(
+  #  title = 'Info',
+  #  htmltools::includeMarkdown(
+  #    fs::path_package('rbiotechsalary', 'markdown', "info_page.md")
+  #  ),
+  #   tags$br(),
+  #   tags$br()
+  # ),
+  # 
+  # ## data pipe ----
+  # nav_panel(
+  #   title = 'Raw Data',
+  #   h3('Completeness and summary stats for original raw data'),
+  #   reactable::reactableOutput('skim_raw_data')
+  # ),
   
   ## menu ----
   nav_spacer(),
