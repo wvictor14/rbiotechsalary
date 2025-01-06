@@ -90,7 +90,7 @@ rb_server <- function(input, output, session) {
   })
   
   # table data panel ----
-  table_raw_server('table_raw', .salaries_hist_clicked, defaultPageSize = 20) # connected to histogram
+  table_raw_server('table_raw', .salaries_hist_clicked, defaultPageSize = 10) # connected to histogram
   
   output$top_companies_tbl <- reactable::renderReactable({
     .salaries() |> 
