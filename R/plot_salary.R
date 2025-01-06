@@ -290,7 +290,7 @@ plot_career_progression <- function(
       hoverinfo = 'none',
       marker = list(
         color = 'darkgrey',
-        opacity = 0.2
+        opacity = 0.1
       ),
       showlegend = FALSE
     ) |> 
@@ -298,7 +298,7 @@ plot_career_progression <- function(
       x = x, y = y, color = .color_by, type = 'scatter', mode = 'markers+lines', 
       hovertext = text, hoverinfo = 'text',
       marker = list(
-        size = 10,
+        size = 8,
         #sizeref = sizeref,
         #sizemin = sizemin,
         #sizemax = sizemax,

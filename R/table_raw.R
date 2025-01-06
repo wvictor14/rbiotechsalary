@@ -113,18 +113,31 @@ rt_table_raw <- function(.df, id = 'table-raw', ...) {
         
       )
     ) |> 
+    mutate(
+      html_company_location_date = glue::glue(
+        "{tidyr::replace_na(company_or_institution_name, '-')}<br>",
+        '<p style="font-size:0.75rem;color:grey;margin:0">{location_granular} | {date}</p>'
+      ),
+      
+      html_total_base_bonus = glue::glue(
+        "{scales::dollar(salary_total)}<br>",
+        '<p style="font-size:0.75rem;color:grey;margin:0">{base_bonus}</p>'
+      ),
+      
+      html_title_detail_yoe = glue::glue(
+        "{tidyr::replace_na(as.character(title_detail), '-')}<br>",
+        '<p style="font-size:0.75rem;color:grey;margin:0">',
+        '{years_of_experience} years',
+        '</p>'
+      )
+    ) |> 
     select(
-      `Job title` = title_general,
-      `Job details` = title_detail,
-      `YOE` = years_of_experience,
-      `Total` = salary_total,
-      base_bonus,
+      html_company_location_date,
+      html_total_base_bonus,
+      html_title_detail_yoe,
       Stock = compensation_annual_equity,
-      `Company` = company_or_institution_name,
-      `Location` = location_granular,
       `Field` = biotech_sub_industry,
       `Highest education` = highest_achieved_formal_education,
-      `Date` = date
       
     )
   .df_select |> 
@@ -132,33 +145,22 @@ rt_table_raw <- function(.df, id = 'table-raw', ...) {
       ...,
       elementId = id,
       columns = list(
-        `YOE` = reactable::colDef(
-          #style = list(color = 'grey'),
-          #headerStyle = list(color = 'grey'),
-          width = 60
+        html_company_location_date = reactable::colDef(
+          html = TRUE,
+          name = 'Company<br><span style="font-size:0.8rem;color:grey">Location | Date</span>'
+          ),
+        html_total_base_bonus = reactable::colDef(
+          html = TRUE,
+          name = 'Total<br><span style="font-size:0.8rem;color:grey">Base | Bonus</span>'
         ),
-        base_bonus = reactable::colDef(
-          show = TRUE,
-          name = 'Base | Bonus',
-          sortable = FALSE,
-          width = 145,
-          
-          style = list(color = 'lightgrey'),
-          headerStyle = list(color = 'grey')
-        ),
-        `Total` = reactable::colDef(
-          width = 100,
-          format = reactable::colFormat(
-            prefix = "$", separators = TRUE, digits = 0
-          )
+        html_title_detail_yoe = reactable::colDef(
+          html = TRUE,
+          name = 'Title<br><span style="font-size:0.8rem;color:grey">Years of Experience</span>'
         ),
         
         # hidden by default:
-        `Job title` = reactable::colDef(show = FALSE),
-        `Job details` = reactable::colDef(show = FALSE),
         `Field` = reactable::colDef(show = FALSE),
         `Stock` = reactable::colDef(show = FALSE),
-        #`Company` = colDef(show = FALSE),
         `Highest education` = reactable::colDef(show = FALSE)
       )
     )
