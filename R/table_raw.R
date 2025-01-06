@@ -55,7 +55,7 @@ table_raw_server <- function(id, .salaries,  defaultPageSize = 10, ...) {
           arrange(desc(date)) |>
           #slice(.slice) |>
           rt_table_raw(
-            server = TRUE, searchable = FALSE, 
+            server = TRUE, searchable = TRUE, 
             defaultPageSize = defaultPageSize)
         #  gt_table_raw() |>  
         #  gt_dark_mode() |> 
@@ -147,15 +147,18 @@ rt_table_raw <- function(.df, id = 'table-raw', ...) {
       columns = list(
         html_company_location_date = reactable::colDef(
           html = TRUE,
-          name = 'Company<br><span style="font-size:0.8rem;color:grey">Location | Date</span>'
+          name = 'Company<br><span style="font-size:0.8rem;color:grey">Location | Date</span>',
+          minWidth = 120
           ),
         html_total_base_bonus = reactable::colDef(
           html = TRUE,
-          name = 'Total<br><span style="font-size:0.8rem;color:grey">Base | Bonus</span>'
+          name = 'Total<br><span style="font-size:0.8rem;color:grey">Base | Bonus</span>',
+          minWidth = 100
         ),
         html_title_detail_yoe = reactable::colDef(
           html = TRUE,
-          name = 'Title<br><span style="font-size:0.8rem;color:grey">Years of Experience</span>'
+          name = 'Title<br><span style="font-size:0.8rem;color:grey">Years of Experience</span>',
+          minWidth = 80
         ),
         
         # hidden by default:
@@ -194,9 +197,11 @@ reactable_rbs <- function(.df, ...) {
           display = 'inline-block',
           align = 'left',
           borderColor = 'transparent', #'#EEE8D5',
-          borderWidth = '0px',
-          border  = 'none',
-          backgroundColor = '#222627',
+          borderWidth = '2px',
+          #border  = '2px',
+          backgroundColor = 
+            '#202020',
+          #'#222627',
           highlightColor = "#393C3D",
           width = "100%",
           

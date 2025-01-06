@@ -100,15 +100,20 @@ page_navbar(
           width = 1/3, 
           !!!value_boxes_stats_ui('value_boxes', height = '100px', fg = '#EEE8D5')
         )
-      ),
+      )
+    ),
+    card(
+      full_screen = FALSE,
+      max_height = '200px',
       card_body(
         class = 'p-0',
         #fill = FALSE,
-        plotly::plotlyOutput("plot_salary_histogram", height = '200px')
+        plotly::plotlyOutput("plot_salary_histogram")
       )
     ),
     card(
       class = 'p-0 mt-0',
+      htmltools::h3('Recently Submitted Salaries'),
       card_body(
         class = 'p-0',
         table_raw_ui("table_raw")

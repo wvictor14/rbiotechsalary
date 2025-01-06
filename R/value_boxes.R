@@ -3,7 +3,7 @@
 value_boxes_stats_ui <- function(
     id, bg = '#1E2122', fg = '#41AB5DFF',
     showcase_layout = 'left center',
-    full_screen = TRUE, fill = TRUE, fillable = TRUE,
+    full_screen = FALSE, fill = TRUE, fillable = TRUE,
     height = NULL,
     #min_height = '125px',
     max_height = '125px',
