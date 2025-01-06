@@ -241,7 +241,6 @@ plot_salary_histogram <- function(
 #'
 #' @examples
 #' library(rbiotechsalary)
-#' data(salaries)
 #' salaries_sub <- salaries |>
 #'   dplyr::filter(title_general %in% c('Scientist', 'Principal Scientist'),
 #'          stringr::str_detect(location_country, 'United States') )
@@ -250,23 +249,35 @@ plot_salary_histogram <- function(
 #' @param .df salary data
 #' @export
 plot_career_progression <- function(
-    .df, color = '#41AB5D', font_color = '#EEE8D5', bg_color = 'black',
+    .df, 
+    color_by = highest_achieved_formal_education,
+    color = c('#41AB5D', 'goldenrod', 'firebrick'), 
+    font_color = '#EEE8D5', bg_color = 'black',
     font_size = 14,
-    sizeref = 0.1) {
+    sizeref = 0.75,
+    sizemin = 3,
+    sizemax = 5
+    
+    ) {
   
   summarized <- .df |> 
     summarize(
-      .by = years_of_experience,
+      .by = c({{ color_by }}, years_of_experience),
       salary_total = mean(salary_total),
       n = n()
     ) |> 
     filter(if_all(everything(), ~!is.na(.x))) |> 
     mutate(.text = glue::glue(
-      '${sal}', '{years_of_experience} years of experience',
-      '{n} salaries',
+      '{ .data[[rlang::as_name(rlang::enquo(color_by ) )]] }',
+      '   ${sal}', 
+      '   {years_of_experience} years of experience',
+      '   {n} salaries',
       .sep = '<br>',
-      sal = round(salary_total, -3) |>  scales::number(big.mark = ',')))
+      sal = round(salary_total, -3) |>  scales::number(big.mark = ','))
+    ) |> 
+    arrange({{ color_by }}, years_of_experience)
   
+  .color_by <- summarized |> pull({{ color_by }})
   x <- summarized$years_of_experience;
   y <- summarized$salary_total;
   size <- summarized$n
@@ -284,14 +295,14 @@ plot_career_progression <- function(
       showlegend = FALSE
     ) |> 
     plotly::add_trace(
-      x = x, y = y, type = 'scatter', mode = 'markers', 
+      x = x, y = y, color = .color_by, type = 'scatter', mode = 'markers+lines', 
       hovertext = text, hoverinfo = 'text',
       marker = list(
-        size = size,
-        sizeref = sizeref,
-        sizemin = 6,
-        sizemode = 'area',
-        color = color,
+        size = 10,
+        #sizeref = sizeref,
+        #sizemin = sizemin,
+        #sizemax = sizemax,
+        #sizemode = 'area',
         opacity = 1,
         cliponaxis = FALSE,
         line = list(width = 0)
@@ -299,7 +310,7 @@ plot_career_progression <- function(
     ) |> 
     plotly::config(displayModeBar = FALSE) |> 
     plotly::layout(
-      margin = list(t = 0, b = 0, l = 0, r = 0),
+      margin = list(t = 0, b = 10, l = 0, r = 0),
       plot_bgcolor  = bg_color, #"rgba(0, 0, 0, 0)",
       paper_bgcolor = bg_color, #"rgba(0, 0, 0, 0)",
       yaxis = list(
@@ -325,10 +336,16 @@ plot_career_progression <- function(
         spikethickness = -2
       ),
       font = list(color = font_color, size = font_size),
-      hovermode = 'x',
+      hovermode = 'x unified',
       hoverlabel = list(
         font = list(size=15, color = font_color), 
         bgcolor = '#161C21'
+      ),
+      legend = list(
+        orientation = 'h',
+        xanchor = "center",  # use center of legend as anchor
+        x = 0.5,
+        y = -0.4
       )
     )
 }
