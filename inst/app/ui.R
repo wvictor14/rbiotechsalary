@@ -97,7 +97,7 @@ page_navbar(
         fill = FALSE,
         layout_column_wrap(
           width = 1/3, 
-          !!!value_boxes_stats_ui('value_boxes', height = '100px')
+          !!!value_boxes_stats_ui('value_boxes', height = '100px', fg = '#EEE8D5')
         )
       ),
       card_body(
