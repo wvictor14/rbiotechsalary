@@ -34,8 +34,8 @@ table_raw_ui <- function(id, ...) {
     #gt::gt_output(NS(id, "table_raw", ...))
     div(
       style = 'display: flex; flex-flow: column wrap;',
-      reactable::reactableOutput(NS(id, "table_raw"), ...),
-      showHideButton(NS(id, 'toggle_button'))
+      reactable::reactableOutput(NS(id, "table_raw"), ...)
+      #showHideButton(NS(id, 'toggle_button'))
     )
   )
 }

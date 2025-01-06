@@ -6,7 +6,7 @@ page_navbar(
     bg =  '#232627',
     primary = .colors$primary,
     info = '#EEE8D5',
-    "border-color" = 'rgba(255,255,255,0.1)', #495057',
+    #"border-color" = 'rgba(255,255,255,0.1)', #495057',
     "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
     "focus-ring-color" = "rgba(255,255,255,0.1)",
     "accordion-border-width" = "1px",
@@ -124,6 +124,26 @@ page_navbar(
         class = 'm-0 p-0',
         min_height = '300px',
         plotly::plotlyOutput('plot_career_progression')
+      )
+    ),
+    
+    ### top companies ----
+    br(),
+    br(),
+    layout_columns(
+      card(
+        class = 'border border-secondary',
+        htmltools::h3('Top Paying Companies'),
+        card_body(
+          reactable::reactableOutput('top_companies_tbl')
+        )
+      ),
+      card(
+        class = 'border border-secondary p-0',
+        htmltools::h3('Top Paying Locations'),
+        card_body(
+          reactable::reactableOutput('top_locations_tbl')
+        )
       )
     )
   ),
