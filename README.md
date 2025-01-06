@@ -189,10 +189,10 @@ docker exec -it <container_name> bash
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 
-# build and push
+# build and push`
 docker build -t rbiotechsalary .
 docker tag rbiotechsalary victor2wy/rbiotechsalary
-docker push victor2wy/rbiotechsalary # push to dockerhub
+docker push victor2wy/rbiotechsalary # push to dockerhub`
 
 # run
 docker run --user shiny -dp 3838:3838 victor2wy/rbiotechsalary #dockerhub

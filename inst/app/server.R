@@ -92,6 +92,66 @@ rb_server <- function(input, output, session) {
   # table data panel ----
   table_raw_server('table_raw', .salaries_hist_clicked, defaultPageSize = 20) # connected to histogram
   
+  output$top_companies_tbl <- reactable::renderReactable({
+    .salaries() |> 
+      filter(!is.na(company_or_institution_name)) |> 
+      summarize(
+        .by = company_or_institution_name,
+        mean = mean(salary_total, na.rm = TRUE),
+        n_salaries = n()
+      ) |> 
+      filter(n_salaries > 1) |> 
+      slice_max(order_by = mean, n = 5) |> 
+      reactable_rbs(
+        sortable = FALSE,
+        columns = list(
+          
+          mean = reactable::colDef(
+            name = '',
+            format = reactable::colFormat(
+              prefix = "$", separators = TRUE, digits = 0
+            )
+          ),
+          company_or_institution_name =  reactable::colDef(
+            name = ''
+          ),
+          n_salaries = reactable::colDef(
+            show = FALSE
+          )
+        )
+      )
+  })
+  
+  output$top_locations_tbl <- reactable::renderReactable({
+    .salaries() |> 
+      filter(!is.na(location_granular)) |> 
+      summarize(
+        .by = location_granular,
+        mean = mean(salary_total, na.rm = TRUE),
+        n_salaries = n()
+      ) |> 
+      filter(n_salaries > 1) |> 
+      slice_max(order_by = mean, n = 5) |> 
+      reactable_rbs(
+        sortable = FALSE,
+        columns = list(
+          
+          mean = reactable::colDef(
+            name = '',
+            format = reactable::colFormat(
+              prefix = "$", separators = TRUE, digits = 0
+            )
+          ),
+          location_granular =  reactable::colDef(
+            name = ''
+          ),
+          n_salaries = reactable::colDef(
+            show = FALSE
+          )
+        )
+      )
+  })
+  
   
   # raw data pipe
   output$skim_raw_data <- reactable::renderReactable({
