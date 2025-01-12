@@ -250,7 +250,7 @@ plot_salary_histogram <- function(
 #' @export
 plot_career_progression <- function(
     .df, 
-    color_by = highest_achieved_formal_education,
+    color_by = experience_highest_degree,
     color = c('#41AB5D', 'goldenrod', 'firebrick'), 
     font_color = '#EEE8D5', bg_color = 'black',
     font_size = 14,
