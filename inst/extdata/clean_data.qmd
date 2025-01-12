@@ -448,10 +448,10 @@ sal_clean_filt <- sal_clean_filt |>
         str_remove_all(
           regex('(Associate|Scientist|Principal|Senior)*', ignore_case = TRUE)) |> 
         str_replace_all('[:punct:]+', ' ') # |> 
-        # str_replace_all('\\s{2,}', ' ')
+      # str_replace_all('\\s{2,}', ' ')
       ,
       NA
-  )
+    )
   ) |> 
   
   # title_gen most specific to most general
@@ -488,7 +488,7 @@ remove <- sal_clean_filt |>
     month(mdy_hms(timestamp)) == 5,
     day(mdy_hms(timestamp)) == 22,
     role_title_of_current_position == 'Scientist'
-    ) |> 
+  ) |> 
   pull(timestamp)
 
 # removed
@@ -540,10 +540,10 @@ sal_clean_filt <- sal_clean_filt |>
         str_remove_all(
           regex('(Associate|Director|Senior|Executive)*', ignore_case = TRUE)) |> 
         str_replace_all('[:punct:]+', ' ') # |> 
-        # str_replace_all('\\s{2,}', ' ')
+      # str_replace_all('\\s{2,}', ' ')
       ,
       title_detail
-  )) |> 
+    )) |> 
   
   # title_gen most specific to most general
   mutate(title_general = case_when(
@@ -760,14 +760,27 @@ n_after <- sum(is.na(sal_clean_filt$years_of_experience))
 message(glue('# NAs\nbefore: {n_before}\nafter: {n_after}'))
 ```
 
-#### degree
+#### Education / degree
 
 ```{r}
 sal_clean_filt |> 
   count(what_degrees_do_you_have) |>  gt()
 ```
 
-contains all degrees, but let's simplify to the highest degree:
+contains all degrees (not just highest)
+
+contains a bunch of NAs
+
+These NAs are due to question change in 2022 and 2023:
+
+```{r}
+sal_clean_filt |>  
+  count(
+    sheet_year, what_degrees_do_you_have, highest_achieved_formal_education) |>
+  gt::gt()
+```
+
+but let's simplify to the highest degree:
 
 e.g.
 
@@ -782,21 +795,44 @@ Below code assumes highest degree is the last listed degree
 
 ```{r}
 sal_clean_filt <- sal_clean_filt |> 
-  mutate(experience_highest_degree =  str_extract(
-    what_degrees_do_you_have,
-    '(?<=,|^)[^,]+$'
-  ) |> 
-    str_replace('M\\.D\\.', 'MD') |> 
-    str_remove('or Equivalent') |> 
-    str_replace('MD/Pharm.*', 'MD')
+  mutate(
+    experience_highest_degree =  case_when(
+      !is.na(highest_achieved_formal_education) ~ 
+        highest_achieved_formal_education |> 
+        str_remove('or Equivalent') |> 
+        str_trim() |> 
+        str_replace('M\\.D\\.\\/PharmD\\/D\\.D\\.S\\.', 'MD'),
+      
+      # 2023 and 2024
+      !is.na(what_degrees_do_you_have) ~ what_degrees_do_you_have |> 
+        str_extract('(?<=,|^)[^,]+$') |>  # get the last title in series
+        str_replace('M\\.D\\.', 'MD') |> 
+        str_remove('or Equivalent') |> 
+        str_replace('MD/Pharm.*', 'MD'),
+      TRUE ~ NA
+    )
   ) 
 
 # View Changes
 sal_clean_filt |>  
-  count(is.na(experience_highest_degree), is.na(what_degrees_do_you_have))
+  count(
+    is.na(experience_highest_degree), 
+    is.na(what_degrees_do_you_have),
+    is.na(highest_achieved_formal_education)
+  )
 
 sal_clean_filt |>
-  count(experience_highest_degree, what_degrees_do_you_have) |>  
+  count(experience_highest_degree, what_degrees_do_you_have, 
+        highest_achieved_formal_education) |>  
+  gt()
+
+sal_clean_filt |> count(highest_achieved_formal_education) |>  gt::gt()
+
+# NAs in cleaned column should be where respondents left blank
+sal_clean_filt |> 
+  filter(is.na(experience_highest_degree)) |> 
+  count(experience_highest_degree, what_degrees_do_you_have, 
+        highest_achieved_formal_education) |>  
   gt()
 ```
 
