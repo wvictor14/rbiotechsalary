@@ -1,7 +1,7 @@
 page_navbar(
   theme = bs_theme(
     version = 5, 
-    font_scale = 0.8, # reduce by 20%
+    font_scale = 0.7, # reduce by 20%
     fg = '#EEE8D5',
     bg =  '#232627',
     primary = .colors$primary,
@@ -10,7 +10,6 @@ page_navbar(
     "border-color-translucent" = 'rgba(255,255,255,0.1)', #495057'
     "focus-ring-color" = "rgba(255,255,255,0.1)",
     "accordion-border-width" = "1px",
-    "bslib_spacer" = "0.75rem"
   ) |>
     
     bs_add_variables(
@@ -18,9 +17,6 @@ page_navbar(
     ) |> 
     bs_add_rules(
       list("
-          .bslib-gap-spacing {
-            gap: 10px
-          }
           h1, h2, h3 {
             
           }
@@ -30,15 +26,11 @@ page_navbar(
             background-color: #202020 !important;
             color: #EEE8D5 !important;
             overflow-y: auto;
-            padding-top: 0;
-            padding-bottom: 0;
             outline: none
           }
           .form-group {
-            margin-bottom: 0;
           }
           .accordion-body {
-            padding-top: 0; padding-bottom: 0;
           }
           ::-webkit-input-placeholder {
             color: #EEE8D5;
@@ -64,7 +56,7 @@ page_navbar(
           }
           .selectize-dropdown-content {max-height: 90vh !important}
           .bslib-value-box .value-box-value {
-            font-size: 1.5rem
+            font-size: 1rem
           }
           "
       )
@@ -98,7 +90,7 @@ page_navbar(
         fill = FALSE,
         layout_column_wrap(
           width = 1/3, 
-          !!!value_boxes_stats_ui('value_boxes', height = '100px', fg = '#EEE8D5')
+          !!!value_boxes_stats_ui('value_boxes', height = '130px', fg = '#EEE8D5')
         )
       )
     ),
