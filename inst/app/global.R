@@ -16,6 +16,8 @@ message('data summarized with skimr')
 salaries_file <- fs::path_package(
   'rbiotechsalary', 'extdata', 'salary_results_cleaned.csv'
 )
+message('loading data from github')
+salaries_file <- 'https://raw.githubusercontent.com/wvictor14/rbiotechsalarydata/refs/heads/main/salary_results_cleaned.csv'
 salaries <- readr::read_csv(salaries_file, show_col_types = FALSE) |> 
   rb_clean_data()
 message('processed data loaded')
