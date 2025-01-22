@@ -3,15 +3,6 @@ library(bslib)
 library(dplyr)
 library(rbiotechsalary)
 
-# load data for app
-skim_raw_data <- load_raw_data() |> 
-  skimr::skim() |> 
-  as_tibble() |> 
-  rename_with(~stringr::str_remove_all(.x, 'character\\.')) |> 
-  select(-skim_type, -whitespace) 
-
-message('data summarized with skimr')
-
 
 salaries_file <- fs::path_package(
   'rbiotechsalary', 'extdata', 'salary_results_cleaned.csv'
