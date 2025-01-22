@@ -277,7 +277,7 @@ plot_career_progression <- function(
     ) |> 
     arrange({{ color_by }}, years_of_experience)
   
-  .color_by <- summarized |> pull({{ color_by }})
+  .color_by <- summarized |> pull({{ color_by }}) |>  forcats::fct_drop()
   x <- summarized$years_of_experience;
   y <- summarized$salary_total;
   size <- summarized$n
