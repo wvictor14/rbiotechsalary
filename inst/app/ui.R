@@ -103,13 +103,19 @@ page_navbar(
         plotly::plotlyOutput("plot_salary_histogram")
       )
     ),
-    card(
-      class = 'p-0 mt-0',
-      htmltools::h3('Recently Submitted Salaries'),
-      card_body(
-        class = 'p-0',
-        table_raw_ui("table_raw")
-      )
+    
+    layout_columns(
+      col_widths = c(2, 8, 2),
+      card(height = '10px'),
+      card(
+        card_title('Recently Submitted Salaries'),
+        class = 'p-0 mt-0',
+        card_body(
+          class = 'p-0',
+          table_raw_ui("table_raw")
+        )
+      ),
+      card(height = '10px')
     ),
     
     ### career progression ----
