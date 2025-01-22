@@ -16,7 +16,7 @@ message('processed data loaded')
 # links
 link_add_data <- shiny::tags$a(
   bsicons::bs_icon("plus-lg"), " Add Your Salary",
-  href = "https://docs.google.com/forms/d/e/1FAIpQLSeXpPvkjdf8EPRU_cAdyMAUFVjgx67nyVgDxV7TNHeFkR2k9A/viewform",
+  href = "https://docs.google.com/forms/d/e/1FAIpQLSdj_9sP4DRp_3OuKsOT0wWQBTCHePo-CdBQOso8mvQJks4rIQ/viewform",
   target = "_blank"
 )
 link_github <- shiny::tags$a(
@@ -31,7 +31,7 @@ link_reddit <- shiny::tags$a(
 )
 link_google <- shiny::tags$a(
   bsicons::bs_icon("file-earmark-spreadsheet"), " Raw Data",
-  href = "https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit#gid=491268892",
+  href = "https://docs.google.com/spreadsheets/d/1G0FmJhkOME_sv66hWmhnZS5qR2KMTY7nzkxksv46bfk/edit?usp=sharing",
   target = "_blank"
 )
 
