@@ -61,6 +61,7 @@ filters_ui <- function(id, .salaries, ...) {
     selectizeInput(
       NS(id, 'education'),
       label = 'Education',
+      selected = c('PhD', 'Masters', 'Bachelors'),
       choices = .salaries$experience_highest_degree |>  unique() |>  sort(na.last = TRUE),
       multiple = TRUE,
       options = list(
