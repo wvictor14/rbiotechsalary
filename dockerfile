@@ -27,9 +27,6 @@ RUN install2.r \
 WORKDIR /home/app/
 COPY . .
 
-# create data
-RUN R -e "quarto::quarto_render('inst/extdata/clean_data.qmd')"
-
 # install app
 RUN R -e "devtools::install()"
 
