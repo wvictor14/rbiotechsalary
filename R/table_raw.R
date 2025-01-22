@@ -116,17 +116,17 @@ rt_table_raw <- function(.df, id = 'table-raw', ...) {
     mutate(
       html_company_location_date = glue::glue(
         "{tidyr::replace_na(company_or_institution_name, '-')}<br>",
-        '<p style="font-size:0.75rem;color:grey;margin:0">{location_granular} | {date}</p>'
+        '<p style="font-size:0.6rem;color:grey;margin:0">{location_granular} | {date}</p>'
       ),
       
       html_total_base_bonus = glue::glue(
         "{scales::dollar(salary_total)}<br>",
-        '<p style="font-size:0.75rem;color:grey;margin:0">{base_bonus}</p>'
+        '<p style="font-size:0.6rem;color:grey;margin:0">{base_bonus}</p>'
       ),
       
       html_title_detail_yoe = glue::glue(
         "{tidyr::replace_na(as.character(title_detail), '-')}<br>",
-        '<p style="font-size:0.75rem;color:grey;margin:0">',
+        '<p style="font-size:0.6rem;color:grey;margin:0">',
         '{years_of_experience} years',
         '</p>'
       )
@@ -143,21 +143,21 @@ rt_table_raw <- function(.df, id = 'table-raw', ...) {
   .df_select |> 
     reactable_rbs(
       ...,
-      elementId = id,
+      #elementId = id,
       columns = list(
         html_company_location_date = reactable::colDef(
           html = TRUE,
-          name = 'Company<br><span style="font-size:0.8rem;color:grey">Location | Date</span>',
+          name = 'Company<br><span style="font-size:0.6rem;color:grey">Location | Date</span>',
           minWidth = 120
           ),
         html_total_base_bonus = reactable::colDef(
           html = TRUE,
-          name = 'Total<br><span style="font-size:0.8rem;color:grey">Base | Bonus</span>',
+          name = 'Total<br><span style="font-size:0.6rem;color:grey">Base | Bonus</span>',
           minWidth = 100
         ),
         html_title_detail_yoe = reactable::colDef(
           html = TRUE,
-          name = 'Title<br><span style="font-size:0.8rem;color:grey">Years of Experience</span>',
+          name = 'Title<br><span style="font-size:0.6rem;color:grey">Years of Experience</span>',
           minWidth = 80
         ),
         
@@ -176,13 +176,21 @@ reactable_rbs <- function(.df, ...) {
       ...,
       highlight = TRUE,
       resizable = TRUE,
+      fullWidth = TRUE,
+      wrap = TRUE,
+      language = reactable::reactableLang(
+        searchPlaceholder = "Search"
+      ),
+      showSortable = TRUE,
       theme = reactable::reactableTheme(
         style = list(
+          paddingLeft = "0px",
+          paddingRigt = "0px",
           marginTop = '0px',
           color = "#EEE8D5",
           backgroundColor = "#222627",
           fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif",
-          fontSize = "0.9rem"
+          fontSize = "0.8rem"
         ),
         highlightColor = "#393C3D",
         borderWidth = '0px',
@@ -211,11 +219,6 @@ reactable_rbs <- function(.df, ...) {
           "::placeholder" = list(color = 'grey'),
           "&:hover::placeholder, &:focus::placeholder" = list(color = '#EEE8D5')
         )
-      ),
-      wrap = FALSE,
-      language = reactable::reactableLang(
-        searchPlaceholder = "Search"
-      ),
-      showSortable = TRUE
+      )
     )
 }
