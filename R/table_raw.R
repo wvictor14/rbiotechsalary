@@ -186,7 +186,7 @@ reactable_rbs <- function(.df, ...) {
           color = "#EEE8D5",
           backgroundColor = "#222627",
           fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif",
-          fontSize = "0.8rem"
+          fontSize = "0.75rem"
         ),
         highlightColor = "#393C3D",
         borderWidth = '0px',
