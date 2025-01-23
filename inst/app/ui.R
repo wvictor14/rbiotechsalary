@@ -104,18 +104,15 @@ page_navbar(
       )
     ),
     
-    layout_columns(
-      col_widths = c(2, 8, 2),
-      card(height = '10px'),
-      card(
-        card_title('Recently Submitted Salaries'),
-        class = 'p-0 mt-0',
-        card_body(
-          class = 'p-0',
-          table_raw_ui("table_raw")
-        )
+    card(
+      card_title(
+        class = 'd-flex justify-content-center', 
+        'Recently Submitted Salaries'
       ),
-      card(height = '10px')
+      card_body(
+        class = 'p-0 m-0',
+        table_raw_ui(class = 'p-0 m-0', "table_raw")
+      )
     ),
     
     ### career progression ----
