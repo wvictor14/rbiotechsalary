@@ -29,14 +29,10 @@ showHideButton = function(id, .table_id = 'table-raw' ){
 
 #' table_raw ui
 #' @export
-table_raw_ui <- function(id, ...) {
-  tagList(
-    #gt::gt_output(NS(id, "table_raw", ...))
-    div(
-      style = 'display: flex; flex-flow: column wrap;',
-      reactable::reactableOutput(NS(id, "table_raw"), ...)
-      #showHideButton(NS(id, 'toggle_button'))
-    )
+table_raw_ui <- function(id, class = '', ...) {
+  htmltools::div(
+    class = class,
+    reactable::reactableOutput(NS(id, "table_raw"), ...)
   )
 }
 
