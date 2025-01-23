@@ -145,7 +145,7 @@ rt_table_raw <- function(.df, id = 'table-raw', ...) {
           html = TRUE,
           name = 'Company<br><span style="font-size:0.6rem;color:grey">Location | Date</span>',
           minWidth = 120
-          ),
+        ),
         html_total_base_bonus = reactable::colDef(
           html = TRUE,
           name = 'Total<br><span style="font-size:0.6rem;color:grey">Base | Bonus</span>',
@@ -154,7 +154,7 @@ rt_table_raw <- function(.df, id = 'table-raw', ...) {
         html_title_detail_yoe = reactable::colDef(
           html = TRUE,
           name = 'Title<br><span style="font-size:0.6rem;color:grey">Years of Experience</span>',
-          minWidth = 80
+          minWidth = 110
         ),
         
         # hidden by default:
