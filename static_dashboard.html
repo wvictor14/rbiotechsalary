@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -61,18 +61,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="static_dashboard_files/libs/clipboard/clipboard.min.js"></script>
 <script src="static_dashboard_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="static_dashboard_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="static_dashboard_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="static_dashboard_files/libs/quarto-html/popper.min.js"></script>
 <script src="static_dashboard_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="static_dashboard_files/libs/quarto-html/anchor.min.js"></script>
 <link href="static_dashboard_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="static_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="static_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-dark-befe23ebd2f54d8af2c8a89d1a1611f1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="static_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="static_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="static_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="static_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="static_dashboard_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="static_dashboard_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="static_dashboard_files/libs/bootstrap/bootstrap-aa3bcb0068bf488364925e55b2521e66.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="static_dashboard_files/libs/bootstrap/bootstrap-dark-aa3bcb0068bf488364925e55b2521e66.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="static_dashboard_files/libs/bootstrap/bootstrap-aa3bcb0068bf488364925e55b2521e66.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="static_dashboard_files/libs/bootstrap/bootstrap-93defb492de48fe1eeeb643cc1a0ab64.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="static_dashboard_files/libs/bootstrap/bootstrap-dark-93defb492de48fe1eeeb643cc1a0ab64.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="static_dashboard_files/libs/bootstrap/bootstrap-93defb492de48fe1eeeb643cc1a0ab64.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="static_dashboard_files/libs/quarto-dashboard/quarto-dashboard.js"></script>
 <script src="static_dashboard_files/libs/quarto-dashboard/stickythead.js"></script>
 
@@ -100,7 +101,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </button>    
 
 
-    <div class="navbar-brand-container">       
+    <div class="navbar-brand-container">
+
 
       <div class="navbar-title">
         <div class="navbar-title-text"><a href="#">r/biotechsalary</a></div>
@@ -115,8 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="html-fill-item html-fill-container dashboard-toolbar-container toolbar-toplevel"><div class="toolbar html-fill-container" data-layout="flow">
 <div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="85" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 84;"><span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>job_titles_general <span class="op">=</span> [<span class="op">...</span><span class="kw">new</span> <span class="bu">Set</span>(<span class="fu">transpose</span>(salaries_ojs)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">title_general</span>))]<span class="op">.</span><span class="fu">sort</span>()</span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>location_country <span class="op">=</span> [<span class="op">...</span><span class="kw">new</span> <span class="bu">Set</span>(<span class="fu">transpose</span>(salaries_ojs)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">location_country</span>))]<span class="op">.</span><span class="fu">sort</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb1" data-startfrom="85" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 84;"><span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>job_titles_general <span class="op">=</span> [<span class="op">...</span><span class="kw">new</span> <span class="bu">Set</span>(<span class="fu">transpose</span>(salaries_ojs)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">title_general</span>))]<span class="op">.</span><span class="fu">sort</span>()</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>location_country <span class="op">=</span> [<span class="op">...</span><span class="kw">new</span> <span class="bu">Set</span>(<span class="fu">transpose</span>(salaries_ojs)<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">location_country</span>))]<span class="op">.</span><span class="fu">sort</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display hidden">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -132,7 +134,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="95" data-source-offset="-110"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 94;"><span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>viewof select_job_title_general <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb2" data-startfrom="95" data-source-offset="-110"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 94;"><span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>viewof select_job_title_general <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(</span>
 <span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>  job_titles_general<span class="op">,</span> </span>
 <span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">label</span><span class="op">:</span><span class="st">"Job Title"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">'Scientist'</span>}</span>
 <span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -140,7 +142,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>viewof select_location_country <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(</span>
 <span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  location_country<span class="op">,</span> </span>
 <span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">label</span><span class="op">:</span><span class="st">"Country"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">'United States Of America'</span>}</span>
-<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -156,12 +158,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell hidden">
-<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="107" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 106;"><span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a><span class="co">// //salary_min &lt; x.salary_total &amp;&amp;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb3" data-startfrom="107" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 106;"><span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a><span class="co">// //salary_min &lt; x.salary_total &amp;&amp;</span></span>
 <span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>filtered <span class="op">=</span> <span class="fu">transpose</span>(salaries_ojs)<span class="op">.</span><span class="fu">filter</span>(<span class="kw">function</span>(x) {</span>
 <span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> select_job_title_general<span class="op">.</span><span class="fu">includes</span>(x<span class="op">.</span><span class="at">title_general</span>) <span class="op">&amp;&amp;</span></span>
 <span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>         select_location_country<span class="op">.</span><span class="fu">includes</span>(x<span class="op">.</span><span class="at">location_country</span>)</span>
 <span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>         <span class="op">;</span></span>
-<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display hidden">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -186,7 +188,7 @@ grid-auto-rows: minmax(0, 1fr);">
 Avg Salary
 </p>
 <p class="value-box-value">
-<div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb4" data-startfrom="126" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 125;"><span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a><span class="pp">parseFloat</span>(d3<span class="op">.</span><span class="fu">mean</span>(filtered<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">salary_total</span><span class="op">/</span><span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="op">*</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold html-fill-item html-fill-container"><div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb4" data-startfrom="126" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 125;"><span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a><span class="pp">parseFloat</span>(d3<span class="op">.</span><span class="fu">mean</span>(filtered<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">salary_total</span><span class="op">/</span><span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="op">*</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display html-fill-item html-fill-container">
 <div id="ojs-cell-4" data-nodetype="expression" class="html-fill-item html-fill-container">
 
@@ -208,7 +210,7 @@ Avg Salary
 Number of respondents
 </p>
 <p class="value-box-value">
-<div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb5" data-startfrom="134" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 133;"><span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a>filtered<span class="op">.</span><span class="at">length</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold html-fill-item html-fill-container"><div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb5" data-startfrom="134" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 133;"><span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a>filtered<span class="op">.</span><span class="at">length</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display html-fill-item html-fill-container">
 <div id="ojs-cell-5" data-nodetype="expression" class="html-fill-item html-fill-container">
 
@@ -230,7 +232,7 @@ Number of respondents
 Avg years experience
 </p>
 <p class="value-box-value">
-<div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb6" data-startfrom="142" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 141;"><span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a><span class="pp">parseFloat</span>(d3<span class="op">.</span><span class="fu">mean</span>(filtered<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">years_of_experience</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold html-fill-item html-fill-container"><div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb6" data-startfrom="142" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 141;"><span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a><span class="pp">parseFloat</span>(d3<span class="op">.</span><span class="fu">mean</span>(filtered<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">years_of_experience</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display html-fill-item html-fill-container">
 <div id="ojs-cell-6" data-nodetype="expression" class="html-fill-item html-fill-container">
 
@@ -243,11 +245,11 @@ Avg years experience
 <script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
 </div><div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
 <div class="cell hidden html-fill-item html-fill-container">
-<div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb7" data-startfrom="149" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 148;"><span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>wrangled <span class="op">=</span> aq<span class="op">.</span><span class="fu">from</span>(filtered)</span>
+<div class="code-copy-outer-scaffold html-fill-item html-fill-container"><div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb7" data-startfrom="149" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 148;"><span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>wrangled <span class="op">=</span> aq<span class="op">.</span><span class="fu">from</span>(filtered)</span>
 <span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">groupby</span>(<span class="st">"location_granular"</span>)</span>
 <span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">count</span>()</span>
 <span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="dv">20</span>)</span>
-<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">objects</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">objects</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display hidden html-fill-item html-fill-container">
 <div id="ojs-cell-7" data-nodetype="declaration" class="html-fill-item html-fill-container">
 
@@ -259,7 +261,7 @@ Avg years experience
 Location
 </span></div></div>
 <div class="card-body html-fill-item html-fill-container" style="padding: 1px;">
-<div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb8" data-startfrom="159" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 158;"><span id="cb8-159"><a href="#cb8-159" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<div class="code-copy-outer-scaffold html-fill-item html-fill-container"><div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb8" data-startfrom="159" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 158;"><span id="cb8-159"><a href="#cb8-159" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
 <span id="cb8-160"><a href="#cb8-160" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">160</span><span class="op">,</span></span>
 <span id="cb8-161"><a href="#cb8-161" aria-hidden="true" tabindex="-1"></a>  <span class="co">//height: 300,</span></span>
 <span id="cb8-162"><a href="#cb8-162" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {</span>
@@ -295,7 +297,7 @@ Location
 <span id="cb8-192"><a href="#cb8-192" aria-hidden="true" tabindex="-1"></a>    })<span class="op">,</span></span>
 <span id="cb8-193"><a href="#cb8-193" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-194"><a href="#cb8-194" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb8-195"><a href="#cb8-195" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-195"><a href="#cb8-195" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display html-fill-item html-fill-container">
 <div id="ojs-cell-8" data-nodetype="expression" class="html-fill-item html-fill-container">
 
@@ -314,7 +316,7 @@ Location
 Salary Distribution
 </span></div></div>
 <div class="card-body html-fill-item html-fill-container" style="padding: 4px;">
-<div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb9" data-startfrom="203" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 202;"><span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<div class="code-copy-outer-scaffold html-fill-item html-fill-container"><div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb9" data-startfrom="203" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 202;"><span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
 <span id="cb9-204"><a href="#cb9-204" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {</span>
 <span id="cb9-205"><a href="#cb9-205" aria-hidden="true" tabindex="-1"></a>    <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">14</span></span>
 <span id="cb9-206"><a href="#cb9-206" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span> </span>
@@ -365,7 +367,7 @@ Salary Distribution
 <span id="cb9-251"><a href="#cb9-251" aria-hidden="true" tabindex="-1"></a>      )</span>
 <span id="cb9-252"><a href="#cb9-252" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb9-253"><a href="#cb9-253" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb9-254"><a href="#cb9-254" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-254"><a href="#cb9-254" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display html-fill-item html-fill-container">
 <div id="ojs-cell-9" data-nodetype="expression" class="html-fill-item html-fill-container">
 
@@ -383,7 +385,7 @@ Salary Distribution
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
 <div class="cell hidden html-fill-item html-fill-container">
-<div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb10" data-startfrom="261" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 260;"><span id="cb10-261"><a href="#cb10-261" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">sparkbar</span>(max) {</span>
+<div class="code-copy-outer-scaffold html-fill-item html-fill-container"><div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb10" data-startfrom="261" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 260;"><span id="cb10-261"><a href="#cb10-261" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">sparkbar</span>(max) {</span>
 <span id="cb10-262"><a href="#cb10-262" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">html</span><span class="vs">`&lt;div style="</span></span>
 <span id="cb10-263"><a href="#cb10-263" aria-hidden="true" tabindex="-1"></a><span class="vs">    background: #32de84;</span></span>
 <span id="cb10-264"><a href="#cb10-264" aria-hidden="true" tabindex="-1"></a><span class="vs">    width: </span><span class="sc">${</span><span class="dv">100</span> <span class="op">*</span> x <span class="op">/</span> max<span class="sc">}</span><span class="vs">%;</span></span>
@@ -393,7 +395,7 @@ grid-auto-rows: minmax(0, 1fr);">
 <span id="cb10-268"><a href="#cb10-268" aria-hidden="true" tabindex="-1"></a><span class="vs">    overflow: visible;</span></span>
 <span id="cb10-269"><a href="#cb10-269" aria-hidden="true" tabindex="-1"></a><span class="vs">    display: flex;</span></span>
 <span id="cb10-270"><a href="#cb10-270" aria-hidden="true" tabindex="-1"></a><span class="vs">    justify-content: end;"&gt;</span><span class="sc">${</span>x<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">"en"</span>)<span class="sc">}</span><span class="vs">`</span></span>
-<span id="cb10-271"><a href="#cb10-271" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-271"><a href="#cb10-271" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display hidden html-fill-item html-fill-container">
 <div id="ojs-cell-10" data-nodetype="declaration" class="html-fill-item html-fill-container">
 
@@ -401,7 +403,7 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 </div><div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
 <div class="card-body html-fill-item html-fill-container">
-<div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb11" data-startfrom="275" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 274;"><span id="cb11-275"><a href="#cb11-275" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(filtered<span class="op">,</span> {</span>
+<div class="code-copy-outer-scaffold html-fill-item html-fill-container"><div class="sourceCode cell-code hidden html-fill-item html-fill-container" id="cb11" data-startfrom="275" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 274;"><span id="cb11-275"><a href="#cb11-275" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(filtered<span class="op">,</span> {</span>
 <span id="cb11-276"><a href="#cb11-276" aria-hidden="true" tabindex="-1"></a>  <span class="dt">sort</span><span class="op">:</span> <span class="st">"date"</span><span class="op">,</span> </span>
 <span id="cb11-277"><a href="#cb11-277" aria-hidden="true" tabindex="-1"></a>  <span class="dt">reverse</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
 <span id="cb11-278"><a href="#cb11-278" aria-hidden="true" tabindex="-1"></a>  <span class="dt">layout</span><span class="op">:</span> <span class="st">"auto"</span><span class="op">,</span></span>
@@ -435,7 +437,7 @@ grid-auto-rows: minmax(0, 1fr);">
 <span id="cb11-306"><a href="#cb11-306" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> {</span>
 <span id="cb11-307"><a href="#cb11-307" aria-hidden="true" tabindex="-1"></a>    <span class="dt">salary_base</span><span class="op">:</span> <span class="fu">sparkbar</span>(d3<span class="op">.</span><span class="fu">max</span>(filtered<span class="op">,</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">salary_total</span>))</span>
 <span id="cb11-308"><a href="#cb11-308" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb11-309"><a href="#cb11-309" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-309"><a href="#cb11-309" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display html-fill-item html-fill-container">
 <div id="ojs-cell-11" data-nodetype="expression" class="html-fill-item html-fill-container">
 
@@ -519,13 +521,14 @@ window._ojs.runtime.interpretFromScriptTags();
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
