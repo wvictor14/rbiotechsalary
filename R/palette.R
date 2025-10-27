@@ -2,10 +2,12 @@
 #' @export
 #' @return 3 length color vector
 pal_salary <- function() {
-  c('total' = 'seagreen',
+  c(
+    'total' = 'seagreen',
     'base' = '#8CD17DFF',
     'bonus' = '#A0CBE8FF',
-    'bonus_2' = '#4E79A7FF')
+    'bonus_2' = '#4E79A7FF'
+  )
 }
 
 #' general color palette
@@ -29,7 +31,7 @@ pal_general <- function() {
     '#FABFD2FF',
     '#D4A6C8FF',
     '#D7B5A6FF'
-    )
+  )
 }
 
 #' paletteer color palette

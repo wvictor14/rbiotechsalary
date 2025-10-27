@@ -1,7 +1,7 @@
 #' table of summarized salary info
 #'
 #' not currently used
-#' 
+#'
 #' @return plot
 #' @export
 #'
@@ -18,7 +18,7 @@ gt_career_progression <- function(.df) {
       bonus_pct = mean(bonus_pct, na.rm = TRUE)
     ) |>
     #ungroup() |>
-    mutate(base_p = base/total) |>
+    mutate(base_p = base / total) |>
     relocate(base_p, .after = total) |>
     select(-base) |>
     gt::gt() |>
@@ -36,9 +36,11 @@ gt_career_progression <- function(.df) {
     gt::cols_merge(
       columns = c(bonus, bonus_pct),
       pattern = "{1} ({2})"
-    )|>
+    ) |>
     gtExtras::gt_plt_bar_pct(
-      base_p, fill = pal_salary()['base'], background = pal_salary()['bonus']
+      base_p,
+      fill = pal_salary()['base'],
+      background = pal_salary()['bonus']
     ) |>
     gt::cols_align(title_general, align = 'right') |>
     gt::cols_align(bonus_pct, align = 'left') |>
@@ -47,7 +49,8 @@ gt_career_progression <- function(.df) {
     gt::tab_style(
       style = gt::cell_borders(style = 'hidden'),
       locations = gt::cells_body(
-        columns = c(everything(), -title_category))
+        columns = c(everything(), -title_category)
+      )
     ) |>
     gt::tab_style(
       style = list(
@@ -67,9 +70,7 @@ gt_career_progression <- function(.df) {
       )
     ) |>
     gt::tab_style(
-      style = gt::cell_text(size = 'xx-small',
-                            color = "white",
-      ),
+      style = gt::cell_text(size = 'xx-small', color = "white", ),
       location = gt::cells_row_groups()
     ) |>
 

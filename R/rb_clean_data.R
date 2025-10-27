@@ -10,34 +10,42 @@ rb_clean_data <- function(.salaries) {
     "West Coast (California & Pacific Northwest)",
     "Other US Location (HI, AK, PR, etc.)"
   )
-  
-  .salaries |> 
+
+  .salaries |>
     mutate(
       title_general = title_general |>
         forcats::fct() |>
         forcats::fct_relevel(
-          
-          'Research Associate', 'Senior Research Associate',
-          
-          'Associate Scientist', 'Scientist', 
-          'Senior Scientist', 'Principal Scientist',
-          
-          'Associate Director', 'Director', 'Senior Director', 
+          'Research Associate',
+          'Senior Research Associate',
+
+          'Associate Scientist',
+          'Scientist',
+          'Senior Scientist',
+          'Principal Scientist',
+
+          'Associate Director',
+          'Director',
+          'Senior Director',
           'Executive Director',
-          
-          'VP', 'SVP'
+
+          'VP',
+          'SVP'
         ),
-      
-      title_category = title_category |> 
-        forcats::fct() |> 
+
+      title_category = title_category |>
+        forcats::fct() |>
         forcats::fct_relevel(
-          'Research Associate', 'Scientist', 'Director', 'VP'
+          'Research Associate',
+          'Scientist',
+          'Director',
+          'VP'
         ),
-      
-      location_granular = forcats::fct(location_granular) |> 
+
+      location_granular = forcats::fct(location_granular) |>
         forcats::fct_relevel(USA),
-      
-      experience_highest_degree = forcats::fct(experience_highest_degree) |> 
+
+      experience_highest_degree = forcats::fct(experience_highest_degree) |>
         forcats::fct_na_value_to_level()
     )
 }
