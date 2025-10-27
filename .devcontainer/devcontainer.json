@@ -1,0 +1,68 @@
+{
+  "name": "victor2wy/rstudio",
+  "image": "victor2wy/rstudio",
+  "containerEnv": {
+    "RENV_PATHS_CACHE": "/renv/cache",
+    "PASSWORD": "password",
+    "ROOT": "TRUE"
+  },
+  "features": {
+    "ghcr.io/rocker-org/devcontainer-features/renv-cache:0": {},
+    "ghcr.io/devcontainers-extra/features/apt-packages:1": {
+      "packages": []
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": true
+    },
+    "ghcr.io/rocker-org/devcontainer-features/renv-cache:0": {},
+    "ghcr.io/rocker-org/devcontainer-features/r-apt:0": {
+      "installVscDebugger": true,
+      "installDevTools": true,
+      "vscodeRSupport": "full",
+      "installRadian": true
+    },
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "mechatroner.rainbow-csv",
+        // R Extensions
+        "rdebugger.r-debugger",
+        "reditorsupport.r",
+        // Documentation Extensions
+        "quarto.quarto",
+        // Docker Supporting Extensions
+        "ms-azuretools.vscode-docker",
+        "ms-vscode-remote.remote-containers",
+        // Python Extensions
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "mhutchie.git-graph",
+      ],
+      "settings": {
+        "r.lsp.enabled": true,
+        "r.rterm.linux": "/usr/local/bin/radian",
+        "r.bracketedPaste": true,
+        "r.plot.useHttpgd": true,
+        "[r]": {
+          "editor.wordSeparators": "`~!@#%$^&*()-=+[{]}\\|;:'\",<>/?"
+        }
+      }
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  //"postStartCommand": "bash .devcontainer/postStart.sh",
+  "overrideCommand": false, // lets rstudio-server auto start
+  // map 8787 (rstudio in container) to host 8889
+  // modify the 8888 to whatever you want
+  "appPort": [
+    "8890:8787"
+  ],
+  "forwardPorts": [
+    "8890:8787",
+    9000, // httpgd
+    "4200:4210" // quarto preview
+  ],
+  "shutdownAction": "none",
+  "remoteUser": "rstudio"
+}
