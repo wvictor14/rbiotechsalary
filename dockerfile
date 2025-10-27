@@ -1,5 +1,5 @@
 # https://github.com/rocker-org/rocker-versioned2/wiki/shiny-verse_9dec38cb85d0
-FROM rocker/tidyverse:4.4.0
+FROM rocker/tidyverse:4.5.1
 
 # Install R packages 
 RUN install2.r --skipinstalled \
