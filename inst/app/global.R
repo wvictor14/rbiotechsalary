@@ -2,6 +2,7 @@ library(shiny)
 library(bslib)
 library(dplyr)
 library(rbiotechsalary)
+library(htmltools)
 
 # can read locally if needed
 #salaries_file <- fs::path_package(
