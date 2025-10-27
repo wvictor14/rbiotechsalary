@@ -1,9 +1,9 @@
-page_navbar(
+bslib::page_navbar(
   theme = bs_theme(
-    version = 5, 
+    version = 5,
     font_scale = 0.7, # reduce by 20%
     fg = '#EEE8D5',
-    bg =  '#232627',
+    bg = '#232627',
     primary = .colors$primary,
     info = '#EEE8D5',
     #"border-color" = 'rgba(255,255,255,0.1)', #495057',
@@ -11,12 +11,13 @@ page_navbar(
     "focus-ring-color" = "rgba(255,255,255,0.1)",
     "accordion-border-width" = "1px",
   ) |>
-    
+
     bs_add_variables(
       "bslib-value-box-horizontal-break-point" = "1px" #freezes value boxes layout
-    ) |> 
+    ) |>
     bs_add_rules(
-      list("
+      list(
+        "
           h1, h2, h3 {
             
           }
@@ -60,7 +61,7 @@ page_navbar(
           }
           "
       )
-    ), 
+    ),
   padding = c(0, 0),
   fillable = FALSE,
   title = "r/biotech salaries",
@@ -77,7 +78,7 @@ page_navbar(
   ),
   ### panel 1 ----
   nav_panel(
-    title = "Salaries", 
+    title = "Salaries",
     fillable = FALSE,
     padding = 0,
     class = 'p-0 m-0 row-gap-2',
@@ -92,8 +93,12 @@ page_navbar(
         class = 'p-0',
         fill = FALSE,
         layout_column_wrap(
-          width = 1/3, 
-          !!!value_boxes_stats_ui('value_boxes', height = '130px', fg = '#EEE8D5')
+          width = 1 / 3,
+          !!!value_boxes_stats_ui(
+            'value_boxes',
+            height = '130px',
+            fg = '#EEE8D5'
+          )
         )
       )
     ),
@@ -106,10 +111,10 @@ page_navbar(
         plotly::plotlyOutput("plot_salary_histogram")
       )
     ),
-    
+
     card(
       card_title(
-        class = 'd-flex justify-content-center', 
+        class = 'd-flex justify-content-center',
         'Recently Submitted Salaries'
       ),
       card_body(
@@ -117,7 +122,7 @@ page_navbar(
         table_raw_ui(class = 'p-0 m-0', "table_raw")
       )
     ),
-    
+
     ### career progression ----
     br(),
     br(),
@@ -130,7 +135,7 @@ page_navbar(
         plotly::plotlyOutput('plot_career_progression')
       )
     ),
-    
+
     ### top companies ----
     br(),
     br(),
@@ -151,7 +156,7 @@ page_navbar(
       )
     )
   ),
-  
+
   ## panel info ----
   #nav_panel(
   #  title = 'Info',
@@ -161,17 +166,17 @@ page_navbar(
   #   tags$br(),
   #   tags$br()
   # ),
-  # 
+  #
   # ## data pipe ----
   # nav_panel(
   #   title = 'Raw Data',
   #   h3('Completeness and summary stats for original raw data'),
   #   reactable::reactableOutput('skim_raw_data')
   # ),
-  
+
   ## menu ----
   nav_spacer(),
-  
+
   nav_menu(
     title = "Links",
     align = "right",
@@ -179,9 +184,8 @@ page_navbar(
     nav_item(link_google),
     nav_item(link_reddit),
     nav_item(link_github)
-    
   ),
-  
+
   nav_item(
     style = "color: #888; padding: 0px; font-size:1rem",
     glue::glue("rbiotechsalary {version}")
