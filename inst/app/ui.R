@@ -71,7 +71,10 @@ page_navbar(
     width = 300,
     filters_ui('filters', .salaries = salaries)
   ),
-  
+  header = htmltools::tags$script(
+    "data-goatcounter" = "https://victor2wy.goatcounter.com/count",
+    "async src" = "//gc.zgo.at/count.js"
+  ),
   ### panel 1 ----
   nav_panel(
     title = "Salaries", 
