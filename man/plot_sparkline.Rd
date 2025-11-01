@@ -15,9 +15,9 @@ sparkline for salary average showcase value box
 plot_sparkline(salaries, x = date, y = salary_total, color = 'seagreen')
 
 # user density
-salaries |>  
-  count(date) |>  
-  mutate(x = cumsum(n))  |> 
+salaries |>
+  count(date) |>
+  mutate(x = cumsum(n))  |>
   plot_sparkline(date, x, color = 'seagreen')
 
 

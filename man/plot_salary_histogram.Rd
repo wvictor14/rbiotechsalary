@@ -9,6 +9,7 @@ plot_salary_histogram(
   color = "#41AB5DFF",
   font_color = "#EEE8D5",
   hover_bg = "#161C21",
+  font_size = 14,
   ...
 )
 }
@@ -22,8 +23,8 @@ salaries |>  make_hist_data(salary_total) |>  plot_salary_histogram(font_color =
 
 # scientist
 salaries |>  filter(title_general == 'Scientist') |> make_hist_data(salary_total) |> plot_salary_histogram(font_color = 'black', hover_bg = 'white')
-  
+
 # 1
-salaries |>  slice(1) |> make_hist_data(salary_total) |> 
+salaries |>  slice(1) |> make_hist_data(salary_total) |>
   plot_salary_histogram(font_color = 'black', hover_bg = 'white')
 }

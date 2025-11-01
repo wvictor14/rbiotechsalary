@@ -13,7 +13,8 @@ plot_salary(.df, x = salary_total, fill = title_general)
 \item{.df}{salary data}
 }
 \description{
-plot salary histogram
+A ggplot2 version of the histogram. Not currently used in the app,
+see plot_salary_histogram for current implementation
 }
 \examples{
 library(rbiotechsalary)

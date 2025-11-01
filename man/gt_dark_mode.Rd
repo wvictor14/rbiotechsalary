@@ -23,11 +23,11 @@ gt table
 stylize to dark mode
 }
 \examples{
-  
+
 salaries |> slice(1:20) |>  gt_table_raw() |>  gt_dark_mode('black','black')
-salaries |> slice(1:20) |>  gt_table_raw() |>  
+salaries |> slice(1:20) |>  gt_table_raw() |>
 gt::tab_style(
-style = gt::cell_fill(alpha = 0), locations = list(gt::cells_body()))  |> 
+style = gt::cell_fill(alpha = 0), locations = list(gt::cells_body()))  |>
 gt::opt_interactive()
 
 }

@@ -6,10 +6,14 @@
 \usage{
 plot_career_progression(
   .df,
-  color = "#41AB5D",
+  color_by = experience_highest_degree,
+  color = c("#41AB5D", "goldenrod", "firebrick"),
   font_color = "#EEE8D5",
   bg_color = "black",
-  sizeref = 0.1
+  font_size = 14,
+  sizeref = 0.75,
+  sizemin = 3,
+  sizemax = 5
 )
 }
 \arguments{
@@ -20,7 +24,6 @@ plot career progression
 }
 \examples{
 library(rbiotechsalary)
-data(salaries)
 salaries_sub <- salaries |>
   dplyr::filter(title_general \%in\% c('Scientist', 'Principal Scientist'),
          stringr::str_detect(location_country, 'United States') )

@@ -4,7 +4,7 @@
 \alias{table_raw_ui}
 \title{table_raw ui}
 \usage{
-table_raw_ui(id, ...)
+table_raw_ui(id, class = "", ...)
 }
 \description{
 table_raw ui

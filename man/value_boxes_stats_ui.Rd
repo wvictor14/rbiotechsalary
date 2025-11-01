@@ -9,7 +9,7 @@ value_boxes_stats_ui(
   bg = "#1E2122",
   fg = "#41AB5DFF",
   showcase_layout = "left center",
-  full_screen = TRUE,
+  full_screen = FALSE,
   fill = TRUE,
   fillable = TRUE,
   height = NULL,

@@ -19,6 +19,6 @@ then launch the app with 'l()')
 }
 \examples{
 \dontrun{
- 
+
 }
 }
