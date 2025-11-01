@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: '41 15 * * *'  # trigger at 3:41 pm UTC (8:41 AM PST)
 
-name: Quarto Publish
+name: Quarto Publish OJS Static Dashboard
 
 jobs:
   build-deploy:
