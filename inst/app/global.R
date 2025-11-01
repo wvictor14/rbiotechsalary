@@ -46,3 +46,55 @@ link_google <- shiny::tags$a(
 )
 
 version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
+
+# companies
+select_companies_choices <- salaries |>
+  count(company_or_institution_name) |>
+  arrange(desc(n)) |>
+  filter(
+    !is.na(company_or_institution_name),
+    company_or_institution_name != 'Prefer not to say',
+    n > 1
+  ) |>
+  pull(company_or_institution_name)
+
+stringr::str_subset(colnames(salaries), 'company')
+
+companies <- salaries |>
+
+  # harmonize the reviews
+  distinct(
+    company_or_institution_name,
+    optional_company_review,
+    provide_a_review_and_rate_your_company_institution_and_experience,
+    which_of_the_following_best_describes_your_company,
+    company_detail_approximate_company_size,
+    company_details_public_private_start_up_subsidiary_of
+  ) |>
+  mutate(
+    company_review = coalesce(
+      optional_company_review,
+      provide_a_review_and_rate_your_company_institution_and_experience
+    )
+  ) |>
+  relocate(company_review, .before = optional_company_review) |>
+  select(
+    -optional_company_review,
+    -provide_a_review_and_rate_your_company_institution_and_experience
+  ) |>
+
+  # harmonize the public / private field
+  mutate(
+    public_or_private = coalesce(
+      which_of_the_following_best_describes_your_company,
+      company_details_public_private_start_up_subsidiary_of
+    )
+  ) |>
+  relocate(
+    public_or_private,
+    .before = which_of_the_following_best_describes_your_company
+  ) |>
+  select(
+    -which_of_the_following_best_describes_your_company,
+    -company_details_public_private_start_up_subsidiary_of
+  )
