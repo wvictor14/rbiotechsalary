@@ -156,6 +156,14 @@ bslib::page_navbar(
       )
     )
   ),
+  
+  nav_panel(
+    title = "Companies",
+    companies_ui(
+      'companies',
+      choices = select_companies_choices
+    )
+  ),
 
   ## panel info ----
   #nav_panel(
