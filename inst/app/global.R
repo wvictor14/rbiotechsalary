@@ -48,6 +48,7 @@ link_google <- shiny::tags$a(
 version <- paste0('v', as.character(utils::packageVersion('rbiotechsalary')))
 
 # companies
+cli::cli_alert_info('Loading and processing companies dataset')
 select_companies_choices <- salaries |>
   count(company_or_institution_name) |>
   arrange(desc(n)) |>
@@ -58,19 +59,21 @@ select_companies_choices <- salaries |>
   ) |>
   pull(company_or_institution_name)
 
-stringr::str_subset(colnames(salaries), 'company')
 
 companies <- salaries |>
 
   # harmonize the reviews
-  distinct(
+  select(
+    date,
     company_or_institution_name,
     optional_company_review,
     provide_a_review_and_rate_your_company_institution_and_experience,
     which_of_the_following_best_describes_your_company,
     company_detail_approximate_company_size,
-    company_details_public_private_start_up_subsidiary_of
+    company_details_public_private_start_up_subsidiary_of,
+    starts_with('title')
   ) |>
+  distinct() |>
   mutate(
     company_review = coalesce(
       optional_company_review,
@@ -98,3 +101,46 @@ companies <- salaries |>
     -which_of_the_following_best_describes_your_company,
     -company_details_public_private_start_up_subsidiary_of
   )
+
+options(
+  reactable.theme = reactable::reactableTheme(
+    style = list(
+      paddingLeft = "0px",
+      paddingRigt = "0px",
+      marginTop = '0px',
+      color = "#EEE8D5",
+      backgroundColor = "#222627",
+      fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif",
+      fontSize = "0.75rem"
+    ),
+    highlightColor = "#393C3D",
+    borderWidth = '0px',
+    headerStyle = list(
+      color = 'seagreen'
+    ),
+    searchInputStyle = list(
+      paddingLeft = "8px",
+      paddingTop = "6px",
+      paddingBottom = "6px",
+      borderRadius = '4px',
+      display = 'inline-block',
+      align = 'left',
+      borderColor = 'transparent', #'#EEE8D5',
+      borderWidth = '2px',
+      #border  = '2px',
+      backgroundColor = '#202020',
+      #'#222627',
+      highlightColor = "#393C3D",
+      width = "100%",
+
+      backgroundRepeat = "no-repeat",
+      "&:focus" = list(backgroundColor = "#393C3D", border = "none"),
+      "&:hover, &:focus" = list(
+        backgroundColor = '#393C3D',
+        color = '#EEE8D5'
+      ),
+      "::placeholder" = list(color = 'grey'),
+      "&:hover::placeholder, &:focus::placeholder" = list(color = '#EEE8D5')
+    )
+  )
+)

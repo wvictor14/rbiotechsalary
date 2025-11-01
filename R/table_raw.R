@@ -179,46 +179,6 @@ reactable_rbs <- function(.df, ...) {
       language = reactable::reactableLang(
         searchPlaceholder = "Search"
       ),
-      showSortable = TRUE,
-      theme = reactable::reactableTheme(
-        style = list(
-          paddingLeft = "0px",
-          paddingRigt = "0px",
-          marginTop = '0px',
-          color = "#EEE8D5",
-          backgroundColor = "#222627",
-          fontFamily = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif",
-          fontSize = "0.75rem"
-        ),
-        highlightColor = "#393C3D",
-        borderWidth = '0px',
-        headerStyle = list(
-          color = 'seagreen'
-        ),
-        searchInputStyle = list(
-          paddingLeft = "8px",
-          paddingTop = "6px",
-          paddingBottom = "6px",
-          borderRadius = '4px',
-          display = 'inline-block',
-          align = 'left',
-          borderColor = 'transparent', #'#EEE8D5',
-          borderWidth = '2px',
-          #border  = '2px',
-          backgroundColor = '#202020',
-          #'#222627',
-          highlightColor = "#393C3D",
-          width = "100%",
-
-          backgroundRepeat = "no-repeat",
-          "&:focus" = list(backgroundColor = "#393C3D", border = "none"),
-          "&:hover, &:focus" = list(
-            backgroundColor = '#393C3D',
-            color = '#EEE8D5'
-          ),
-          "::placeholder" = list(color = 'grey'),
-          "&:hover::placeholder, &:focus::placeholder" = list(color = '#EEE8D5')
-        )
-      )
+      showSortable = TRUE
     )
 }
