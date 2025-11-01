@@ -1,20 +1,46 @@
+value_box <- function(
+  id,
+  bg = '#1E2122',
+  fg = '#EEE8D5',
+  showcase_layout = 'left center',
+  full_screen = FALSE,
+  fill = TRUE,
+  fillable = TRUE,
+  height = '130px',
+  #min_height = '125px',
+  max_height = '125px',
+  ...
+) {
+  bslib::value_box(
+    theme = bslib::value_box_theme(bg = bg, fg = fg),
+    showcase_layout = showcase_layout,
+    full_screen = full_screen,
+    fill = fill,
+    fillable = fillable,
+    height = height,
+    # min_height = min_height,
+    max_height = max_height,
+    ...
+  )
+}
+
 #' Value boxes ui
 #' @export
 value_boxes_stats_ui <- function(
   id,
   bg = '#1E2122',
-  fg = '#41AB5DFF',
+  fg = '#EEE8D5',
   showcase_layout = 'left center',
   full_screen = FALSE,
   fill = TRUE,
   fillable = TRUE,
-  height = NULL,
+  height = '130px',
   #min_height = '125px',
   max_height = '125px',
   ...
 ) {
   vb <- function(...) {
-    value_box(
+    bslib::value_box(
       theme = value_box_theme(bg = bg, fg = fg),
       showcase_layout = showcase_layout,
       full_screen = full_screen,
