@@ -57,9 +57,26 @@ companies_server <- function(id) {
 
     output$company_reviews <- reactable::renderReactable({
       companies_selected() |>
-        select(date, company_review, title_category) |>
+        select(date, company_review, title_category, location_granular) |>
         filter(!is.na(company_review)) |>
-        reactable_rbs()
+        reactable_rbs(
+          searchable = TRUE,
+          columns = list(
+            date = colDef(
+              minWidth = 80
+            ),
+            company_review = colDef(
+              minWidth = 180,
+              name = 'Review'
+            ),
+            title_category = colDef(
+              name = 'Title'
+            ),
+            location_granular = colDef(
+              name = 'Location'
+            )
+          )
+        )
     })
 
     # value boxes ----

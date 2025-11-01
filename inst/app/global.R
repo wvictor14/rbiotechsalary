@@ -66,6 +66,7 @@ companies <- salaries |>
   select(
     date,
     company_or_institution_name,
+    location_granular,
     optional_company_review,
     provide_a_review_and_rate_your_company_institution_and_experience,
     which_of_the_following_best_describes_your_company,
